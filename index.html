@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="application/x-www-form-urlencoded; charset=UTF-8">
+
+<meta name="keywords" lang="de" content="Geocaching, Cache, Caches, Maps, Google Maps, Google Maps API">
+<meta name="keywords" lang="en" content="Geocaching, Cache, Caches, Maps, Google Maps, Google Maps API Koordinaten">
+
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
+<link href="css/geocaching.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script> -->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+
+<script type="text/javascript" src="scripts/3rdPartyLibs/jquery.i18n.properties-min.js"></script>
+<script type="text/javascript" src="scripts/3rdPartyLibs/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="scripts/3rdPartyLibs/markerclusterer.js"></script>
+
+<script type="text/javascript">
+	jQuery.noConflict();
+
+	jQuery(document).ready(function() {
+		
+		jQuery("#tabs").tabs();
+		
+		translatePage();
+		
+		setMapDivHeight();
+
+		jQuery(function($){
+	 		$.mask.definitions['D']='[nNeEsSwW]';
+			$("#coordCH").mask("999999 / 999999");
+// 			$("#coordDecimalAngleMaskedInput").mask("99.999999 99.999999");
+// 			$("#coordDecimalMinutes").mask("D99° 99.999 D99° 99.999");
+// 			$("#coordAngleMinutesSeconds").mask("D99° 99' 99.999' D99° 99' 99.999'");
+		});
+		
+		placeSlider();
+
+		bindHandlers();
+    });
+	
+	window.onresize = function(event){
+		setMapDivHeight();
+		placeSlider();
+	};
+
+	jQuery(function() {
+		var tabContainers = jQuery('div.tabs > div');
+		
+		jQuery('div.tabs ul.tabNavigation a').click(function() {
+			tabContainers.hide().filter(this.hash).show();
+
+			jQuery('div.tabs ul.tabNavigation a').removeClass('selected');
+			jQuery(this).addClass('selected');
+
+			return false;
+		}).filter(':first').click();
+	});
+	
+	jQuery.i18n.properties({
+	    name:'messages',
+	    path: 'bundle/',
+	    mode:'both'
+	});
+	
+	function setI18nProperties(language){
+		if(!language){
+			language = 'de';
+		}
+		
+		jQuery.i18n.properties({
+		    name: 'messages',
+		    path: 'bundle/',
+		    mode: 'both',
+		    language: language
+		});
+	}
+	
+	function translatePage(language){
+		setI18nProperties(language);
+		
+		var browserLang = jQuery.i18n.browserLang();
+		
+		jQuery('[data-i18nKey]').each(function(){
+			var $translationNode = jQuery(this);
+			var key = $translationNode.attr('data-i18nKey');
+			$translationNode.text(jQuery.i18n.prop(key));
+		});
+		
+		jQuery('button[title*="i18n."]').each(function(){
+			var $translationNode = jQuery(this);
+			var title = $translationNode.attr('title');
+			var key = title.substring(title.indexOf('.') + 1);
+			$translationNode.attr('title', jQuery.i18n.prop(key));
+		});
+	}
+	
+	function setMapDivHeight(){
+		var docHeight = jQuery(document).height();
+		var mainTitleHeight = jQuery("#mainTitle").outerHeight(true);
+		var tabNavigationHeight = jQuery("ul.tabNavigation").outerHeight(true);
+		var footerHeight = jQuery("#footer").outerHeight(true);
+		
+		
+		var mapHeight = docHeight - mainTitleHeight - tabNavigationHeight - footerHeight - 66;
+		
+ 		jQuery("#map").height(mapHeight);
+	};
+	
+	function placeSlider(){
+		var $map = jQuery("#map");
+		var top = $map.position().top;
+		var left = $map.position().left -1;
+		var height = $map.height();
+		
+		var $mapCommands = jQuery("#mapCommands");
+		$mapCommands.css({	top: top + 'px',
+							left: left + 'px',
+							height: height + 'px',
+							visibility: 'visible'});
+		
+		jQuery("#slider").click(function(){
+			jQuery(this).toggleClass("sliderOpen");
+			
+			var $mapCommandsContent = jQuery("#mapCommandsContent");
+			var $mapCommandsContentWrapper = jQuery('#mapCommandsContentWrapper');
+			
+			$mapCommandsContent.toggleClass('paddingLeft10');
+			
+			if($mapCommandsContentWrapper.width() > 0){
+				$mapCommandsContentWrapper.animate({width: '0px'});
+				$mapCommandsContentWrapper.css('visibility', 'hidden');
+			}else{
+				$mapCommandsContentWrapper.animate({width: '390px'});
+				$mapCommandsContentWrapper.css('visibility', 'visible');
+			}
+		});
+	};
+	
+	function bindHandlers(){
+		jQuery("#addressSearchTxt").keypress(function(event) {
+			if ( event.which == 13 ) {
+				jQuery("#addressSearchBtn").trigger('click');
+				event.preventDefault();
+			}
+		});
+	};
+	
+</script>
+
+</head>
+
+<body>
+	<div id="tabs" class="tabs">
+	
+		<h2 id="mainTitle" data-i18nKey="main.title">main.title</h2>
+		<span style="float: right"><a href="#" onclick="translatePage('en');">EN</a> | <a href="#" onclick="translatePage('de');">DE</a></span>
+		
+		<!-- tabs -->
+		<ul class="tabNavigation">
+			<li><a href="#googleMaps" data-i18nKey="tab.maps">tab.maps</a></li>
+			<li><a href="#tools" data-i18nKey="tab.tools">tab.tools</a></li>
+		</ul>
+
+		<!-- tab containers -->
+		<div id="googleMaps">
+			<div id="mapCommands" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;">
+				<div id="mapCommandsContentWrapper" class="mapCommandsContent">
+					<div id="mapCommandsContent" class="paddingLeft10">
+						
+						<h5 data-i18nKey="map.load.title">map.load.title</h5>
+						<input type="file" id="files" name="file" />
+						<button data-i18nKey="map.load.finds" onclick="readFile()" title="i18n.map.load.finds.tooltip">map.load.finds</button>
+						<br><br>
+						<input type="checkbox" id="useClustering" onclick="toggleClusterer()" >
+						<label for="useClustering" data-i18nKey="map.use_clustering">map.use_clustering</label>
+						<hr>
+						
+						<h5 data-i18nKey="map.search.title">map.search.title</h5>
+						<input type="text" id="addressSearchTxt" placeholder="" size="30">
+						
+	<!-- 					<button class="ui-button ui-button-text ui-widget ui-state-default ui-corner-all"> -->
+	<!-- 					   <span class="ui-icon ui-icon-search ui-icon-shadow">Button Label</span> -->
+	<!-- 					</button> -->
+						
+						<button id="addressSearchBtn" data-i18nKey="map.search" onclick="searchLocationAndDisplay();">map.search</button>
+						 
+						<hr>
+						
+						<button onclick="clearMap()" data-i18nKey="map.clear">map.clear</button>
+	<!-- 					<hr> -->
+	<!-- 					<input type="text" id="distanceFrom"><br> -->
+	<!-- 					<input type="text" id="distanceTo"> -->
+	<!-- 					<button id="displayDistance" onclick="displayDistance()">dist</button> -->
+						</div>
+					
+					
+					
+				</div>
+				
+				<div id="slider" class="slider sliderOpen" ></div>
+			</div>
+		
+<!-- 			<input id="tradiFilter" type="checkbox" onclick="toggleTraditionalCaches(this.checked)" checked="true" /> -->
+<!-- 			<label for="tradiFilter">Traditional Cache</label> -->
+<!-- 			<br /> -->
+			
+			<div id="map" style="height: 200px; width: 100%"></div>
+		</div>
+
+		<div id="tools">
+			<div>
+				<h4 data-i18nKey="tools.coordinates_convertion">tools.coordinates_convertion</h4>
+				<label>WGS84</label> <img src="images/info_16x16.png"
+					title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
+				<input id="coordCH" type="text" size="16" />
+				<button onclick="CHtoWGS()">&gt;CH1903 - Schweizer Gitter</button>
+				<input id="coordDecimalAngle" type="text" class="numberOrientation" size="26" readonly="readonly"/>
+				<input id="coordDecimalMinutes" type="text" class="numberOrientation" size="30" readonly="readonly"/>
+				<input id="coordAngleMinutesSeconds" type="text" class="numberOrientation" size="36" readonly="readonly"/>
+			</div>
+			<hr>
+		
+			<div>
+				<h4 data-i18nKey="tools.letter_calculation">tools.letter_calculation</h4>
+				<div style="float: left;">
+					<input id="inpCalcLetter" type="text" onkeyup="calculateLetterValuesAndDisplayResults(this.value)" />
+				</div>
+				
+				<div id="calculations" style="float: left;">
+					<ul id="sum" style="margin-top: 0px;" data-i18nKey="tools.sum">tools.sum</ul>
+					<ul id="checksum" data-i18nKey="tools.checksum">tools.checksum</ul>
+					<ul id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">tools.one_digit_checksum</ul>
+				</div>
+			</div>
+			
+			<hr style="clear: both;">
+
+			<div>			
+				<h4 data-i18nKey="tools.caesar_rot13.title">tools.caesar_rot13.title</h4>
+				<table><tr>
+					<td style="vertical-align: top;">
+						<label>ROT</label>
+						
+						<script type="text/javascript">
+							document.writeln('<select id="rotationCount" onclick="calculateRot()" onkeyup="calculateRot()">');
+							
+							for(var x=0; x<26; x++){
+								if(x === 13){
+									document.writeln('<option value="'+ x + '" selected="selected">' + x + '</option>');
+								}else{
+									document.writeln('<option value="'+ x + '">' + x + '</option>');
+								}
+							}
+							
+							document.writeln('</select>');
+
+						</script>
+					</td>
+					<td style="width: 800px;">
+						<textarea id="rotationInput" rows="3" onkeyup="calculateRot()" style="width: 100%;"></textarea>
+						<br><br>
+					</td>
+					<tr>
+						<td><span data-i18nKey="tools.caesar_rot13.result">tools.caesar_rot13.result</span></td>
+						<td><div id="rotationResult" style="width: 100%;"></div></td>
+					</tr>
+				<tr/></table>
+			</div>
+		</div>
+	</div>
+	
+	<div id="footer" style="float: right">
+		Software by <a href="http://www.geocaching.com/profile/">GottfriedEgger</a>
+	</div>
+	
+	<script type="text/javascript" src="scripts/wgs84_ch1903.js"></script>
+	<script type="text/javascript" src="scripts/common.js"></script>
+	<script type="text/javascript" src="scripts/cachingMaps.js"></script>
+	<script type="text/javascript" src="scripts/calculating.js"></script>
+	<script type="text/javascript" src="scripts/coordinates.js"></script>
+
+
+</body>
+</html>

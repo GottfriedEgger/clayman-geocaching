@@ -1,0 +1,48 @@
+hr {
+	margin-top: 24px;	
+}
+
+.numberOrientation{
+	text-align: right;	
+}
+
+.waypointInfoWindow{
+	min-width: 320px;
+	min-height: 90px;
+	padding-top: 5px;
+}
+
+.locationInfoWindow{
+	min-width: 300px;
+	padding-top: 5px;
+}
+
+.mapCommandsContent{
+	height: 100%;
+	width: 390px;
+	float: left;
+/* 	background-color: rgba(255, 255, 255); */
+	background-image: url(../images/75p_white.png);
+}
+
+.paddingLeft10{
+	padding-left: 10px;
+}
+
+.slider{
+	height: 100%;
+	width: 24px;
+	opacity: 0.9;
+	filter:Alpha(opacity=90, finishopacity=60, style=2);
+	float:left;	
+	display: block;
+	background: url('../images/toggle_minus.png') no-repeat 48% #4C4646;
+}
+
+.slider:hover{
+	background-color: grey; 
+}
+
+.sliderOpen{
+	background-image: url('../images/toggle_plus.png');
+}
