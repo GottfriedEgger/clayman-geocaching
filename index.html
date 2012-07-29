@@ -33,9 +33,6 @@
 		jQuery(function($){
 	 		$.mask.definitions['D']='[nNeEsSwW]';
 			$("#coordCH").mask("999999 / 999999");
-// 			$("#coordDecimalAngleMaskedInput").mask("99.999999 99.999999");
-// 			$("#coordDecimalMinutes").mask("D99° 99.999 D99° 99.999");
-// 			$("#coordAngleMinutesSeconds").mask("D99° 99' 99.999' D99° 99' 99.999'");
 		});
 		
 		placeSlider();
@@ -183,32 +180,18 @@
 						<h5 data-i18nKey="map.search.title">map.search.title</h5>
 						<input type="text" id="addressSearchTxt" placeholder="" size="30">
 						
-	<!-- 					<button class="ui-button ui-button-text ui-widget ui-state-default ui-corner-all"> -->
-	<!-- 					   <span class="ui-icon ui-icon-search ui-icon-shadow">Button Label</span> -->
-	<!-- 					</button> -->
-						
 						<button id="addressSearchBtn" data-i18nKey="map.search" onclick="searchLocationAndDisplay();">map.search</button>
 						 
 						<hr>
 						
 						<button onclick="clearMap()" data-i18nKey="map.clear">map.clear</button>
-	<!-- 					<hr> -->
-	<!-- 					<input type="text" id="distanceFrom"><br> -->
-	<!-- 					<input type="text" id="distanceTo"> -->
-	<!-- 					<button id="displayDistance" onclick="displayDistance()">dist</button> -->
-						</div>
-					
-					
+					</div>
 					
 				</div>
 				
 				<div id="slider" class="slider sliderOpen" ></div>
 			</div>
 		
-<!-- 			<input id="tradiFilter" type="checkbox" onclick="toggleTraditionalCaches(this.checked)" checked="true" /> -->
-<!-- 			<label for="tradiFilter">Traditional Cache</label> -->
-<!-- 			<br /> -->
-			
 			<div id="map" style="height: 200px; width: 100%"></div>
 		</div>
 
@@ -283,7 +266,6 @@
 	<script type="text/javascript" src="scripts/cachingMaps.js"></script>
 	<script type="text/javascript" src="scripts/calculating.js"></script>
 	<script type="text/javascript" src="scripts/coordinates.js"></script>
-
 
 </body>
 </html>
