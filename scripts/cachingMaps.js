@@ -54,7 +54,10 @@ var infoWindow = new google.maps.InfoWindow();
         options = {
             center: latLng,
             zoom: 8,
-            mapTypeId: google.maps.MapTypeId.TERRAIN
+            mapTypeId: google.maps.MapTypeId.TERRAIN,
+            navigationControlOptions: {
+            	position: google.maps.ControlPosition.TOP_RIGHT
+            }
         };
 
         map = new google.maps.Map(mapDiv, options);
