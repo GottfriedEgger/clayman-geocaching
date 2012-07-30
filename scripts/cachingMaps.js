@@ -143,25 +143,17 @@ function readFile() {
 
             var xmlDoc = jQuery.parseXML(xmlContentGpx);
             $xml = jQuery(xmlDoc);
+            
             $wpt = $xml.find('wpt').each(function () {
-
-//				var $log = jQuery(this).find('groundspeak\\:log');
-//				var foundType = $log.find('groundspeak\\:type').text();
-
-//				if(foundType && foundType === 'Found it'){
                 var lat = jQuery(this).attr('lat');
                 var lon = jQuery(this).attr('lon');
                 var name = jQuery(this).find('name').text();
                 var urlName = jQuery(this).find('urlname').text();
                 var url = jQuery(this).find('url').text();
                 var type = jQuery(this).find('type').text().split("|")[1];
-//					var foundDate =  $log.find('groundspeak\\:date').text();
-//					foundDate = foundDate.substring(0, foundDate.indexOf('T'));
 
                 var waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type};
-//					var waypoint = {lat: lat,lon: lon, name: name, urlName:urlName, url: url, type: type, foundDate: foundDate };
                 waypoints.push(waypoint);
-//				}
             });
 
             displayWaypoints(waypoints);
@@ -244,14 +236,11 @@ function displayWaypoints(waypoints) {
                     var gcLink = '<a href="' + waypoint.url + '" target="_blank">' + waypoint.urlName + '</a>';
 
                     var content = '<div class="waypointInfoWindow">';
-//					content += ('<span>'+gcLink+'</span>&nbsp;<span style="float: right"> ' + waypoint.name + '</span>') + '<br>';
                     content += '<table>';
                     content += '<tr>';
                     content += '<td>' + gcLink + '</td>';
                     content += '<td>' + waypoint.name + '</td>';
                     content += '</tr><tr>';
-//					content += '<td>'+ jQuery.i18n.prop('map.wpt.found_at') + '</td>';
-//					content += '<td>' + waypoint.foundDate + '</td>';
                     content += '</tr><tr>';
 
                     if (status === google.maps.GeocoderStatus.OK) {
