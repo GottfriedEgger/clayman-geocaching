@@ -166,7 +166,7 @@
 		<!-- tab containers -->
 		<div id="googleMaps">
 			<div id="mapCommands" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;">
-				<div id="mapCommandsContentWrapper" class="mapCommandsContent">
+				<div id="mapCommandsContentWrapper" class="mapCommandsContent overflowScroll">
 					<div id="mapCommandsContent" class="paddingLeft10">
 						
 						<h5 data-i18nKey="map.load.title">map.load.title</h5>
@@ -187,17 +187,27 @@
 						<hr>
 						
 						<h5 data-i18nKey="map.distance.title">map.load.title</h5>
-						<label data-i18nKey="map.distance.from">Von</label>
-						<input type="text" id="distanceFrom"><br>
 						
-						<label data-i18nKey="map.distance.to">Bis</label>
-						<input type="text" id="distanceTo"><br>
-						
-						<label data-i18nKey="map.distance.degrees">Winkel</label>
-						<input type="text" id="angle" disabled="disabled"><br>
-						
-						<button data-i18nKey="map.distance.display" id="displayDistance" onclick="displayDistance()">dist</button>
-						
+						<ul>
+							<li>
+								<label data-i18nKey="map.distance.from">Von</label>
+								<input type="text" id="distanceFrom">
+							</li>
+							<li>						
+								<label data-i18nKey="map.distance.to">Bis</label>
+								<input type="text" id="distanceTo">
+							</li>
+							<li>
+								<label data-i18nKey="map.distance.degrees">Winkel</label>
+								<input type="text" id="angle" disabled="disabled">
+							</li>
+							<li>
+								<label data-i18nKey="map.distance.distance">Distanz</label>
+								<input type="text" id="distance" disabled="disabled">
+							</li>
+						</ul>
+							
+							<button data-i18nKey="map.distance.display" id="displayDistance" onclick="displayDistance()">dist</button>
 					</div>
 				</div>
 				

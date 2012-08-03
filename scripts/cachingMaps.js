@@ -399,7 +399,6 @@ function toggleTraditionalCaches(checked) {
 }
 
 function displayDistance() {
-	
 	infoWindow.close(map);
 	
 	$distanceTo = jQuery("#distanceTo");
@@ -412,9 +411,36 @@ function displayDistance() {
 	if(!geocoder){
 		geocoder = new google.maps.Geocoder();
 	}
-					
+
+	var polyOptions = {
+			strokeColor: '#FF0000',
+			strokeOpacity: 1.0,
+			strokeWeight: 3
+	};
+  
+	if(!straightPolygon){
+		straightPolygon = new google.maps.Polyline(polyOptions);
+		straightPolygon.setMap(map);
+	}else{
+		straightPolygon.getPath().clear();
+	}
+  
+	var geodesicOptions = {
+			strokeColor: '#CC0099',
+			strokeOpacity: 1.0,
+			strokeWeight: 3,
+			geodesic: true
+	};
+  
+	if(!geodesic){
+		geodesic = new google.maps.Polyline(geodesicOptions);
+		geodesic.setMap(map);
+	}else{
+		geodesic.getPath().clear();
+	}
+  
 	var geocoderRequest = {
-		address: distanceFromAddress
+			address: distanceFromAddress
 	};
 	
 	geocoder.geocode(geocoderRequest, function(results, status){
@@ -434,62 +460,46 @@ function displayDistance() {
 			addDestination(latLngTo);
 		}
 	});
-
-  var polyOptions = {
-    strokeColor: '#FF0000',
-    strokeOpacity: 1.0,
-    strokeWeight: 3
-  };
-  
-  straightPolygon = new google.maps.Polyline(polyOptions);
-  straightPolygon.setMap(map);
-  
-  var geodesicOptions = {
-    strokeColor: '#CC0099',
-    strokeOpacity: 1.0,
-    strokeWeight: 3,
-    geodesic: true
-  };
-  
-  geodesic = new google.maps.Polyline(geodesicOptions);
-  geodesic.setMap(map);
 }
 
 function addOrigin(latLng) {
-  clearPaths();
-  var path = straightPolygon.getPath();
-  path.push(latLng);
-  var gPath = geodesic.getPath();
-  gPath.push(latLng);
+	var path = straightPolygon.getPath();
+	path.push(latLng);
+	var gPath = geodesic.getPath();
+	gPath.push(latLng);
 }
 
 function addDestination(latLng) {
-  var path = straightPolygon.getPath();
-  path.push(latLng);
-  var gPath = geodesic.getPath();
-  gPath.push(latLng);
-  adjustHeading();
+	var path = straightPolygon.getPath();
+	path.push(latLng);
+	var gPath = geodesic.getPath();
+	gPath.push(latLng);
+	
+	adjustHeading();
+	adjustDistance();
 }
   
-function clearPaths() {
-  var path = straightPolygon.getPath();
-  while (path.getLength()) {
-    path.pop();
-  }
-  var gPath = geodesic.getPath();
-  while (gPath.getLength()) {
-    gPath.pop();
-  }
-}
-
 function adjustHeading() {
-  var path = straightPolygon.getPath();
-  var pathSize = path.getLength();
-  var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(pathSize - 1));
+	var path = straightPolygon.getPath();
+	var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
   
-  document.getElementById('angle').value = heading;
+	document.getElementById('angle').value = heading.toFixed(5);
 //  latLng = path.getAt(0).lat() + "," + path.getAt(0).lng();
 //  latLng =  path.getAt(pathSize - 1).lat() + "," + path.getAt(pathSize - 1).lng();
+}
+
+function adjustDistance(){
+	var path = straightPolygon.getPath();
+	
+	var distance = google.maps.geometry.spherical.computeDistanceBetween(path.getAt(0), path.getAt(1));
+	
+	if(distance > 2000){
+		distance = (distance / 1000).toFixed(3) + ' km';
+	}else{
+		distance = distance.toFixed(2) + ' m';
+	}
+	
+	document.getElementById('distance').value = distance
 }
 
 
