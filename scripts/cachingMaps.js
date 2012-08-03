@@ -6,8 +6,9 @@ var placesService;
 var gcMarkers = {};
 var geocoder = 0;
 var markerClusterer = 0;
+var straightPolygon;
+var geodesic;
 
-var startInfoWindow = new google.maps.InfoWindow();
 var infoWindow = new google.maps.InfoWindow();
 
 (function () {
@@ -17,7 +18,6 @@ var infoWindow = new google.maps.InfoWindow();
         var locations = [],
             positionalRequest;
 
-        startInfoWindow.close(map);
         infoWindow.close(map);
 
         if (!elevationService) {
@@ -62,9 +62,9 @@ var infoWindow = new google.maps.InfoWindow();
 
         map = new google.maps.Map(mapDiv, options);
 
-        startInfoWindow.setPosition(latLng);
-        startInfoWindow.setContent(jQuery.i18n.prop('map.start_info_window_text'));
-        startInfoWindow.open(map);
+        infoWindow.setPosition(latLng);
+        infoWindow.setContent(jQuery.i18n.prop('map.start_info_window_text'));
+        infoWindow.open(map);
 
         google.maps.event.addListener(map, 'click', function (e) {
             showLocationInfoPopup(e.latLng);
@@ -107,9 +107,6 @@ function setMarkersVisibility(visible) {
 }
 
 function clearMap() {
-    if (startInfoWindow) {
-        startInfoWindow.close(map);
-    }
     if (infoWindow) {
         infoWindow.close(map);
     }
@@ -321,7 +318,6 @@ function placeChangedListener(){
     	latLng = place.geometry.location;
     
 	infoWindow.close(map);
-	startInfoWindow.close(map);
     
     map.setCenter(place.geometry.location);
     map.setZoom(14);
@@ -402,13 +398,9 @@ function toggleTraditionalCaches(checked) {
     });
 }
 
-
-var poly;
-var geodesic;
-var map;
-var clickcount = 0;
-
 function displayDistance() {
+	
+	infoWindow.close(map);
 	
 	$distanceTo = jQuery("#distanceTo");
 	
@@ -417,8 +409,6 @@ function displayDistance() {
 		latLngFrom = 0,
 		latLngTo = 0;
 	
-	infoWindow.close(map);
- 	
 	if(!geocoder){
 		geocoder = new google.maps.Geocoder();
 	}
@@ -451,8 +441,8 @@ function displayDistance() {
     strokeWeight: 3
   };
   
-  poly = new google.maps.Polyline(polyOptions);
-  poly.setMap(map);
+  straightPolygon = new google.maps.Polyline(polyOptions);
+  straightPolygon.setMap(map);
   
   var geodesicOptions = {
     strokeColor: '#CC0099',
@@ -467,23 +457,22 @@ function displayDistance() {
 
 function addOrigin(latLng) {
   clearPaths();
-  var path = poly.getPath();
+  var path = straightPolygon.getPath();
   path.push(latLng);
   var gPath = geodesic.getPath();
   gPath.push(latLng);
 }
 
 function addDestination(latLng) {
-  var path = poly.getPath();
+  var path = straightPolygon.getPath();
   path.push(latLng);
   var gPath = geodesic.getPath();
   gPath.push(latLng);
   adjustHeading();
-  clickcount = 0;
 }
   
 function clearPaths() {
-  var path = poly.getPath();
+  var path = straightPolygon.getPath();
   while (path.getLength()) {
     path.pop();
   }
@@ -494,14 +483,13 @@ function clearPaths() {
 }
 
 function adjustHeading() {
-  var path = poly.getPath();
+  var path = straightPolygon.getPath();
   var pathSize = path.getLength();
   var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(pathSize - 1));
-  document.getElementById('heading').value = heading;
-  document.getElementById('origin').value = path.getAt(0).lat()
-      + "," + path.getAt(0).lng();
-  document.getElementById('destination').value = path.getAt(pathSize - 1).lat()
-      + "," + path.getAt(pathSize - 1).lng();
+  
+  document.getElementById('angle').value = heading;
+//  latLng = path.getAt(0).lat() + "," + path.getAt(0).lng();
+//  latLng =  path.getAt(pathSize - 1).lat() + "," + path.getAt(pathSize - 1).lng();
 }
 
 
