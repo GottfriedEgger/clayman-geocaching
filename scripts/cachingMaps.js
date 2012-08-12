@@ -8,6 +8,7 @@ var geocoder = 0;
 var markerClusterer = 0;
 var straightPolygon;
 var geodesic;
+var bounds = 0;
 
 var infoWindow = new google.maps.InfoWindow();
 
@@ -192,7 +193,7 @@ function isClusteringActivated() {
 }
 
 function displayWaypoints(waypoints) {
-    var bounds = new google.maps.LatLngBounds(),
+    bounds = new google.maps.LatLngBounds(),
         clusteringActivated = isClusteringActivated(),
         x;
 
@@ -400,6 +401,7 @@ function toggleTraditionalCaches(checked) {
 
 function displayDistance() {
 	infoWindow.close(map);
+	bounds = new google.maps.LatLngBounds();
 	
 	$distanceTo = jQuery("#distanceTo");
 	
@@ -467,14 +469,13 @@ function addOrigin(latLng) {
 	path.push(latLng);
 	var gPath = geodesic.getPath();
 	gPath.push(latLng);
+	bounds.extend(latLng);
 }
 
 function addDestination(latLng) {
-	var path = straightPolygon.getPath();
-	path.push(latLng);
-	var gPath = geodesic.getPath();
-	gPath.push(latLng);
+	addOrigin(latLng);
 	
+	map.fitBounds(bounds);
 	adjustHeading();
 	adjustDistance();
 }
@@ -483,9 +484,7 @@ function adjustHeading() {
 	var path = straightPolygon.getPath();
 	var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
   
-	document.getElementById('angle').value = heading.toFixed(5);
-//  latLng = path.getAt(0).lat() + "," + path.getAt(0).lng();
-//  latLng =  path.getAt(pathSize - 1).lat() + "," + path.getAt(pathSize - 1).lng();
+	jQuery('#angle').val(heading.toFixed(5) + ' \u00B0');
 }
 
 function adjustDistance(){
@@ -499,7 +498,7 @@ function adjustDistance(){
 		distance = distance.toFixed(2) + ' m';
 	}
 	
-	document.getElementById('distance').value = distance
+	jQuery('#distance').val(distance);
 }
 
 
