@@ -111,6 +111,13 @@ function clearMap() {
     if (infoWindow) {
         infoWindow.close(map);
     }
+    
+    if(straightPolygon){
+    	straightPolygon.getPath().clear();
+    }
+    if(geodesic){
+    	geodesic.getPath().clear();
+    }
 
     setMarkersVisibility(false);
 
