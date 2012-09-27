@@ -105,7 +105,7 @@
 		var mapHeight = docHeight - mainTitleHeight - tabNavigationHeight - footerHeight - 66;
 		
  		jQuery("#map").height(mapHeight);
-	};
+	}
 	
 	function placeSlider(){
 		var $map = jQuery("#map");
@@ -135,7 +135,7 @@
 				$mapCommandsContentWrapper.css('visibility', 'visible');
 			}
 		});
-	};
+	}
 	
 	function bindHandlers(){
 		jQuery("#addressSearchTxt").keypress(function(event) {
@@ -144,7 +144,7 @@
 				event.preventDefault();
 			}
 		});
-	};
+	}
 	
 </script>
 
@@ -235,7 +235,7 @@
 				</div>
 				
 				<div id="calculations" style="float: left;">
-					<ul id="sum" style="margin-top: 0px;" data-i18nKey="tools.sum">Summe:</ul>
+					<ul id="sum" style="margin-top: 0;" data-i18nKey="tools.sum">Summe:</ul>
 					<ul id="checksum" data-i18nKey="tools.checksum">Quersumme:</ul>
 					<ul id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</ul>
 				</div>
@@ -245,34 +245,36 @@
 
 			<div>			
 				<h4 data-i18nKey="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</h4>
-				<table><tr>
-					<td style="vertical-align: top;">
-						<label>ROT</label>
-						
-						<script type="text/javascript">
-							document.writeln('<select id="rotationCount" onclick="calculateRot()" onkeyup="calculateRot()">');
-							
-							for(var x=0; x<26; x++){
-								if(x === 13){
-									document.writeln('<option value="'+ x + '" selected="selected">' + x + '</option>');
-								}else{
-									document.writeln('<option value="'+ x + '">' + x + '</option>');
-								}
-							}
-							
-							document.writeln('</select>');
+				<table>
+                    <tr>
+                        <td style="vertical-align: top;">
+                            <label>ROT</label>
 
-						</script>
-					</td>
-					<td style="width: 800px;">
-						<textarea id="rotationInput" rows="3" onkeyup="calculateRot()" style="width: 100%;"></textarea>
-						<br><br>
-					</td>
+                            <script type="text/javascript">
+                                document.writeln('<select id="rotationCount" onclick="calculateRot()" onkeyup="calculateRot()">');
+
+                                for(var x=0; x<26; x++){
+                                    if(x === 13){
+                                        document.writeln('<option value="'+ x + '" selected="selected">' + x + '</option>');
+                                    }else{
+                                        document.writeln('<option value="'+ x + '">' + x + '</option>');
+                                    }
+                                }
+
+                                document.writeln('</select>');
+
+                            </script>
+                        </td>
+                        <td style="width: 800px;">
+                            <textarea id="rotationInput" rows="3" onkeyup="calculateRot()" style="width: 100%;"></textarea>
+                            <br><br>
+                        </td>
+                    </tr>
 					<tr>
 						<td><span data-i18nKey="tools.caesar_rot13.result">Resultat:</span></td>
 						<td><div id="rotationResult" style="width: 100%;"></div></td>
 					</tr>
-				<tr/></table>
+				</table>
 			</div>
 		</div>
 	</div>
@@ -281,7 +283,7 @@
 		Software by <a href="http://www.geocaching.com/profile/">GottfriedEgger</a>
 	</div>
 	
-	<script type="text/javascript" src="scripts/wgs84_ch1903.js"></script>
+	<script type="text/javascript" src="scripts/3rdPartyLibs/wgs84_ch1903.js"></script>
 	<script type="text/javascript" src="scripts/common.js"></script>
 	<script type="text/javascript" src="scripts/cachingMaps.js"></script>
 	<script type="text/javascript" src="scripts/calculating.js"></script>
