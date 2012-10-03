@@ -1,8 +1,7 @@
-/*global jQuery, google */
+/*global jQuery, google, convertGoogleLatLngToDecimalMinutes, MarkerClusterer */
 
 var map;
 var autocomplete;
-var placesService;
 var gcMarkers = {};
 var geocoder = 0;
 var markerClusterer = 0;
@@ -14,6 +13,37 @@ var infoWindow = new google.maps.InfoWindow();
 
 (function () {
     var elevationService = 0;
+
+    function getElevationInMeters(elevationResponse, responseStatus) {
+        if (responseStatus === google.maps.ElevationStatus.OK) {
+            if (elevationResponse[0]) {
+                return elevationResponse[0].elevation.toFixed(0);
+            } else {
+                alert("No results found");
+            }
+        } else {
+            alert("Elevation service failed due to: " + responseStatus);
+        }
+    }
+
+    function placeChangedListener(){
+        var place = autocomplete.getPlace(),
+            latLng = place.geometry.location;
+
+        infoWindow.close(map);
+
+        map.setCenter(place.geometry.location);
+        map.setZoom(14);
+
+        var content = '<div class="locationInfoWindow" >';
+        content += place.formatted_address + '<br />';
+        content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
+        content += '</div>';
+
+        infoWindow.setPosition(latLng);
+        infoWindow.setContent(content);
+        infoWindow.open(map);
+    }
 
     function showLocationInfoPopup(latLng) {
         var locations = [],
@@ -27,7 +57,6 @@ var infoWindow = new google.maps.InfoWindow();
 
         locations.push(latLng);
 
-
         positionalRequest = {
             'locations': locations
         };
@@ -35,29 +64,33 @@ var infoWindow = new google.maps.InfoWindow();
         elevationService.getElevationForLocations(positionalRequest, function (elevationResponse, responseStatus) {
             infoWindow.setPosition(latLng);
 
-            var content = '<div class="locationInfoWindow">';
-            content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
-            content += jQuery.i18n.prop('map.elevation') + ': ' + getElevationInMeters(elevationResponse, responseStatus) + ' ' +
-                jQuery.i18n.prop('map.elevation.unit') + '<br>';
-            content += '</div>';
+            var content = '<div id="locationInfoWindow" class="locationInfoWindow">'+
+                '<ul class="formList">' +
+                '<li><label>' + jQuery.i18n.prop('map.position') + ':</label>' +
+                '<span>' + convertGoogleLatLngToDecimalMinutes(latLng) + '</span>' +
+                '</li>' +
+                '<li><label>' + jQuery.i18n.prop('map.elevation') + ':</label>' +
+                '<span>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</span>'+
+                '</ul>' +
+                '</div>';
 
             infoWindow.setContent(content);
             infoWindow.open(map);
-
         });
     }
 
     window.onload = function () {
         var mapDiv = document.getElementById('map'),
             latLng = new google.maps.LatLng(46.8, 7.985),
-            options;
+            options,
+            inputAddress;
 
         options = {
             center: latLng,
             zoom: 8,
             mapTypeId: google.maps.MapTypeId.TERRAIN,
             navigationControlOptions: {
-            	position: google.maps.ControlPosition.TOP_RIGHT
+                position: google.maps.ControlPosition.TOP_RIGHT
             }
         };
 
@@ -72,30 +105,19 @@ var infoWindow = new google.maps.InfoWindow();
         });
 
         markerClusterer = new MarkerClusterer(map);
-        
-        var input = document.getElementById('addressSearchTxt');
-        autocomplete = new google.maps.places.Autocomplete(input);
+
+        inputAddress = document.getElementById('addressSearchTxt');
+        autocomplete = new google.maps.places.Autocomplete(inputAddress);
         autocomplete.bindTo('bounds', map);
-        
+
         google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
     };
-
-    function getElevationInMeters(elevationResponse, responseStatus) {
-        if (responseStatus === google.maps.ElevationStatus.OK) {
-            if (elevationResponse[0]) {
-                return elevationResponse[0].elevation.toFixed(0);
-            } else {
-                alert("No results found");
-            }
-        } else {
-            alert("Elevation service failed due to: " + responseStatus);
-        }
-    }
 
 })();
 
 function setMarkersVisibility(visible) {
     var key, typeArray, x;
+
     for (key in gcMarkers) {
         if (gcMarkers.hasOwnProperty()) {
             typeArray = gcMarkers[key];
@@ -113,10 +135,10 @@ function clearMap() {
     }
     
     if(straightPolygon){
-    	straightPolygon.getPath().clear();
+        straightPolygon.getPath().clear();
     }
     if(geodesic){
-    	geodesic.getPath().clear();
+        geodesic.getPath().clear();
     }
 
     setMarkersVisibility(false);
@@ -191,17 +213,13 @@ function checkFileReadPreconditions(files) {
 }
 
 function isClusteringActivated() {
-    var $selected = jQuery("#useClustering:checked").val();
-
-    if (!$selected) {
-        return false;
-    }
-    return true;
+    return jQuery("#useClustering:checked").val();
 }
 
 function displayWaypoints(waypoints) {
-    bounds = new google.maps.LatLngBounds(),
-        clusteringActivated = isClusteringActivated(),
+    bounds = new google.maps.LatLngBounds();
+
+    var clusteringActivated = isClusteringActivated(),
         x;
 
     for (x = 0; x < waypoints.length; x++) {
@@ -240,13 +258,12 @@ function displayWaypoints(waypoints) {
 
                     var gcLink = '<a href="' + waypoint.url + '" target="_blank">' + waypoint.urlName + '</a>';
 
-                    var content = '<div class="waypointInfoWindow">';
-                    content += '<table>';
-                    content += '<tr>';
-                    content += '<td>' + gcLink + '</td>';
-                    content += '<td>' + waypoint.name + '</td>';
-                    content += '</tr><tr>';
-                    content += '</tr><tr>';
+                    var content = '<div class="cacheInfoWindow">' +
+                                  '<table class="cacheInfoTable" style="border-spacing: 20px 5px;">' +
+                                  '<tr>' +
+                                  '<td>' + gcLink + '</td>' +
+                                  '<td>' + waypoint.name + '</td>' +
+                                  '</tr><tr>';
 
                     if (status === google.maps.GeocoderStatus.OK) {
                         content += '<td>' + jQuery.i18n.prop('map.wpt.location') + '</td>';
@@ -254,10 +271,9 @@ function displayWaypoints(waypoints) {
                     } else {
                         content += '<p>No address could be found. Status = ' + status + '</p>';
                     }
-                    content += '</tr>';
-                    content += '</table>';
-
-                    content += '</div>';
+                    content += '</tr>' +
+                                '</table>'+
+                                '</div>';
 
                     infoWindow.setContent(content);
                     infoWindow.open(map, gcMarker);
@@ -303,7 +319,7 @@ function getDisplayAddress(geocoderRequestResult) {
         }
     }
 
-    var partOfLocation = 0;
+    var partOfLocation;
     if (partOfLocation = partsOfLocation['locality']) {
         displayAddress.push(partOfLocation);
     }
@@ -319,25 +335,6 @@ function getDisplayAddress(geocoderRequestResult) {
     displayAddress.push(partsOfLocation['country']);
 
     return displayAddress.join(", ");
-}
-
-function placeChangedListener(){
-	var place = autocomplete.getPlace(),
-    	latLng = place.geometry.location;
-    
-	infoWindow.close(map);
-    
-    map.setCenter(place.geometry.location);
-    map.setZoom(14);
-
-    var content = '<div class="locationInfoWindow" >';
-    content += place.formatted_address + '<br />';
-	content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
-	content += '</div>';
-	
-	infoWindow.setPosition(latLng);
-	infoWindow.setContent(content);
-	infoWindow.open(map);
 }
 
 function searchLocationAndDisplay(){
@@ -376,21 +373,23 @@ function searchLocationAndDisplay(){
 
 function toggleClusterer() {
 
+    var x, key, typeArray;
+
     if (markerClusterer.getMarkers().length > 0) {
         markerClusterer.clearMarkers();
 
-        for (var key in gcMarkers) {
-            var typeArray = gcMarkers[key];
+        for (key in gcMarkers) {
+            typeArray = gcMarkers[key];
 
-            for (var x = 0; x < typeArray.length; x++) {
+            for (x = 0; x < typeArray.length; x++) {
                 typeArray[x].setMap(map);
             }
         }
     } else {
-        for (var key in gcMarkers) {
-            var typeArray = gcMarkers[key];
+        for (key in gcMarkers) {
+            typeArray = gcMarkers[key];
 
-            for (var x = 0; x < typeArray.length; x++) {
+            for (x = 0; x < typeArray.length; x++) {
                 markerClusterer.addMarker(typeArray[x]);
             }
         }
@@ -415,7 +414,8 @@ function displayDistance() {
 	var distanceFromAddress = jQuery("#distanceFrom").val(),
 		distanceToAddress = jQuery("#distanceTo").val(),
 		latLngFrom = 0,
-		latLngTo = 0;
+		latLngTo = 0,
+        geocoderRequest;
 	
 	if(!geocoder){
 		geocoder = new google.maps.Geocoder();
@@ -448,7 +448,7 @@ function displayDistance() {
 		geodesic.getPath().clear();
 	}
   
-	var geocoderRequest = {
+	geocoderRequest = {
 			address: distanceFromAddress
 	};
 	
@@ -459,7 +459,7 @@ function displayDistance() {
 		}
 	});
 	
-	var geocoderRequest = {
+	geocoderRequest = {
 		address: distanceToAddress
 	};
 	
@@ -507,7 +507,3 @@ function adjustDistance(){
 	
 	jQuery('#distance').val(distance);
 }
-
-
-
-

@@ -4,21 +4,68 @@ hr {
 
 ul{
 	list-style-type: none;
-	padding-left: 0px;
+	padding-left: 0;
+}
+
+ul.formList {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.formList li {
+    margin: 0 5px 5px 0;
+    overflow: hidden;
+}
+
+ul.formList li label, ul.formList li p {
+    float: left;
+    margin-left: 0;
+    margin-top: 2px;
+    padding-left: 0;
+    white-space: normal;
+    width: 23%;
+}
+label {
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+ul.mediumLabel li label {
+    width: 35%;
+}
+
+ul.formList li span {
+    display: block;
+    margin-left: 30%;
+    padding-left: 10px;
 }
 
 .numberOrientation{
 	text-align: right;	
 }
 
-.waypointInfoWindow{
-	min-width: 320px;
+.cacheInfoWindow {
+	min-width: 400px;
 	min-height: 90px;
 	padding-top: 5px;
+    font-size: 15px;
 }
 
-.locationInfoWindow{
-	min-width: 300px;
+.cacheInfoTable {
+    width: 100%;
+}
+
+.cacheInfoTable td:first-child{
+    text-align: left;
+}
+
+.cacheInfoTable td:last-child{
+    text-align: right;
+}
+
+.locationInfoWindow {
+	min-width: 360px;
 	padding-top: 5px;
 }
 
@@ -38,7 +85,7 @@ ul{
 	height: 100%;
 	width: 24px;
 	opacity: 0.9;
-	filter:Alpha(opacity=90, finishopacity=60, style=2);
+	filter: Alpha(opacity=90, finishopacity=60, style=2);
 	float:left;	
 	display: block;
 	background: url('../images/toggle_minus.png') no-repeat 48% #4C4646;
