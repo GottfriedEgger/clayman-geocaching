@@ -1,4 +1,4 @@
-/*global jQuery */
+/*global jQuery, CHtoWGSlat */
 
 function getDirection(decimalAngle, lat) {
     var direction;
@@ -27,10 +27,9 @@ function convertDecimalAngleToDecimalMinutes(decimalAngle, lat) {
         decimalPlaces = decimalAngle - angle,
         minutesDecimal = decimalPlaces * 60,
         minutes = Math.floor(minutesDecimal),
-        decimal = parseFloat((minutesDecimal - minutes)),
-        decimalMinutes = direction + angle + '° ' + (minutes + decimal).toFixed(3);
+        decimal = parseFloat((minutesDecimal - minutes));
 
-    return decimalMinutes;
+    return decimalMinutes = direction + angle + '° ' + (minutes + decimal).toFixed(3);
 }
 
 // i.e. N46° 56' 53.52" E7° 23' 12.84"
@@ -42,10 +41,9 @@ function convertDecimalAngleToAngleMinutesSeconds(decimalAngle, lat) {
         decimalPlaces = decimalAngle - angle,
         minutesDecimal = decimalPlaces * 60,
         minutes = Math.floor(minutesDecimal),
-        seconds = (parseFloat(minutesDecimal - minutes) * 60).toFixed(3),
-        angleMinutesSeconds = direction + angle + '° ' + minutes + '\' ' + seconds + '\'\'';
+        seconds = (parseFloat(minutesDecimal - minutes) * 60).toFixed(3);
 
-    return angleMinutesSeconds;
+    return direction + angle + '° ' + minutes + '\' ' + seconds + '\'\'';
 }
 
 function CHtoWGS() {
@@ -61,13 +59,13 @@ function CHtoWGS() {
 
     jQuery('#coordDecimalAngle').val(lat + ' ' + lng);
 
-    jQuery('#coordDecimalMinutes').val(//
-        convertDecimalAngleToDecimalMinutes(lat, true) + ' ' + convertDecimalAngleToDecimalMinutes(lng, false));
+    jQuery('#coordDecimalMinutes').val(
+        convertDecimalAngleToDecimalMinutes(lat, true) + ' ' + convertDecimalAngleToDecimalMinutes(lng, false)
+    );
 
-    jQuery('#coordAngleMinutesSeconds').val(//
-        convertDecimalAngleToAngleMinutesSeconds(lat, true) + ' ' + convertDecimalAngleToAngleMinutesSeconds(lng, false));
-
-
+    jQuery('#coordAngleMinutesSeconds').val(
+        convertDecimalAngleToAngleMinutesSeconds(lat, true) + ' ' + convertDecimalAngleToAngleMinutesSeconds(lng, false)
+    );
 }
 
 function convertGoogleLatLngToDecimalMinutes(latLng) {
