@@ -168,19 +168,31 @@ function readFile() {
             var xmlContentGpx = evt.target.result,
                 waypoints = [];
 
-            var xmlDoc = jQuery.parseXML(xmlContentGpx);
-            $xml = jQuery(xmlDoc);
-            
-            $wpt = $xml.find('wpt').each(function () {
-                var lat = jQuery(this).attr('lat');
-                var lon = jQuery(this).attr('lon');
-                var name = jQuery(this).find('name').text();
-                var urlName = jQuery(this).find('urlname').text();
-                var url = jQuery(this).find('url').text();
-                var type = jQuery(this).find('type').text().split("|")[1];
+            var xmlDoc = jQuery.parseXML( xmlContentGpx ),
+            $xml = jQuery( xmlDoc );
 
-                var waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type};
-                waypoints.push(waypoint);
+            $wpt = $xml.find('wpt').each(function () {
+                var foundType, foundDate;
+
+                jQuery(this).find("groundspeak\\:logs, logs").each(function(){
+                   foundType = jQuery(this).find("groundspeak\\:type, type").text();
+                   foundDate = jQuery(this).find("groundspeak\\:date, date").text();
+                   foundDate = foundDate.substring(0, foundDate.indexOf('T'));
+                });
+
+                if(foundType && foundType === 'Found it'){
+                    var lat = jQuery(this).attr('lat');
+                    var lon = jQuery(this).attr('lon');
+                    var name = jQuery(this).find('name').text();
+                    var urlName = jQuery(this).find('urlname').text();
+                    var url = jQuery(this).find('url').text();
+                    var type = jQuery(this).find('type').text().split("|")[1];
+
+                    var waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type,
+                        foundDate: foundDate};
+                    waypoints.push(waypoint);
+                }
+
             });
 
             displayWaypoints(waypoints);
@@ -271,6 +283,12 @@ function displayWaypoints(waypoints) {
                     } else {
                         content += '<p>No address could be found. Status = ' + status + '</p>';
                     }
+
+                    content += '<tr>' +
+                               '<td>' + jQuery.i18n.prop('map.wpt.found_at') + '</td>' +
+                               '<td>' + waypoint.foundDate +'</td>' +
+                               '</tr>';
+
                     content += '</tr>' +
                                 '</table>'+
                                 '</div>';
