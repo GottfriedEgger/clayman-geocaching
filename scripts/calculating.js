@@ -36,6 +36,7 @@ function calculateLetterValues(inputText) {
 
 function displayCalculationResults(output) {
     var x, $outputUl, ulText, currentLabel, text;
+
     for (x = 0; x < output.length; x++) {
         $outputUl = jQuery('#' + output[x].id);
         ulText = $outputUl.text();
@@ -45,14 +46,42 @@ function displayCalculationResults(output) {
     }
 }
 
-function calculateLetterValuesAndDisplayResults(inputText) {
+function calculateLetterValuesAndDisplayResults() {
 
-    var sum = calculateLetterValues(inputText),
+    var inputText = jQuery('#calcLetterInp').val(),
+        singleLetterMode = jQuery('#singleLetterMode:checked').val(),
+        sum,
+        sumEach = [],
+        checksumEach = [],
+        subtotal,
+        letter,
         output = [];
 
-    output.push({id: 'sum', value: sum});
-    output.push({id: 'checksum', value: sum.getChecksum()});
-    output.push({id: 'oneDigitChecksum', value: sum.getOneDigitChecksum()});
+    if(singleLetterMode){
+        letter = inputText.substring(0,1);
+
+        for (x = 0; x < inputText.length; x++) {
+            letter = inputText.substring(x, x+1);
+            subtotal = calculateLetterValues(letter);
+
+            if(subtotal > 0){
+                sumEach.push(calculateLetterValues(letter));
+                checksumEach.push(subtotal.getChecksum());
+            }
+        }
+
+        output.push({id: 'sum', value: sumEach.join(", ")});
+        output.push({id: 'checksum', value: checksumEach.join(", ")});
+        output.push({id: 'oneDigitChecksum', value: ''});
+
+    }else{
+        sum = calculateLetterValues(inputText);
+
+        output.push({id: 'sum', value: sum});
+        output.push({id: 'checksum', value: sum.getChecksum()});
+        output.push({id: 'oneDigitChecksum', value: sum.getOneDigitChecksum()});
+    }
+
 
     displayCalculationResults(output);
 }
@@ -91,7 +120,6 @@ function calculateRot() {
         charAtPosition = rotationInput.charAt(x);
         rot = charAtPosition;
         index = alphabet.indexOf(charAtPosition);
-
 
         if (index >= 0) {
             rot = alphabet.charAt(index + rotationCount) % alphabet.length;

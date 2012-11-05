@@ -79,19 +79,19 @@
 						<h5 data-i18nKey="map.distance.title">Gefundene Caches darstellen</h5>
 						<ul>
 							<li>
-								<label data-i18nKey="map.distance.from">Von:</label>
+								<label for="distanceFrom" data-i18nKey="map.distance.from">Von:</label>
 								<input type="text" id="distanceFrom">
 							</li>
 							<li>						
-								<label data-i18nKey="map.distance.to">Bis:</label>
+								<label for="distanceTo" data-i18nKey="map.distance.to">Bis:</label>
 								<input type="text" id="distanceTo">
 							</li>
 							<li>
-								<label data-i18nKey="map.distance.degrees">Winkel:</label>
+								<label for="angle" data-i18nKey="map.distance.degrees">Winkel:</label>
 								<input type="text" id="angle" disabled="disabled">
 							</li>
 							<li>
-								<label data-i18nKey="map.distance.distance">Distanz:</label>
+								<label for="distance" data-i18nKey="map.distance.distance">Distanz:</label>
 								<input type="text" id="distance" disabled="disabled">
 							</li>
 						</ul>
@@ -112,7 +112,7 @@
 		<div id="tools">
 			<div>
 				<h4 data-i18nKey="tools.coordinates_convertion">Koordinaten konvertieren</h4>
-				<label>WGS84</label> <img src="images/info_16x16.png"
+				<label for="coordCH">WGS84</label> <img src="images/info_16x16.png"
 					title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
 				<input id="coordCH" type="text" size="16" />
 				<button onclick="CHtoWGS()">&gt;CH1903 - Schweizer Gitter</button>
@@ -124,14 +124,25 @@
 		
 			<div>
 				<h4 data-i18nKey="tools.letter_calculation">Buchstabenwerte berechnen</h4>
-				<div style="float: left;">
-					<input id="inpCalcLetter" type="text" onkeyup="calculateLetterValuesAndDisplayResults(this.value)" />
+				<div class="box_left">
+                    <ul>
+                        <li>
+					        <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults()" />
+                        </li>
+                        <li>
+                            <input id="singleLetterMode" type="checkbox"
+                                   onclick="calculateLetterValuesAndDisplayResults()">
+                            <label for="singleLetterMode" data-i18nKey="tools.single_letter_mode">Buchstaben einzeln</label>
+                        </li>
+                    </ul>
 				</div>
 				
 				<div id="calculations" style="float: left;">
-					<ul id="sum" style="margin-top: 0;" data-i18nKey="tools.sum">Summe:</ul>
-					<ul id="checksum" data-i18nKey="tools.checksum">Quersumme:</ul>
-					<ul id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</ul>
+                    <ul>
+                        <li id="sum" style="margin-top: 0;" data-i18nKey="tools.sum">Summe:</li>
+                        <li id="checksum" data-i18nKey="tools.checksum">Quersumme:</li>
+                        <li id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</li>
+                    </ul>
 				</div>
 			</div>
 			
