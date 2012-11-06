@@ -11,6 +11,49 @@ var bounds = 0;
 
 var infoWindow = new google.maps.InfoWindow();
 
+var roadMapStyleOff = {
+    featureType: "road",
+    elementType: "all",
+    stylers: [
+        { visibility: "off" }
+    ]
+};
+var landscapeMapStyleOff = {
+    featureType: "landscape",
+    elementType: "all",
+    stylers: [
+        { visibility: "off" }
+    ]
+};
+var administrativeMapStyleOff = {
+    featureType: "administrative",
+    elementType: "all",
+    stylers: [
+        { visibility: "off" }
+    ]
+};
+var countryMapStyleOn = {
+    featureType: "administrative.country",
+    elementType: "all",
+    stylers: [
+        { visibility: "on" }
+    ]
+};
+var poiMapStyleOff = {
+    featureType: "poi",
+    elementType: "all",
+    stylers: [
+        { visibility: "off" }
+    ]
+};
+var waterLabelMapStyleOff = {
+    featureType: "water",
+    elementType: "labels",
+    stylers: [
+        { visibility: "off" }
+    ]
+};
+
 (function () {
     var elevationService = 0;
 
@@ -93,7 +136,6 @@ var infoWindow = new google.maps.InfoWindow();
                 position: google.maps.ControlPosition.TOP_RIGHT
             }
         };
-
         map = new google.maps.Map(mapDiv, options);
 
         infoWindow.setPosition(latLng);
@@ -524,4 +566,45 @@ function adjustDistance(){
 	}
 	
 	jQuery('#distance').val(distance);
+}
+
+function showOnlyBorders(){
+    var showRoads = jQuery('#showRoads:checked').val(),
+        showLandscape = jQuery('#showLandscape:checked').val(),
+        showAdministratives = jQuery('#showAdministratives:checked').val(),
+        showPois = jQuery('#showPois:checked').val(),
+        showWaterLabels = jQuery('#showWaterLabels:checked').val(),
+        mapStyle = [],
+        styledMapOptions;
+
+    if(!showRoads){
+        mapStyle.push(roadMapStyleOff);
+    }
+    if(!showLandscape){
+        mapStyle.push(landscapeMapStyleOff);
+    }
+    if(!showAdministratives){
+        mapStyle.push(administrativeMapStyleOff);
+        mapStyle.push(countryMapStyleOn);
+    }
+    if(!showPois){
+        mapStyle.push(poiMapStyleOff);
+    }
+    if(!showWaterLabels){
+        mapStyle.push(waterLabelMapStyleOff);
+    }
+
+
+    styledMapOptions = {
+        name: "customMapStyle"
+    };
+
+
+    var myMapType = new google.maps.StyledMapType(
+        mapStyle, styledMapOptions);
+
+    map.mapTypes.set('customMapStyle', myMapType);
+    map.setMapTypeId('customMapStyle');
+
+
 }
