@@ -35,14 +35,12 @@ function calculateLetterValues(inputText) {
 }
 
 function displayCalculationResults(output) {
-    var x, $outputUl, ulText, currentLabel, text;
+    var x, $label, $spanForResultValue;
 
     for (x = 0; x < output.length; x++) {
-        $outputUl = jQuery('#' + output[x].id);
-        ulText = $outputUl.text();
-        currentLabel = ulText.substring(0, ulText.indexOf(':'));
-        text = currentLabel + ': ' + output[x].value;
-        $outputUl.text(text);
+        $label = jQuery('#' + output[x].id);
+        $spanForResultValue = $label.next();
+        $spanForResultValue.text(output[x].value);
     }
 }
 

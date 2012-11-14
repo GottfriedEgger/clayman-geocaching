@@ -113,36 +113,6 @@
                             <li>
 						        <button onclick="clearMap()" data-i18nKey="map.clear">Karte leeren</button>
                             </li>
-                            <li>
-                                <input type="checkbox" id="showRoads" onclick="showOnlyBorders()" checked>
-                                <span>
-                                    <label for="showRoads">roads</label>
-                                </span>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="showLandscape" onclick="showOnlyBorders()" checked>
-                                <span>
-                                    <label for="showLandscape">landscape</label>
-                                </span>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="showAdministratives" onclick="showOnlyBorders()" checked>
-                                <span>
-                                    <label for="showAdministratives">administrative</label>
-                                </span>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="showPois" onclick="showOnlyBorders()" checked>
-                                <span>
-                                    <label for="showPois">POI</label>
-                                </span>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="showWaterLabels" onclick="showOnlyBorders()" checked>
-                                <span>
-                                    <label for="showWaterLabels">water</label>
-                                </span>
-                            </li>
                         </ul>
 
 					</div>
@@ -175,10 +145,22 @@
 				
 				<div id="calculations" style="float: left;">
                     <ul>
-                        <li id="sum" data-i18nKey="tools.sum">Summe:</li>
-                        <li id="singleLetterValue" data-i18nKey="tools.single_letters">Buchstaben einzeln:</li>
-                        <li id="checksum" data-i18nKey="tools.checksum">Quersumme:</li>
-                        <li id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</li>
+                        <li>
+                            <label id="sum" data-i18nKey="tools.sum">Summe:</label>
+                            <span></span>
+                        </li>
+                        <li>
+                            <label id="singleLetterValue" data-i18nKey="tools.single_letters">Buchstaben einzeln:</label>
+                            <span></span>
+                        </li>
+                        <li>
+                            <label id="checksum" data-i18nKey="tools.checksum">Quersumme:</label>
+                            <span></span>
+                        </li>
+                        <li>
+                            <label id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</label>
+                            <span></span>
+                        </li>
                     </ul>
 				</div>
 			</div>
