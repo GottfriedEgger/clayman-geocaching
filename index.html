@@ -107,8 +107,6 @@
 						<button data-i18nKey="map.distance.display" id="displayDistance" onclick="displayDistance()">Distanz anzeigen</button>
 						
 						<hr>
-                        <h5>Karteneinstellungen</h5>
-
                         <ul>
                             <li>
 						        <button onclick="clearMap()" data-i18nKey="map.clear">Karte leeren</button>
@@ -144,24 +142,24 @@
 				</div>
 				
 				<div id="calculations" style="float: left;">
-                    <ul>
-                        <li>
+                    <dl class="dlCalculation">
+                        <dt>
                             <label id="sum" data-i18nKey="tools.sum">Summe:</label>
-                            <span></span>
-                        </li>
-                        <li>
+                        </dt>
+                        <dd></dd>
+                        <dt>
                             <label id="singleLetterValue" data-i18nKey="tools.single_letters">Buchstaben einzeln:</label>
-                            <span></span>
-                        </li>
-                        <li>
+                        </dt>
+                        <dd></dd>
+                        <dt>
                             <label id="checksum" data-i18nKey="tools.checksum">Quersumme:</label>
-                            <span></span>
-                        </li>
-                        <li>
+                        </dt>
+                        <dd></dd>
+                        <dt>
                             <label id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</label>
-                            <span></span>
-                        </li>
-                    </ul>
+                        </dt>
+                        <dd></dd>
+                    </dl>
 				</div>
 			</div>
 			

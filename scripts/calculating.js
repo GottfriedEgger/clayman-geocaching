@@ -35,12 +35,16 @@ function calculateLetterValues(inputText) {
 }
 
 function displayCalculationResults(output) {
-    var x, $label, $spanForResultValue;
+    var x, $displayNode;
 
     for (x = 0; x < output.length; x++) {
-        $label = jQuery('#' + output[x].id);
-        $spanForResultValue = $label.next();
-        $spanForResultValue.text(output[x].value);
+        $displayNode = jQuery('#' + output[x].id).parent().next();
+
+        if(output[x].value !== 0){
+            $displayNode.text(output[x].value);
+        }else{
+            $displayNode.text('');
+        }
     }
 }
 

@@ -1,5 +1,14 @@
 hr {
-	margin-top: 24px;	
+	margin-top: 24px;
+}
+
+dl{
+    margin-top: 0px;
+}
+
+dt {
+    clear: left;
+    float: left;
 }
 
 ul{
@@ -27,9 +36,18 @@ ul.formList li label, ul.formList li p {
     white-space: normal;
     width: 23%;
 }
+
 label {
     font-weight: bold;
     margin-right: 4px;
+}
+
+.dlCalculation dt{
+    width: 250px;
+}
+
+.dlCalculation dd{
+    margin-left: 250px;
 }
 
 ul.mediumLabel li label {
