@@ -34,7 +34,7 @@ var administrativeMapStyleOff = {
 };
 var countryMapStyleOn = {
     featureType: "administrative.country",
-    elementType: "all",
+    elementType: "geometry",
     stylers: [
         { visibility: "on" }
     ]
@@ -56,6 +56,26 @@ var waterLabelMapStyleOff = {
 
 (function () {
     var elevationService = 0;
+
+    function addSimpleMapType(){
+        var mapStyle = [];
+
+        mapStyle.push(roadMapStyleOff);
+        mapStyle.push(landscapeMapStyleOff);
+        mapStyle.push(administrativeMapStyleOff);
+        mapStyle.push(countryMapStyleOn);
+        mapStyle.push(poiMapStyleOff);
+        mapStyle.push(waterLabelMapStyleOff);
+
+        var simpleStyledMap = new google.maps.StyledMapType(mapStyle,
+            {name: "Simple Map"});
+
+
+        map.mapTypes.set('simple_map_style', simpleStyledMap);
+//        map.getMapTypeIds.push('simple_map_style')
+//        map.setMapTypeId('simple_map_style');
+
+    }
 
     function getElevationInMeters(elevationResponse, responseStatus) {
         if (responseStatus === google.maps.ElevationStatus.OK) {
@@ -132,6 +152,9 @@ var waterLabelMapStyleOff = {
             center: latLng,
             zoom: 8,
             mapTypeId: google.maps.MapTypeId.TERRAIN,
+            mapTypeControlOptions: {
+                mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID, 'simple_map_style']
+            },
             navigationControlOptions: {
                 position: google.maps.ControlPosition.TOP_RIGHT
             }
@@ -145,6 +168,8 @@ var waterLabelMapStyleOff = {
         google.maps.event.addListener(map, 'click', function (e) {
             showLocationInfoPopup(e.latLng);
         });
+
+        addSimpleMapType();
 
         markerClusterer = new MarkerClusterer(map);
 
@@ -572,45 +597,4 @@ function adjustDistance(){
 	}
 	
 	jQuery('#distance').val(distance);
-}
-
-function showOnlyBorders(){
-    var showRoads = jQuery('#showRoads:checked').val(),
-        showLandscape = jQuery('#showLandscape:checked').val(),
-        showAdministratives = jQuery('#showAdministratives:checked').val(),
-        showPois = jQuery('#showPois:checked').val(),
-        showWaterLabels = jQuery('#showWaterLabels:checked').val(),
-        mapStyle = [],
-        styledMapOptions;
-
-    if(!showRoads){
-        mapStyle.push(roadMapStyleOff);
-    }
-    if(!showLandscape){
-        mapStyle.push(landscapeMapStyleOff);
-    }
-    if(!showAdministratives){
-        mapStyle.push(administrativeMapStyleOff);
-        mapStyle.push(countryMapStyleOn);
-    }
-    if(!showPois){
-        mapStyle.push(poiMapStyleOff);
-    }
-    if(!showWaterLabels){
-        mapStyle.push(waterLabelMapStyleOff);
-    }
-
-
-    styledMapOptions = {
-        name: "customMapStyle"
-    };
-
-
-    var myMapType = new google.maps.StyledMapType(
-        mapStyle, styledMapOptions);
-
-    map.mapTypes.set('customMapStyle', myMapType);
-    map.setMapTypeId('customMapStyle');
-
-
 }

@@ -35,52 +35,47 @@ function calculateLetterValues(inputText) {
 }
 
 function displayCalculationResults(output) {
-    var x, $outputUl, ulText, currentLabel, text;
+    var x, $displayNode;
 
     for (x = 0; x < output.length; x++) {
-        $outputUl = jQuery('#' + output[x].id);
-        ulText = $outputUl.text();
-        currentLabel = ulText.substring(0, ulText.indexOf(':'));
-        text = currentLabel + ': ' + output[x].value;
-        $outputUl.text(text);
+        $displayNode = jQuery('#' + output[x].id).parent().next();
+
+        if(output[x].value !== 0){
+            $displayNode.text(output[x].value);
+        }else{
+            $displayNode.text('');
+        }
     }
 }
 
 function calculateLetterValuesAndDisplayResults() {
 
     var inputText = jQuery('#calcLetterInp').val(),
-        singleLetterMode = jQuery('#singleLetterMode:checked').val(),
         sum,
         sumEach = [],
-        checksumEach = [],
         subtotal,
         letter,
         output = [];
 
-    if(singleLetterMode){
-        letter = inputText.substring(0,1);
 
-        for (x = 0; x < inputText.length; x++) {
-            letter = inputText.substring(x, x+1);
-            subtotal = calculateLetterValues(letter);
+    letter = inputText.substring(0,1);
 
-            if(subtotal > 0){
-                sumEach.push(calculateLetterValues(letter));
-                checksumEach.push(subtotal.getChecksum());
-            }
+    for (x = 0; x < inputText.length; x++) {
+        letter = inputText.substring(x, x+1);
+        subtotal = calculateLetterValues(letter);
+
+        if(subtotal > 0){
+            sumEach.push(calculateLetterValues(letter));
         }
-
-        output.push({id: 'sum', value: sumEach.join(", ")});
-        output.push({id: 'checksum', value: checksumEach.join(", ")});
-        output.push({id: 'oneDigitChecksum', value: ''});
-
-    }else{
-        sum = calculateLetterValues(inputText);
-
-        output.push({id: 'sum', value: sum});
-        output.push({id: 'checksum', value: sum.getChecksum()});
-        output.push({id: 'oneDigitChecksum', value: sum.getOneDigitChecksum()});
     }
+
+    sum = calculateLetterValues(inputText);
+
+
+    output.push({id: 'sum', value: sum});
+    output.push({id: 'singleLetterValue', value: sumEach.join(", ")});
+    output.push({id: 'checksum', value: sum.getChecksum()});
+    output.push({id: 'oneDigitChecksum', value: sum.getOneDigitChecksum()});
 
 
     displayCalculationResults(output);
