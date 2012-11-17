@@ -214,12 +214,13 @@ function readFile() {
             $xml = jQuery( xmlDoc );
 
             $wpt = $xml.find('wpt').each(function () {
-                var foundType, foundDate;
+                var foundType, logDate, logText;
 
                 jQuery(this).find("groundspeak\\:logs, logs").each(function(){
                    foundType = jQuery(this).find("groundspeak\\:type, type").text();
-                   foundDate = jQuery(this).find("groundspeak\\:date, date").text();
-                   foundDate = foundDate.substring(0, foundDate.indexOf('T'));
+                   logDate = jQuery(this).find("groundspeak\\:date, date").text();
+                   logDate = logDate.substring(0, logDate.indexOf('T'));
+                   logText = jQuery(this).find("groundspeak\\:text, text").text();
                 });
 
                 if(foundType && foundType === 'Found it'){
@@ -231,7 +232,7 @@ function readFile() {
                     var type = jQuery(this).find('type').text().split("|")[1];
 
                     var waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type,
-                        foundDate: foundDate};
+                        logDate: logDate, logText: logText};
                     waypoints.push(waypoint);
                 }
 
@@ -328,7 +329,12 @@ function displayWaypoints(waypoints) {
 
                     content += '<tr>' +
                                '<td>' + jQuery.i18n.prop('map.wpt.found_at') + '</td>' +
-                               '<td>' + waypoint.foundDate +'</td>' +
+                               '<td>' + waypoint.logDate +'</td>' +
+                               '</tr>';
+
+                    content += '<tr>' +
+                               '<td>' + jQuery.i18n.prop('map.wpt.log_text') + '</td>' +
+                               '<td>' + waypoint.logText.substring(0, 20) +'...</td>' +
                                '</tr>';
 
                     content += '</tr>' +
