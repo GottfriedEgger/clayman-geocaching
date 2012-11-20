@@ -15,23 +15,39 @@ function replaceChars(string) {
     return string;
 }
 
-function calculateLetterValues(inputText) {
+function add(number1, number2){
+    return number1 + number2;
+}
+
+function multiply(number1, number2){
+    return number1 * number2;
+}
+
+function calculateLetterValues(inputText, operand) {
+
+    var operationResult = null,
+        x,
+        charCode,
+        letterValue;
 
     inputText = inputText.toUpperCase();
     inputText = replaceChars(inputText);
-    var sum = 0,
-        x,
-        charCode;
 
     for (x = 0; x < inputText.length; x++) {
         charCode = inputText.charCodeAt(x);
 
         if (charCode >= 65 && charCode <= 90) {
-            sum += inputText.charCodeAt(x) - 64;
+            letterValue = charCode - 64;
+
+            if(operationResult === null){
+                operationResult = letterValue;
+            }else{
+                operationResult = operand(operationResult, letterValue);
+            }
         }
     }
 
-    return sum;
+    return operationResult;
 }
 
 function displayCalculationResults(output) {
@@ -52,6 +68,7 @@ function calculateLetterValuesAndDisplayResults() {
 
     var inputText = jQuery('#calcLetterInp').val(),
         sum,
+        product,
         sumEach = [],
         subtotal,
         letter,
@@ -62,18 +79,20 @@ function calculateLetterValuesAndDisplayResults() {
 
     for (x = 0; x < inputText.length; x++) {
         letter = inputText.substring(x, x+1);
-        subtotal = calculateLetterValues(letter);
+        subtotal = calculateLetterValues(letter, add);
 
         if(subtotal > 0){
-            sumEach.push(calculateLetterValues(letter));
+            sumEach.push(calculateLetterValues(letter, add));
         }
     }
 
-    sum = calculateLetterValues(inputText);
+    sum = calculateLetterValues(inputText, add);
+    product = calculateLetterValues(inputText, multiply);
 
 
     output.push({id: 'sum', value: sum});
     output.push({id: 'singleLetterValue', value: sumEach.join(", ")});
+    output.push({id: 'product', value: product });
     output.push({id: 'checksum', value: sum.getChecksum()});
     output.push({id: 'oneDigitChecksum', value: sum.getOneDigitChecksum()});
 
