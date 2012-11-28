@@ -47,13 +47,13 @@
 <body>
 	<div id="tabs" class="tabs">
 	
-		<h2 id="mainTitle" data-i18nKey="main.title">GottfriedEgger's Geocaching page</h2>
+		<h2 id="mainTitle" data-i18n-key="main.title">GottfriedEgger's Geocaching page</h2>
 		<span style="float: right"><a href="#" onclick="translatePage('en');">EN</a> | <a href="#" onclick="translatePage('de');">DE</a></span>
 		
 		<!-- tabs -->
 		<ul class="tabNavigation">
-			<li><a href="#googleMaps" data-i18nKey="tab.maps">Google Maps</a></li>
-			<li><a href="#tools" data-i18nKey="tab.tools">Tools</a></li>
+			<li><a href="#googleMaps" data-i18n-key="tab.maps">Google Maps</a></li>
+			<li><a href="#tools" data-i18n-key="tab.tools">Tools</a></li>
 		</ul>
 
 		<!-- tab containers -->
@@ -62,54 +62,59 @@
 				<div id="mapCommandsContentWrapper" class="mapCommandsContent overflowScroll">
 					<div id="mapCommandsContent" class="paddingLeft10">
 						
-						<h5 data-i18nKey="map.load.title">Gefundene Caches darstellen</h5>
+						<h5 data-i18n-key="map.load.title">Gefundene Caches darstellen</h5>
 						<input type="file" id="files" name="file" />
-						<button data-i18nKey="map.load.finds" onclick="readFile()" title="i18n.map.load.finds.tooltip">Lade gefundene Caches</button>
+						<button data-i18n-key="map.load.finds" data-i18n-title-key="map.load.finds.tooltip"
+                                title="Lade das Pocket Query 'meine Funde'" onclick="readFile()" >
+                            Lade gefundene Caches
+                        </button>
+
 						<br><br>
+
 						<input type="checkbox" id="useClustering" onclick="toggleClusterer()" >
-						<label for="useClustering" data-i18nKey="map.use_clustering">Mit Clustering</label>
+						<label for="useClustering" data-i18n-key="map.use_clustering">Mit Clustering</label>
 						<hr>
 						
-						<h5 data-i18nKey="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
+						<h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
 						<input type="text" id="addressSearchTxt" placeholder="" size="30">
 
-						<button id="addressSearchBtn" data-i18nKey="map.search" onclick="searchLocationAndDisplay();">Suchen</button>
+						<button id="addressSearchBtn" data-i18n-key="map.search" onclick="searchLocationAndDisplay();">Suchen</button>
 						<hr>
 						
-						<h5 data-i18nKey="map.distance.title">Gefundene Caches darstellen</h5>
+						<h5 data-i18n-key="map.distance.title">Gefundene Caches darstellen</h5>
 						<ul class="formList">
 							<li>
-								<label for="distanceFrom" data-i18nKey="map.distance.from">Von:</label>
+								<label for="distanceFrom" data-i18n-key="map.distance.from">Von:</label>
 								<span>
                                     <input type="text" id="distanceFrom">
                                 </span>
 							</li>
 							<li>						
-								<label for="distanceTo" data-i18nKey="map.distance.to">Bis:</label>
+								<label for="distanceTo" data-i18n-key="map.distance.to">Bis:</label>
                                 <span>
 								    <input type="text" id="distanceTo">
                                 </span>
 							</li>
 							<li>
-								<label for="angle" data-i18nKey="map.distance.degrees">Winkel:</label>
+								<label for="angle" data-i18n-key="map.distance.degrees">Winkel:</label>
                                 <span>
 								    <input type="text" id="angle" disabled="disabled">
                                 </span>
 							</li>
 							<li>
-								<label for="distance" data-i18nKey="map.distance.distance">Distanz:</label>
+								<label for="distance" data-i18n-key="map.distance.distance">Distanz:</label>
                                 <span>
 								    <input type="text" id="distance" disabled="disabled">
                                 </span>
 							</li>
 						</ul>
 							
-						<button data-i18nKey="map.distance.display" id="displayDistance" onclick="displayDistance()">Distanz anzeigen</button>
+						<button data-i18n-key="map.distance.display" id="displayDistance" onclick="displayDistance()">Distanz anzeigen</button>
 						
 						<hr>
                         <ul>
                             <li>
-						        <button onclick="clearMap()" data-i18nKey="map.clear">Karte leeren</button>
+						        <button onclick="clearMap()" data-i18n-key="map.clear">Karte leeren</button>
                             </li>
                         </ul>
 
@@ -124,7 +129,7 @@
 
 		<div id="tools">
 			<div>
-				<h4 data-i18nKey="tools.coordinates_convertion">Koordinaten konvertieren</h4>
+				<h4 data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</h4>
 				<label for="coordCH">WGS84</label> <img src="images/info_16x16.png"
 					title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
 				<input id="coordCH" type="text" size="16" />
@@ -136,7 +141,7 @@
 			<hr>
 		
 			<div>
-				<h4 data-i18nKey="tools.letter_calculation">Buchstabenwerte berechnen</h4>
+				<h4 data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</h4>
 				<div class="box_left">
                     <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults()" />
 				</div>
@@ -144,19 +149,23 @@
 				<div id="calculations" style="float: left;">
                     <dl class="dlCalculation">
                         <dt>
-                            <label id="sum" data-i18nKey="tools.sum">Summe:</label>
+                            <label id="sum" data-i18n-key="tools.sum">Summe:</label>
                         </dt>
                         <dd></dd>
                         <dt>
-                            <label id="singleLetterValue" data-i18nKey="tools.single_letters">Buchstaben einzeln:</label>
+                            <label id="singleLetterValue" data-i18n-key="tools.single_letters">Buchstaben einzeln:</label>
                         </dt>
                         <dd></dd>
                         <dt>
-                            <label id="checksum" data-i18nKey="tools.checksum">Quersumme:</label>
+                            <label id="product" data-i18n-key="tools.product">Produkt:</label>
                         </dt>
                         <dd></dd>
                         <dt>
-                            <label id="oneDigitChecksum" data-i18nKey="tools.one_digit_checksum">Einstellige Quersumme:</label>
+                            <label id="checksum" data-i18n-key="tools.checksum">Quersumme:</label>
+                        </dt>
+                        <dd></dd>
+                        <dt>
+                            <label id="oneDigitChecksum" data-i18n-key="tools.one_digit_checksum">Einstellige Quersumme:</label>
                         </dt>
                         <dd></dd>
                     </dl>
@@ -166,7 +175,7 @@
 			<hr style="clear: both;">
 
 			<div>			
-				<h4 data-i18nKey="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</h4>
+				<h4 data-i18n-key="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</h4>
 				<table>
                     <tr>
                         <td style="vertical-align: top;">
@@ -193,7 +202,7 @@
                         </td>
                     </tr>
 					<tr>
-						<td><span data-i18nKey="tools.caesar_rot13.result">Resultat:</span></td>
+						<td><span data-i18n-key="tools.caesar_rot13.result">Resultat:</span></td>
 						<td><div id="rotationResult" style="width: 100%;"></div></td>
 					</tr>
 				</table>

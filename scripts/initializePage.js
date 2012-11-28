@@ -82,17 +82,16 @@ function translatePage(language){
 
     var browserLang = jQuery.i18n.browserLang();
 
-    jQuery('[data-i18nKey]').each(function(){
+    jQuery('[data-i18n-key]').each(function(){
         var $translationNode = jQuery(this),
-            key = $translationNode.attr('data-i18nKey');
+            key = $translationNode.attr('data-i18n-key');
 
         $translationNode.text(jQuery.i18n.prop(key));
     });
 
-    jQuery('button[title*="i18n."]').each(function(){
+    jQuery('[data-i18n-title-key]').each(function(){
         var $translationNode = jQuery(this),
-            title = $translationNode.attr('title'),
-            key = title.substring(title.indexOf('.') + 1);
+            key = $translationNode.attr('data-i18n-title-key');
 
         $translationNode.attr('title', jQuery.i18n.prop(key));
     });
