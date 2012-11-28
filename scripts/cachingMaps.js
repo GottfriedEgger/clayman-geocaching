@@ -157,6 +157,10 @@ var waterLabelMapStyleOff = {
             },
             navigationControlOptions: {
                 position: google.maps.ControlPosition.TOP_RIGHT
+            },
+            scaleControl: true,
+            scaleControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_BOTTOM
             }
         };
         map = new google.maps.Map(mapDiv, options);
