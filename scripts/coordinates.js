@@ -23,13 +23,14 @@ function convertDecimalAngleToDecimalMinutes(decimalAngle, lat) {
     decimalAngle = parseFloat(decimalAngle);
 
     var direction = getDirection(decimalAngle, lat),
-        angle = Math.floor(decimalAngle),
-        decimalPlaces = decimalAngle - angle,
+        absoluteDecimalAngle = Math.abs(decimalAngle),
+        angle = Math.floor(absoluteDecimalAngle),
+        decimalPlaces = absoluteDecimalAngle - angle,
         minutesDecimal = decimalPlaces * 60,
         minutes = Math.floor(minutesDecimal),
         decimal = parseFloat((minutesDecimal - minutes));
 
-    return decimalMinutes = direction + angle + '° ' + (minutes + decimal).toFixed(3);
+    return direction + angle + '° ' + (minutes + decimal).toFixed(3);
 }
 
 // i.e. N46° 56' 53.52" E7° 23' 12.84"
@@ -69,8 +70,8 @@ function CHtoWGS() {
 }
 
 function convertGoogleLatLngToDecimalMinutes(latLng) {
-    var lat = Math.abs(latLng.lat()),
-        lng = Math.abs(latLng.lng()),
+    var lat = latLng.lat(),
+        lng = latLng.lng(),
         latConverted = convertDecimalAngleToDecimalMinutes(lat, true),
         lngConverted = convertDecimalAngleToDecimalMinutes(lng, false);
 
