@@ -70,10 +70,7 @@ var waterLabelMapStyleOff = {
         var simpleStyledMap = new google.maps.StyledMapType(mapStyle,
             {name: "Simple Map"});
 
-
         map.mapTypes.set('simple_map_style', simpleStyledMap);
-//        map.getMapTypeIds.push('simple_map_style')
-//        map.setMapTypeId('simple_map_style');
 
     }
 
