@@ -23,12 +23,41 @@ function multiply(number1, number2){
     return number1 * number2;
 }
 
+function isUpperCaseChar(charCode) {
+    return charCode >= 65 && charCode <= 90;
+}
+
+function isDigit(charCode){
+    return charCode >= 48 && charCode <= 57;
+}
+
+function isUpperCaseCharOrDigit(charCode) {
+    return isUpperCaseChar(charCode) || isDigit(charCode);
+}
+
+function getCharValue(charCode) {
+    if (isUpperCaseChar(charCode)) {
+        return charCode - 64;
+    } else {
+        return charCode - 48;
+    }
+}
+
+function calculateWithPreviousResult(operationResult, value, operand) {
+    if (operationResult === null) {
+        operationResult = value;
+    } else {
+        operationResult = operand(operationResult, value);
+    }
+    return operationResult;
+}
+
 function calculateLetterValues(inputText, operand) {
 
     var operationResult = null,
         x,
         charCode,
-        letterValue;
+        value;
 
     inputText = inputText.toUpperCase();
     inputText = replaceChars(inputText);
@@ -36,14 +65,10 @@ function calculateLetterValues(inputText, operand) {
     for (x = 0; x < inputText.length; x++) {
         charCode = inputText.charCodeAt(x);
 
-        if (charCode >= 65 && charCode <= 90) {
-            letterValue = charCode - 64;
+        if (isUpperCaseCharOrDigit(charCode)) {
+            value = getCharValue(charCode);
 
-            if(operationResult === null){
-                operationResult = letterValue;
-            }else{
-                operationResult = operand(operationResult, letterValue);
-            }
+            operationResult = calculateWithPreviousResult(operationResult, value, operand);
         }
     }
 
@@ -67,6 +92,7 @@ function displayCalculationResults(output) {
 function calculateLetterValuesAndDisplayResults() {
 
     var inputText = jQuery('#calcLetterInp').val(),
+        x,
         sum,
         product,
         sumEach = [],
