@@ -42,10 +42,6 @@ label {
     margin-right: 4px;
 }
 
-.dlCalculation dt{
-    width: 250px;
-}
-
 .dlCalculation dd{
     margin-left: 250px;
 }
@@ -86,6 +82,11 @@ ul.formList li span {
 .locationInfoWindow {
 	min-width: 360px;
 	padding-top: 5px;
+    font-size: 15px;
+}
+
+.dlLocationInfoWindow dd{
+    margin-left: 30%;
 }
 
 .mapCommandsContent{

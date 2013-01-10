@@ -125,13 +125,13 @@ var waterLabelMapStyleOff = {
             infoWindow.setPosition(latLng);
 
             var content = '<div id="locationInfoWindow" class="locationInfoWindow">'+
-                '<ul class="formList">' +
-                '<li><label>' + jQuery.i18n.prop('map.position') + ':</label>' +
-                '<span>' + convertGoogleLatLngToDecimalMinutes(latLng) + '</span>' +
-                '</li>' +
-                '<li><label>' + jQuery.i18n.prop('map.elevation') + ':</label>' +
-                '<span>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</span>'+
-                '</ul>' +
+                '<dl class="dlLocationInfoWindow">' +
+                '<dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>' +
+                '<dd>' + convertGoogleLatLngToDecimalMinutes(latLng) + '</dd>' +
+                '<dt><dt><dd><span>' + latLng.lat().toFixed(6) + ' ' + latLng.lng().toFixed(6) + '</span></dd>'+
+                '<dt><label>' + jQuery.i18n.prop('map.elevation') + ':</label></dt>' +
+                '<dd>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</dd>'+
+                '</dl>' +
                 '</div>';
 
             infoWindow.setContent(content);
