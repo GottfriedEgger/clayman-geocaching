@@ -8,6 +8,8 @@ var markerClusterer = 0;
 var straightPolygon;
 var geodesic;
 var bounds = 0;
+var markerDistanceDestination;
+var markerDistanceOrigin;
 
 var infoWindow = new google.maps.InfoWindow();
 
@@ -197,16 +199,25 @@ function setMarkersVisibility(visible) {
     }
 }
 
-function clearMap() {
-    if (infoWindow) {
-        infoWindow.close(map);
+function clearDestinationOverlays(){
+    if(markerDistanceDestination){
+        markerDistanceOrigin.setMap(null);
     }
-    
+    if(markerDistanceDestination){
+        markerDistanceDestination.setMap(null);
+    }
+
     if(straightPolygon){
         straightPolygon.getPath().clear();
     }
     if(geodesic){
         geodesic.getPath().clear();
+    }
+}
+
+function clearMap() {
+    if (infoWindow) {
+        infoWindow.close(map);
     }
 
     setMarkersVisibility(false);
@@ -214,6 +225,9 @@ function clearMap() {
     gcMarkers = {};
 
     markerClusterer.clearMarkers();
+
+    clearDestinationOverlays();
+
 }
 
 function readFile() {
@@ -501,8 +515,6 @@ function displayDistance() {
 	infoWindow.close(map);
 	bounds = new google.maps.LatLngBounds();
 	
-	$distanceTo = jQuery("#distanceTo");
-	
 	var distanceFromAddress = jQuery("#distanceFrom").val(),
 		distanceToAddress = jQuery("#distanceTo").val(),
 		latLngFrom = 0,
@@ -541,12 +553,30 @@ function displayDistance() {
 	}
   
 	geocoderRequest = {
-			address: distanceFromAddress
+		address: distanceFromAddress
 	};
 	
 	geocoder.geocode(geocoderRequest, function(results, status){
 		if (status === google.maps.GeocoderStatus.OK){
 			latLngFrom = results[0].geometry.location;
+
+
+            if(markerDistanceOrigin){
+                markerDistanceOrigin.setMap(null);
+            }
+
+            markerDistanceOrigin = new google.maps.Marker({
+                map: map,
+                position: latLngFrom,
+                draggable: true,
+                raiseOnDrag: false
+            });
+
+            markerDistanceOrigin.position_changed = function(){
+                updateDistanceLineOrigin(this);
+            }
+
+
 			addOrigin(latLngFrom);
 		}
 	});
@@ -558,9 +588,43 @@ function displayDistance() {
 	geocoder.geocode(geocoderRequest, function(results, status){
 		if (status === google.maps.GeocoderStatus.OK){
 			latLngTo = results[0].geometry.location;
-			addDestination(latLngTo);
+
+
+            if(markerDistanceDestination){
+                markerDistanceDestination.setMap(null);
+            }
+
+            markerDistanceDestination = new google.maps.Marker({
+                map: map,
+                position: latLngTo,
+                draggable: true,
+                raiseOnDrag: false
+            });
+
+            markerDistanceDestination.position_changed = function(){
+                updateDistanceLineDestination(markerDistanceDestination);
+            }
+
+            addDestination(latLngTo);
 		}
 	});
+}
+
+function updateDistanceLines(marker, origin) {
+    var changePosition = origin ? 0 : 1;
+
+    straightPolygon.getPath().setAt(changePosition, marker.get('position'));
+    geodesic.getPath().setAt(changePosition, marker.get('position'));
+
+    adjustHeading();
+    adjustDistance();
+}
+
+function updateDistanceLineOrigin(marker){
+    updateDistanceLines(marker, true);
+}
+function updateDistanceLineDestination(marker){
+    updateDistanceLines(marker, false);
 }
 
 function addOrigin(latLng) {
@@ -573,7 +637,7 @@ function addOrigin(latLng) {
 
 function addDestination(latLng) {
 	addOrigin(latLng);
-	
+
 	map.fitBounds(bounds);
 	adjustHeading();
 	adjustDistance();
