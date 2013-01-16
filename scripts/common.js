@@ -8,3 +8,15 @@ Array.prototype.contains = function contains(string) {
 
     return false;
 };
+
+function showWarningDialog(contentKey) {
+    var $dialog = jQuery('#warningDialogPlaceholder'),
+        $content = $dialog.find('.pui-dialog-content'),
+        $title = $dialog.find('.pui-dialog-title'),
+        dialogContent = jQuery.i18n.prop(contentKey),
+        dialogTitle = jQuery.i18n.prop('map.alert.dialog.title');
+
+    $title.html(dialogTitle);
+    $content.html('<p>' + dialogContent + '</p>');
+    $dialog.puidialog('show');
+}

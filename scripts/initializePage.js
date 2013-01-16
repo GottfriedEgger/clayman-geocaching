@@ -105,3 +105,19 @@ function bindHandlers(){
         }
     });
 }
+
+function bindWarningDialog(){
+    $('#warningDialogPlaceholder').puidialog({
+        showEffect: 'fade',
+        hideEffect: 'fade',
+        modal: true,
+        resizable: false,
+        buttons: [{
+            text: 'OK',
+            icon: 'ui-icon-check',
+            click: function() {
+                $('#warningDialogPlaceholder').puidialog('hide');
+            }
+        }]
+    });
+}

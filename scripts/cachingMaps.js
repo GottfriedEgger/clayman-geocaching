@@ -288,19 +288,18 @@ function readFile() {
 
 function checkFileReadPreconditions(files) {
 
+    var warnMessageKey;
+
     if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
-        alert(jQuery.i18n.prop('map.alert.missing_file_api'));
-        return false;
+        warnMessageKey = 'map.alert.missing_file_api';
+    }else if (!files.length) {
+        warnMessageKey = 'map.alert.select_file';
+    }else if (!files[0].name.match('.*gpx')) {
+        warnMessageKey = 'map.alert.select_gpx';
     }
 
-    if (!files.length) {
-        alert(jQuery.i18n.prop('map.alert.select_file'));
-        return false;
-    }
-
-
-    if (!files[0].name.match('.*gpx')) {
-        alert(jQuery.i18n.prop('map.alert.select_gpx'));
+    if(warnMessageKey){
+        showWarningDialog(warnMessageKey);
         return false;
     }
 
