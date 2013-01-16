@@ -81,10 +81,11 @@ var waterLabelMapStyleOff = {
             if (elevationResponse[0]) {
                 return elevationResponse[0].elevation.toFixed(0);
             } else {
-                alert("No results found");
+                return jQuery.i18n.prop('map.warning.no_elevation');
             }
         } else {
-            alert("Elevation service failed due to: " + responseStatus);
+            console.log('No elevation service found: ' + responseStatus);
+            return jQuery.i18n.prop('map.warning.no_elevation_service') + responseStatus;
         }
     }
 
@@ -291,11 +292,11 @@ function checkFileReadPreconditions(files) {
     var warnMessageKey;
 
     if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
-        warnMessageKey = 'map.alert.missing_file_api';
+        warnMessageKey = 'map.warning.missing_file_api';
     }else if (!files.length) {
-        warnMessageKey = 'map.alert.select_file';
+        warnMessageKey = 'map.warning.select_file';
     }else if (!files[0].name.match('.*gpx')) {
-        warnMessageKey = 'map.alert.select_gpx';
+        warnMessageKey = 'map.warning.select_gpx';
     }
 
     if(warnMessageKey){

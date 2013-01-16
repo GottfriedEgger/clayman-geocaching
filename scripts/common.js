@@ -14,7 +14,7 @@ function showWarningDialog(contentKey) {
         $content = $dialog.find('.pui-dialog-content'),
         $title = $dialog.find('.pui-dialog-title'),
         dialogContent = jQuery.i18n.prop(contentKey),
-        dialogTitle = jQuery.i18n.prop('map.alert.dialog.title');
+        dialogTitle = jQuery.i18n.prop('map.warning.dialog.title');
 
     $title.html(dialogTitle);
     $content.html('<p>' + dialogContent + '</p>');
