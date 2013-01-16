@@ -511,6 +511,74 @@ function toggleTraditionalCaches(checked) {
     });
 }
 
+function adjustHeading() {
+    var path = straightPolygon.getPath();
+    var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
+
+    jQuery('#angle').val(heading.toFixed(5) + ' \u00B0');
+}
+
+function adjustDistance(){
+    var path = straightPolygon.getPath();
+
+    var distance = google.maps.geometry.spherical.computeDistanceBetween(path.getAt(0), path.getAt(1));
+
+    if(distance > 2000){
+        distance = (distance / 1000).toFixed(3) + ' km';
+    }else{
+        distance = distance.toFixed(2) + ' m';
+    }
+
+    jQuery('#distance').val(distance);
+}
+
+function updateDistanceLines(marker, origin) {
+    var changePosition = origin ? 0 : 1;
+
+    straightPolygon.getPath().setAt(changePosition, marker.get('position'));
+    geodesic.getPath().setAt(changePosition, marker.get('position'));
+
+    adjustHeading();
+    adjustDistance();
+}
+
+function adjustOriginInfo(latLng){
+    jQuery('#distanceFrom').val(
+        convertGoogleLatLngToDecimalMinutes(latLng)
+    );
+}
+
+function adjustDestinationInfo(latLng){
+    jQuery('#distanceTo').val(
+        convertGoogleLatLngToDecimalMinutes(latLng)
+    );
+}
+
+function updateDistanceLineOrigin(marker){
+    updateDistanceLines(marker, true);
+    adjustOriginInfo(marker.get('position'));
+}
+function updateDistanceLineDestination(marker){
+    updateDistanceLines(marker, false);
+    adjustDestinationInfo(marker.get('position'));
+}
+
+function addOrigin(latLng) {
+    var path = straightPolygon.getPath();
+    path.push(latLng);
+    var gPath = geodesic.getPath();
+    gPath.push(latLng);
+    bounds.extend(latLng);
+}
+
+function addDestination(latLng) {
+    addOrigin(latLng);
+
+    map.fitBounds(bounds);
+    adjustHeading();
+    adjustDistance();
+}
+
 function displayDistance() {
 	infoWindow.close(map);
 	bounds = new google.maps.LatLngBounds();
@@ -542,7 +610,8 @@ function displayDistance() {
 			strokeColor: '#CC0099',
 			strokeOpacity: 1.0,
 			strokeWeight: 3,
-			geodesic: true
+			geodesic: true,
+            title: 'Geodesic'
 	};
   
 	if(!geodesic){
@@ -610,56 +679,3 @@ function displayDistance() {
 	});
 }
 
-function updateDistanceLines(marker, origin) {
-    var changePosition = origin ? 0 : 1;
-
-    straightPolygon.getPath().setAt(changePosition, marker.get('position'));
-    geodesic.getPath().setAt(changePosition, marker.get('position'));
-
-    adjustHeading();
-    adjustDistance();
-}
-
-function updateDistanceLineOrigin(marker){
-    updateDistanceLines(marker, true);
-}
-function updateDistanceLineDestination(marker){
-    updateDistanceLines(marker, false);
-}
-
-function addOrigin(latLng) {
-	var path = straightPolygon.getPath();
-	path.push(latLng);
-	var gPath = geodesic.getPath();
-	gPath.push(latLng);
-	bounds.extend(latLng);
-}
-
-function addDestination(latLng) {
-	addOrigin(latLng);
-
-	map.fitBounds(bounds);
-	adjustHeading();
-	adjustDistance();
-}
-  
-function adjustHeading() {
-	var path = straightPolygon.getPath();
-	var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
-  
-	jQuery('#angle').val(heading.toFixed(5) + ' \u00B0');
-}
-
-function adjustDistance(){
-	var path = straightPolygon.getPath();
-	
-	var distance = google.maps.geometry.spherical.computeDistanceBetween(path.getAt(0), path.getAt(1));
-	
-	if(distance > 2000){
-		distance = (distance / 1000).toFixed(3) + ' km';
-	}else{
-		distance = distance.toFixed(2) + ' m';
-	}
-	
-	jQuery('#distance').val(distance);
-}
