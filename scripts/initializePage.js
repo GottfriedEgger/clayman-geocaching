@@ -78,9 +78,11 @@ function setI18nProperties(language){
 }
 
 function translatePage(language){
-    setI18nProperties(language);
+    if(!language){
+        language = jQuery.i18n.browserLang();
+    }
 
-    var browserLang = jQuery.i18n.browserLang();
+    setI18nProperties(language);
 
     jQuery('[data-i18n-key]').each(function(){
         var $translationNode = jQuery(this),
@@ -109,9 +111,9 @@ function bindEnterActions(){
         buttonId;
 
     jQuery('[' + enterActionAttrName + ']').each(function(){
-        $(this).keypress(function(event){
+        jQuery(this).keypress(function(event){
             if (event.which === 13 ){
-                buttonId = $(this).attr(enterActionAttrName);
+                buttonId = jQuery(this).attr(enterActionAttrName);
                 jQuery('#' + buttonId).trigger('click');
                 event.preventDefault();
             }
@@ -120,7 +122,7 @@ function bindEnterActions(){
 }
 
 function bindWarningDialog(){
-    $('#warningDialogPlaceholder').puidialog({
+    jQuery('#warningDialogPlaceholder').puidialog({
         showEffect: 'fade',
         hideEffect: 'fade',
         modal: true,
@@ -129,8 +131,31 @@ function bindWarningDialog(){
             text: 'OK',
             icon: 'ui-icon-check',
             click: function() {
-                $('#warningDialogPlaceholder').puidialog('hide');
+                jQuery('#warningDialogPlaceholder').puidialog('hide');
             }
         }]
     });
 }
+
+function initPage(){
+    jQuery("#tabs").tabs();
+
+    translatePage();
+
+    setMapDivHeight();
+
+    jQuery(function($){
+        $.mask.definitions.D ='[nNeEsSwW]';
+        $("#coordCH").mask("999999 / 999999");
+    });
+
+    placeSlider();
+
+    bindEnterActions();
+
+    bindWarningDialog();
+}
+
+jQuery(document).ready(function() {
+        initPage();
+});

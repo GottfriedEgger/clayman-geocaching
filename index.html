@@ -23,30 +23,6 @@
 
 <script type="text/javascript" src="scripts/initializePage.js"></script>
 
-<script type="text/javascript">
-//	jQuery.noConflict();
-
-    jQuery(document).ready(function() {
-
-        jQuery("#tabs").tabs();
-
-        translatePage();
-
-        setMapDivHeight();
-
-        jQuery(function($){
-            $.mask.definitions['D']='[nNeEsSwW]';
-            $("#coordCH").mask("999999 / 999999");
-        });
-
-        placeSlider();
-
-        bindEnterActions();
-
-        bindWarningDialog();
-
-    });
-</script>
 
 </head>
 
@@ -54,7 +30,7 @@
 	<div id="tabs" class="tabs">
 	
 		<h2 id="mainTitle" data-i18n-key="main.title">GottfriedEgger's Geocaching page</h2>
-		<span style="float: right"><a href="#" onclick="translatePage('en');">EN</a> | <a href="#" onclick="translatePage('de');">DE</a></span>
+		<span style="float: right;"><a href="#" onclick="translatePage('en');">EN</a> | <a href="#" onclick="translatePage('de');">DE</a></span>
 
         <div id="warningDialogPlaceholder" title="Warnung">content</div>
 
@@ -73,13 +49,13 @@
 						<h5 data-i18n-key="map.load.title">Gefundene Caches darstellen</h5>
 						<input type="file" id="files" name="file" />
 						<button data-i18n-key="map.load.finds" data-i18n-title-key="map.load.finds.tooltip"
-                                title="Lade das Pocket Query 'meine Funde'" onclick="readFile()" >
+                                title="Lade das Pocket Query 'meine Funde'" onclick="readFile();" >
                             Lade gefundene Caches
                         </button>
 
 						<br><br>
 
-						<input type="checkbox" id="useClustering" onclick="toggleClusterer()" >
+						<input type="checkbox" id="useClustering" onclick="toggleClusterer();" >
 						<label for="useClustering" data-i18n-key="map.use_clustering">Mit Clustering</label>
 						<hr>
 						
@@ -120,12 +96,12 @@
 							</li>
 						</ul>
 							
-						<button data-i18n-key="map.distance.display" id="displayDistance" onclick="displayDistance()">Distanz anzeigen</button>
+						<button data-i18n-key="map.distance.display" id="displayDistance" onclick="displayDistance();">Distanz anzeigen</button>
 						
 						<hr>
                         <ul>
                             <li>
-						        <button onclick="clearMap()" data-i18n-key="map.clear">Karte leeren</button>
+						        <button onclick="clearMap();" data-i18n-key="map.clear">Karte leeren</button>
                             </li>
                         </ul>
 
@@ -144,7 +120,7 @@
 				<label for="coordCH">WGS84</label> <img src="images/info_16x16.png"
 					title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
 				<input id="coordCH" type="text" size="16" placeholder="600000 / 200000"/>
-				<button onclick="CHtoWGS()">&gt;CH1903 - Schweizer Gitter</button>
+				<button onclick="CHtoWGS();">&gt;CH1903 - Schweizer Gitter</button>
 				<input id="coordDecimalAngle" type="text" class="numberOrientation" size="26" readonly="readonly"/>
 				<input id="coordDecimalMinutes" type="text" class="numberOrientation" size="30" readonly="readonly"/>
 				<input id="coordAngleMinutesSeconds" type="text" class="numberOrientation" size="36" readonly="readonly"/>
@@ -154,7 +130,7 @@
 			<div>
 				<h4 data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</h4>
 				<div class="box_left">
-                    <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults()"
+                    <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults();"
                             data-i18n-placeholder-key="tools.letter_calculation.placeholder" placeholder="Text eingeben" />
 				</div>
 				

@@ -1,4 +1,4 @@
-/*global jQuery, CHtoWGSlat */
+/*global jQuery, CHtoWGSlat, CHtoWGSlng */
 
 function getDirection(decimalAngle, lat) {
     var direction;
@@ -55,8 +55,8 @@ function CHtoWGS() {
         lat,
         lng;
 
-    lat = CHtoWGSlat(coordX, coordY).toFixed(6);
-    lng = CHtoWGSlng(coordX, coordY).toFixed(6);
+    lat = new CHtoWGSlat(coordX, coordY).toFixed(6);
+    lng = new CHtoWGSlng(coordX, coordY).toFixed(6);
 
     jQuery('#coordDecimalAngle').val(lat + ' ' + lng);
 

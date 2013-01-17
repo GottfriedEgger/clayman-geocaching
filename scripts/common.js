@@ -1,6 +1,8 @@
+/*global jQuery */
+
 Array.prototype.contains = function contains(string) {
     var x;
-    for (x = 0; x < this.length; x++) {
+    for (x = 0; x < this.length; x+=1) {
         if (this[x] === string) {
             return true;
         }

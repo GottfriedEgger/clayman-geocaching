@@ -9,7 +9,7 @@ var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 function replaceChars(string) {
     var x;
-    for (x = 0; x < replacements.length; x++) {
+    for (x = 0; x < replacements.length; x+=1) {
         string = string.replace(replacements[x][0], replacements[x][1]);
     }
     return string;
@@ -36,11 +36,15 @@ function isUpperCaseCharOrDigit(charCode) {
 }
 
 function getCharValue(charCode) {
+    var charValue;
+
     if (isUpperCaseChar(charCode)) {
-        return charCode - 64;
+        charValue = charCode - 64;
     } else {
-        return charCode - 48;
+        charValue = charCode - 48;
     }
+
+    return charValue;
 }
 
 function calculateWithPreviousResult(operationResult, value, operand) {
@@ -62,7 +66,7 @@ function calculateLetterValues(inputText, operand) {
     inputText = inputText.toUpperCase();
     inputText = replaceChars(inputText);
 
-    for (x = 0; x < inputText.length; x++) {
+    for (x = 0; x < inputText.length; x+=1) {
         charCode = inputText.charCodeAt(x);
 
         if (isUpperCaseCharOrDigit(charCode)) {
@@ -78,7 +82,7 @@ function calculateLetterValues(inputText, operand) {
 function displayCalculationResults(output) {
     var x, $displayNode;
 
-    for (x = 0; x < output.length; x++) {
+    for (x = 0; x < output.length; x+=1) {
         $displayNode = jQuery('#' + output[x].id).parent().next();
 
         if(output[x].value !== 0){
@@ -103,7 +107,7 @@ function calculateLetterValuesAndDisplayResults() {
 
     letter = inputText.substring(0,1);
 
-    for (x = 0; x < inputText.length; x++) {
+    for (x = 0; x < inputText.length; x+=1) {
         letter = inputText.substring(x, x+1);
         subtotal = calculateLetterValues(letter, add);
 
@@ -131,7 +135,7 @@ function replaceForHtml(string) {
         x,
         charAtPosition;
 
-    for (x = 0; x < string.length; x++) {
+    for (x = 0; x < string.length; x+=1) {
         charAtPosition = string.charAt(x);
 
         if (charAtPosition === '\n') {
@@ -154,9 +158,9 @@ function calculateRot() {
         index;
 
     rotationInput = jQuery('#rotationInput').val();
-    rotationCount = parseInt(jQuery('#rotationCount option:selected').text(), 10);
+    rotationCount = parseInt(jQuery('#rotationCount').find('option:selected').text(), 10);
 
-    for (x = 0; x < rotationInput.length; x++) {
+    for (x = 0; x < rotationInput.length; x+=1) {
         charAtPosition = rotationInput.charAt(x);
         rot = charAtPosition;
         index = alphabet.indexOf(charAtPosition);
@@ -181,7 +185,7 @@ Number.prototype.getChecksum = function () {
         checksum = 0,
         x;
 
-    for (x = 0; x < numberString.length; x++) {
+    for (x = 0; x < numberString.length; x+=1) {
         checksum += Number(numberString.charAt(x));
     }
     return checksum;

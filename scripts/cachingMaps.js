@@ -56,148 +56,154 @@ var waterLabelMapStyleOff = {
     ]
 };
 
-(function () {
-    var elevationService = 0;
 
-    function addSimpleMapType(){
-        var mapStyle = [];
+var elevationService = 0;
 
-        mapStyle.push(roadMapStyleOff);
-        mapStyle.push(landscapeMapStyleOff);
-        mapStyle.push(administrativeMapStyleOff);
-        mapStyle.push(countryMapStyleOn);
-        mapStyle.push(poiMapStyleOff);
-        mapStyle.push(waterLabelMapStyleOff);
+function addSimpleMapType(){
+    var mapStyle = [],
+        simpleStyledMap;
 
-        var simpleStyledMap = new google.maps.StyledMapType(mapStyle,
-            {name: "Simple Map"});
+    mapStyle.push(roadMapStyleOff);
+    mapStyle.push(landscapeMapStyleOff);
+    mapStyle.push(administrativeMapStyleOff);
+    mapStyle.push(countryMapStyleOn);
+    mapStyle.push(poiMapStyleOff);
+    mapStyle.push(waterLabelMapStyleOff);
 
-        map.mapTypes.set('simple_map_style', simpleStyledMap);
+    simpleStyledMap = new google.maps.StyledMapType(mapStyle,
+        {name: "Simple Map"});
 
-    }
+    map.mapTypes.set('simple_map_style', simpleStyledMap);
 
-    function getElevationInMeters(elevationResponse, responseStatus) {
-        if (responseStatus === google.maps.ElevationStatus.OK) {
-            if (elevationResponse[0]) {
-                return elevationResponse[0].elevation.toFixed(0);
-            } else {
-                return jQuery.i18n.prop('map.warning.no_elevation');
-            }
+}
+
+function getElevationInMeters(elevationResponse, responseStatus) {
+    var elevationResult;
+
+    if (responseStatus === google.maps.ElevationStatus.OK) {
+        if (elevationResponse[0]) {
+            elevationResult = elevationResponse[0].elevation.toFixed(0);
         } else {
-            console.log('No elevation service found: ' + responseStatus);
-            return jQuery.i18n.prop('map.warning.no_elevation_service') + responseStatus;
+            elevationResult = jQuery.i18n.prop('map.warning.no_elevation');
         }
+    } else {
+        console.log('No elevation service found: ' + responseStatus);
+        elevationResult = jQuery.i18n.prop('map.warning.no_elevation_service') + responseStatus;
     }
 
-    function placeChangedListener(){
-        var place = autocomplete.getPlace(),
-            latLng;
+    return elevationResult;
+}
 
-        if(place.geometry){
-            infoWindow.close(map);
+function placeChangedListener(){
+    var place = autocomplete.getPlace(),
+        latLng,
+        content;
 
-            map.setCenter(place.geometry.location);
-            map.setZoom(14);
-
-            latLng = place.geometry.location;
-
-            var content = '<div class="locationInfoWindow" >';
-            content += place.formatted_address + '<br />';
-            content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
-            content += '</div>';
-
-            infoWindow.setPosition(latLng);
-            infoWindow.setContent(content);
-            infoWindow.open(map);
-        }
-    }
-
-    function showLocationInfoPopup(latLng) {
-        var locations = [],
-            positionalRequest;
-
+    if(place.geometry){
         infoWindow.close(map);
 
-        if (!elevationService) {
-            elevationService = new google.maps.ElevationService();
-        }
+        map.setCenter(place.geometry.location);
+        map.setZoom(14);
 
-        locations.push(latLng);
+        latLng = place.geometry.location;
 
-        positionalRequest = {
-            'locations': locations
-        };
-
-        elevationService.getElevationForLocations(positionalRequest, function (elevationResponse, responseStatus) {
-            infoWindow.setPosition(latLng);
-
-            var content = '<div id="locationInfoWindow" class="locationInfoWindow">'+
-                '<dl class="dlLocationInfoWindow">' +
-                '<dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>' +
-                '<dd>' + convertGoogleLatLngToDecimalMinutes(latLng) + '</dd>' +
-                '<dt><dt><dd><span>' + latLng.lat().toFixed(6) + ' ' + latLng.lng().toFixed(6) + '</span></dd>'+
-                '<dt><label>' + jQuery.i18n.prop('map.elevation') + ':</label></dt>' +
-                '<dd>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</dd>'+
-                '</dl>' +
-                '</div>';
-
-            infoWindow.setContent(content);
-            infoWindow.open(map);
-        });
-    }
-
-    window.onload = function () {
-        var mapDiv = document.getElementById('map'),
-            latLng = new google.maps.LatLng(46.8, 7.985),
-            options,
-            inputAddress;
-
-        options = {
-            center: latLng,
-            zoom: 8,
-            mapTypeId: google.maps.MapTypeId.TERRAIN,
-            mapTypeControlOptions: {
-                mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID, 'simple_map_style']
-            },
-            navigationControlOptions: {
-                position: google.maps.ControlPosition.TOP_RIGHT
-            },
-            scaleControl: true,
-            scaleControlOptions: {
-                position: google.maps.ControlPosition.RIGHT_BOTTOM
-            }
-        };
-        map = new google.maps.Map(mapDiv, options);
+        content = '<div class="locationInfoWindow" >';
+        content += place.formatted_address + '<br />';
+        content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
+        content += '</div>';
 
         infoWindow.setPosition(latLng);
-        infoWindow.setContent(jQuery.i18n.prop('map.start_info_window_text'));
+        infoWindow.setContent(content);
         infoWindow.open(map);
+    }
+}
 
-        google.maps.event.addListener(map, 'click', function (e) {
-            showLocationInfoPopup(e.latLng);
-        });
+function showLocationInfoPopup(latLng) {
+    var locations = [],
+        positionalRequest;
 
-        addSimpleMapType();
+    infoWindow.close(map);
 
-        markerClusterer = new MarkerClusterer(map);
+    if (!elevationService) {
+        elevationService = new google.maps.ElevationService();
+    }
 
-        inputAddress = document.getElementById('addressSearchTxt');
-        autocomplete = new google.maps.places.Autocomplete(inputAddress);
-        autocomplete.bindTo('bounds', map);
+    locations.push(latLng);
 
-        google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
+    positionalRequest = {
+        'locations': locations
     };
 
-})();
+    elevationService.getElevationForLocations(positionalRequest, function (elevationResponse, responseStatus) {
+        infoWindow.setPosition(latLng);
+
+        var content = '<div id="locationInfoWindow" class="locationInfoWindow">'+
+            '<dl class="dlLocationInfoWindow">' +
+            '<dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>' +
+            '<dd>' + convertGoogleLatLngToDecimalMinutes(latLng) + '</dd>' +
+            '<dt><dt><dd><span>' + latLng.lat().toFixed(6) + ' ' + latLng.lng().toFixed(6) + '</span></dd>'+
+            '<dt><label>' + jQuery.i18n.prop('map.elevation') + ':</label></dt>' +
+            '<dd>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</dd>'+
+            '</dl>' +
+            '</div>';
+
+        infoWindow.setContent(content);
+        infoWindow.open(map);
+    });
+}
+
+window.onload = function () {
+    var mapDiv = document.getElementById('map'),
+        latLng = new google.maps.LatLng(46.8, 7.985),
+        options,
+        inputAddress;
+
+    options = {
+        center: latLng,
+        zoom: 8,
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
+        mapTypeControlOptions: {
+            mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID, 'simple_map_style']
+        },
+        navigationControlOptions: {
+            position: google.maps.ControlPosition.TOP_RIGHT
+        },
+        scaleControl: true,
+        scaleControlOptions: {
+            position: google.maps.ControlPosition.RIGHT_BOTTOM
+        }
+    };
+    map = new google.maps.Map(mapDiv, options);
+
+    infoWindow.setPosition(latLng);
+    infoWindow.setContent(jQuery.i18n.prop('map.start_info_window_text'));
+    infoWindow.open(map);
+
+    google.maps.event.addListener(map, 'click', function (e) {
+        showLocationInfoPopup(e.latLng);
+    });
+
+    addSimpleMapType();
+
+    markerClusterer = new MarkerClusterer(map);
+
+    inputAddress = document.getElementById('addressSearchTxt');
+    autocomplete = new google.maps.places.Autocomplete(inputAddress);
+    autocomplete.bindTo('bounds', map);
+
+    google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
+};
+
+
 
 function setMarkersVisibility(visible) {
     var key, typeArray, x;
 
     for (key in gcMarkers) {
-        if (gcMarkers.hasOwnProperty()) {
+        if(gcMarkers.hasOwnProperty(key)){
             typeArray = gcMarkers[key];
 
-            for (x = 0; x < typeArray.length; x++) {
+            for (x = 0; x < typeArray.length; x+=1) {
                 typeArray[x].setVisible(visible);
             }
         }
@@ -259,7 +265,7 @@ function readFile() {
             $xml = jQuery( xmlDoc );
 
             $wpt = $xml.find('wpt').each(function () {
-                var foundType, logDate, logText;
+                var foundType, logDate='', logText='';
 
                 jQuery(this).find("groundspeak\\:logs, logs").each(function(){
                    foundType = jQuery(this).find("groundspeak\\:type, type").text();
@@ -333,7 +339,7 @@ function displayWaypoints(waypoints) {
         });
 
         if (!gcMarkers[waypoint.type]) {
-            gcMarkers[waypoint.type] = new Array();
+            gcMarkers[waypoint.type] = [];
         }
         gcMarkers[waypoint.type].push(gcMarker);
 
@@ -472,7 +478,7 @@ function searchLocationAndDisplay(){
 			
 			formattedAddress = results[0].formatted_address;
 
-            content = '<div class="locationInfoWindow" >'
+            content = '<div class="locationInfoWindow" >';
 			content += formattedAddress + '<br />';
 			content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
             content += '</div>';
@@ -498,18 +504,22 @@ function toggleClusterer() {
         markerClusterer.clearMarkers();
 
         for (key in gcMarkers) {
-            typeArray = gcMarkers[key];
+            if(gcMarkers.hasOwnProperty(key)){
+                typeArray = gcMarkers[key];
 
-            for (x = 0; x < typeArray.length; x++) {
-                typeArray[x].setMap(map);
+                for (x = 0; x < typeArray.length; x++) {
+                    typeArray[x].setMap(map);
+                }
             }
         }
     } else {
         for (key in gcMarkers) {
-            typeArray = gcMarkers[key];
+            if(gcMarkers.hasOwnProperty(key)){
+                typeArray = gcMarkers[key];
 
-            for (x = 0; x < typeArray.length; x++) {
-                markerClusterer.addMarker(typeArray[x]);
+                for (x = 0; x < typeArray.length; x++) {
+                    markerClusterer.addMarker(typeArray[x]);
+                }
             }
         }
     }
@@ -656,7 +666,7 @@ function displayDistance() {
 
             markerDistanceOrigin.position_changed = function(){
                 updateDistanceLineOrigin(this);
-            }
+            };
 
 
 			addOrigin(latLngFrom);
@@ -685,7 +695,7 @@ function displayDistance() {
 
             markerDistanceDestination.position_changed = function(){
                 updateDistanceLineDestination(markerDistanceDestination);
-            }
+            };
 
             addDestination(latLngTo);
 		}
