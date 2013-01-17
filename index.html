@@ -143,7 +143,7 @@
 				<h4 data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</h4>
 				<label for="coordCH">WGS84</label> <img src="images/info_16x16.png"
 					title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
-				<input id="coordCH" type="text" size="16" />
+				<input id="coordCH" type="text" size="16" placeholder="600000 / 200000"/>
 				<button onclick="CHtoWGS()">&gt;CH1903 - Schweizer Gitter</button>
 				<input id="coordDecimalAngle" type="text" class="numberOrientation" size="26" readonly="readonly"/>
 				<input id="coordDecimalMinutes" type="text" class="numberOrientation" size="30" readonly="readonly"/>
@@ -154,7 +154,8 @@
 			<div>
 				<h4 data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</h4>
 				<div class="box_left">
-                    <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults()" />
+                    <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults()"
+                            data-i18n-placeholder-key="tools.letter_calculation.placeholder" placeholder="Text eingeben" />
 				</div>
 				
 				<div id="calculations" style="float: left;">
@@ -208,7 +209,8 @@
                             </script>
                         </td>
                         <td style="width: 800px;">
-                            <textarea id="rotationInput" rows="3" onkeyup="calculateRot()" style="width: 100%;"></textarea>
+                            <textarea id="rotationInput" rows="3" onkeyup="calculateRot()" style="width: 100%;"
+                                      data-i18n-placeholder-key="tools.caesar_rot13.placeholder" placeholder="Zu verschlüsselnden Text eingeben"></textarea>
                             <br><br>
                         </td>
                     </tr>
