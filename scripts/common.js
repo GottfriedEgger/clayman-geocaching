@@ -9,11 +9,11 @@ Array.prototype.contains = function contains(string) {
     return false;
 };
 
-function showWarningDialog(contentKey) {
+function showWarningDialog(contentKey, parameters) {
     var $dialog = jQuery('#warningDialogPlaceholder'),
         $content = $dialog.find('.pui-dialog-content'),
         $title = $dialog.find('.pui-dialog-title'),
-        dialogContent = jQuery.i18n.prop(contentKey),
+        dialogContent = jQuery.i18n.prop(contentKey, parameters),
         dialogTitle = jQuery.i18n.prop('map.warning.dialog.title');
 
     $title.html(dialogTitle);

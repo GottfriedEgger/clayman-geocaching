@@ -41,7 +41,7 @@
 
         placeSlider();
 
-        bindHandlers();
+        bindEnterActions();
 
         bindWarningDialog();
 
@@ -84,7 +84,7 @@
 						<hr>
 						
 						<h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
-						<input type="text" id="addressSearchTxt" placeholder="" size="30">
+						<input type="text" data-enter-action-button-id="addressSearchBtn" id="addressSearchTxt" placeholder="" size="30">
 
 						<button id="addressSearchBtn" data-i18n-key="map.search" onclick="searchLocationAndDisplay();">Suchen</button>
 						<hr>
@@ -94,13 +94,13 @@
 							<li>
 								<label for="distanceFrom" data-i18n-key="map.distance.from">Von:</label>
 								<span>
-                                    <input type="text" id="distanceFrom">
+                                    <input type="text" id="distanceFrom" data-enter-action-button-id="displayDistance">
                                 </span>
 							</li>
 							<li>						
 								<label for="distanceTo" data-i18n-key="map.distance.to">Bis:</label>
                                 <span>
-								    <input type="text" id="distanceTo">
+								    <input type="text" id="distanceTo" data-enter-action-button-id="displayDistance">
                                 </span>
 							</li>
 							<li>

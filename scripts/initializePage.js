@@ -97,12 +97,18 @@ function translatePage(language){
     });
 }
 
-function bindHandlers(){
-    jQuery("#addressSearchTxt").keypress(function(event) {
-        if (event.which === 13 ){
-            jQuery("#addressSearchBtn").trigger('click');
-            event.preventDefault();
-        }
+function bindEnterActions(){
+    var enterActionAttrName = 'data-enter-action-button-id',
+        buttonId;
+
+    jQuery('[' + enterActionAttrName + ']').each(function(){
+        $(this).keypress(function(event){
+            if (event.which === 13 ){
+                buttonId = $(this).attr(enterActionAttrName);
+                jQuery('#' + buttonId).trigger('click');
+                event.preventDefault();
+            }
+        });
     });
 }
 

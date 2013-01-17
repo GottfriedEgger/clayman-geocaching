@@ -91,21 +91,25 @@ var waterLabelMapStyleOff = {
 
     function placeChangedListener(){
         var place = autocomplete.getPlace(),
+            latLng;
+
+        if(place.geometry){
+            infoWindow.close(map);
+
+            map.setCenter(place.geometry.location);
+            map.setZoom(14);
+
             latLng = place.geometry.location;
 
-        infoWindow.close(map);
+            var content = '<div class="locationInfoWindow" >';
+            content += place.formatted_address + '<br />';
+            content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
+            content += '</div>';
 
-        map.setCenter(place.geometry.location);
-        map.setZoom(14);
-
-        var content = '<div class="locationInfoWindow" >';
-        content += place.formatted_address + '<br />';
-        content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
-        content += '</div>';
-
-        infoWindow.setPosition(latLng);
-        infoWindow.setContent(content);
-        infoWindow.open(map);
+            infoWindow.setPosition(latLng);
+            infoWindow.setContent(content);
+            infoWindow.open(map);
+        }
     }
 
     function showLocationInfoPopup(latLng) {
@@ -456,22 +460,31 @@ function searchLocationAndDisplay(){
 	};
 	
 	geocoder.geocode(geocoderRequest, function(results, status){
+        var content,
+            formattedAddress,
+            latLng;
+
 		if (status === google.maps.GeocoderStatus.OK){
 		
-			var latLng = results[0].geometry.location;
+			latLng = results[0].geometry.location;
 			map.setCenter(latLng);
 			map.setZoom(14);
 			
-			var formattedAddress = results[0].formatted_address;
-			
-			var content = '<div class="locationInfoWindow" >';
+			formattedAddress = results[0].formatted_address;
+
+            content = '<div class="locationInfoWindow" >'
 			content += formattedAddress + '<br />';
 			content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
-			content += '</div>';
+            content += '</div>';
 
             infoWindow.setPosition(latLng);
             infoWindow.setContent(content);
             infoWindow.open(map);
+
+        }else if (status === google.maps.GeocoderStatus.ZERO_RESULTS ){
+            showWarningDialog('map.warning.zero_results', ['\'' + address + '\'']);
+        }else{
+            showWarningDialog('map.warning.search_error');
         }
 
     });
