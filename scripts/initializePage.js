@@ -95,6 +95,13 @@ function translatePage(language){
 
         $translationNode.attr('title', jQuery.i18n.prop(key));
     });
+
+    jQuery('[data-i18n-placeholder-key]').each(function(){
+        var $translationNode = jQuery(this),
+            key = $translationNode.attr('data-i18n-placeholder-key');
+
+        $translationNode.attr('placeholder', jQuery.i18n.prop(key));
+    });
 }
 
 function bindEnterActions(){

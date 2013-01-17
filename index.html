@@ -84,7 +84,8 @@
 						<hr>
 						
 						<h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
-						<input type="text" data-enter-action-button-id="addressSearchBtn" id="addressSearchTxt" placeholder="" size="30">
+						<input id="addressSearchTxt" type="text" data-enter-action-button-id="addressSearchBtn"
+                               data-i18n-placeholder-key="map.search.placeholder" placeholder="z.B. Bern" size="30">
 
 						<button id="addressSearchBtn" data-i18n-key="map.search" onclick="searchLocationAndDisplay();">Suchen</button>
 						<hr>
@@ -94,13 +95,15 @@
 							<li>
 								<label for="distanceFrom" data-i18n-key="map.distance.from">Von:</label>
 								<span>
-                                    <input type="text" id="distanceFrom" data-enter-action-button-id="displayDistance">
+                                    <input type="text" id="distanceFrom" data-enter-action-button-id="displayDistance"
+                                           data-i18n-placeholder-key="map.distance.from.placeholder" placeholder="Ausgangspunkt">
                                 </span>
 							</li>
 							<li>						
 								<label for="distanceTo" data-i18n-key="map.distance.to">Bis:</label>
                                 <span>
-								    <input type="text" id="distanceTo" data-enter-action-button-id="displayDistance">
+								    <input type="text" id="distanceTo" data-enter-action-button-id="displayDistance"
+                                           data-i18n-placeholder-key="map.distance.to.placeholder" placeholder="Endpunkt">
                                 </span>
 							</li>
 							<li>
