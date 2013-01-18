@@ -49,11 +49,17 @@ function convertDecimalAngleToAngleMinutesSeconds(decimalAngle, lat) {
 
 function CHtoWGS() {
     var coordCH = jQuery('#coordCH').val(),
-        splittedCoord = coordCH.split(" / "),
-        coordX = splittedCoord[0],
-        coordY = splittedCoord[1],
-        lat,
-        lng;
+        splittedCoord,
+        coordX,coordY,
+        lat,lng;
+
+    if(coordCH === ''){
+        return;
+    }
+
+    splittedCoord = coordCH.split(" / ");
+    coordX = splittedCoord[0];
+    coordY = splittedCoord[1];
 
     lat = CHtoWGSlat(coordX, coordY).toFixed(6);
     lng = CHtoWGSlng(coordX, coordY).toFixed(6);

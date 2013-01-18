@@ -457,7 +457,11 @@ function searchLocationAndDisplay(){
 	var address = jQuery("#addressSearchTxt").val(),
         geocoderRequest;
 
-	infoWindow.close(map);
+    if(address === ''){
+        return;
+    }
+
+    infoWindow.close(map);
 
 	if(!geocoder){
 		geocoder = new google.maps.Geocoder();
