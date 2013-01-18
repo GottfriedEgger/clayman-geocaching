@@ -1,4 +1,4 @@
-/*global jQuery, google, convertGoogleLatLngToDecimalMinutes, MarkerClusterer */
+/*global jQuery, google, FileReader, convertGoogleLatLngToDecimalMinutes, MarkerClusterer */
 
 var map;
 var autocomplete;
@@ -242,12 +242,12 @@ function clearMap() {
 }
 
 function readFile() {
-    var file, reader;
+    var file, files, reader;
 
     gcMarkers = {};
     clearMap();
 
-    var files = document.getElementById('files').files;
+    files = document.getElementById('files').files;
 
     if (!checkFileReadPreconditions(files)) {
         return;
@@ -259,12 +259,11 @@ function readFile() {
     reader.onloadend = function (evt) {
         if (evt.target.readyState === FileReader.DONE) { // DONE == 2
             var xmlContentGpx = evt.target.result,
-                waypoints = [];
+                waypoints = [],
+                xmlDoc = jQuery.parseXML( xmlContentGpx ),
+                $xml = jQuery( xmlDoc );
 
-            var xmlDoc = jQuery.parseXML( xmlContentGpx ),
-            $xml = jQuery( xmlDoc );
-
-            $wpt = $xml.find('wpt').each(function () {
+            $xml.find('wpt').each(function () {
                 var foundType, logDate='', logText='';
 
                 jQuery(this).find("groundspeak\\:logs, logs").each(function(){
@@ -275,14 +274,13 @@ function readFile() {
                 });
 
                 if(foundType && foundType === 'Found it'){
-                    var lat = jQuery(this).attr('lat');
-                    var lon = jQuery(this).attr('lon');
-                    var name = jQuery(this).find('name').text();
-                    var urlName = jQuery(this).find('urlname').text();
-                    var url = jQuery(this).find('url').text();
-                    var type = jQuery(this).find('type').text().split("|")[1];
-
-                    var waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type,
+                    var lat = jQuery(this).attr('lat'),
+                        lon = jQuery(this).attr('lon'),
+                        name = jQuery(this).find('name').text(),
+                        urlName = jQuery(this).find('urlname').text(),
+                        url = jQuery(this).find('url').text(),
+                        type = jQuery(this).find('type').text().split("|")[1],
+                        waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type,
                         logDate: logDate, logText: logText};
                     waypoints.push(waypoint);
                 }
@@ -327,7 +325,7 @@ function displayWaypoints(waypoints) {
     var clusteringActivated = isClusteringActivated(),
         x;
 
-    for (x = 0; x < waypoints.length; x++) {
+    for (x = 0; x < waypoints.length; x+=1) {
         var waypoint = waypoints[x];
         var latLng = new google.maps.LatLng(waypoint.lat, waypoint.lon);
         bounds.extend(latLng);
@@ -361,9 +359,11 @@ function displayWaypoints(waypoints) {
 
                 geocoder.geocode(geocoderRequest, function (geocoderRequestResult, status) {
 
-                    var gcLink = '<a href="' + waypoint.url + '" target="_blank">' + waypoint.urlName + '</a>';
+                    var gcLink, content;
 
-                    var content = '<div class="cacheInfoWindow">' +
+                    gcLink = '<a href="' + waypoint.url + '" target="_blank">' + waypoint.urlName + '</a>';
+
+                    content = '<div class="cacheInfoWindow">' +
                                   '<table class="cacheInfoTable" style="border-spacing: 20px 5px;">' +
                                   '<tr>' +
                                   '<td>' + gcLink + '</td>' +
@@ -411,9 +411,10 @@ function getDisplayAddress(geocoderRequestResult) {
         types,
         type,
         partsOfLocation = [],
+        partOfLocation,
         addressComponent;
 
-    for (x = 0; x < geocoderRequestResult.length; x++) {
+    for (x = 0; x < geocoderRequestResult.length; x+=1) {
         types = geocoderRequestResult[x].types;
 
         if (!types.contains('bus_station')) {
@@ -422,11 +423,11 @@ function getDisplayAddress(geocoderRequestResult) {
         }
     }
 
-    for (x = 0; x < highLevelAddressComponents.length; x++) {
+    for (x = 0; x < highLevelAddressComponents.length; x+=1) {
         addressComponent = highLevelAddressComponents[x];
         types = addressComponent.types;
 
-        for (y = 0; y < types.length; y++) {
+        for (y = 0; y < types.length; y+=1) {
             type = types[y];
 
             if (type === 'country' || type === 'administrative_area_level_1' || type === 'locality' || type === 'administrative_area_level_2' || type === 'locality' || type === 'postal_town') {
@@ -435,33 +436,34 @@ function getDisplayAddress(geocoderRequestResult) {
         }
     }
 
-    var partOfLocation;
-    if (partOfLocation = partsOfLocation['locality']) {
+    if (partOfLocation = partsOfLocation.locality) {
         displayAddress.push(partOfLocation);
     }
 
-    if (partOfLocation = partsOfLocation['administrative_area_level_1']) {
+    if (partOfLocation = partsOfLocation.administrative_area_level_1) {
         displayAddress.push(partOfLocation);
-    } else if (partOfLocation = partsOfLocation['administrative_area_level_2']) {
+    } else if (partOfLocation = partsOfLocation.administrative_area_level_2) {
         displayAddress.push(partOfLocation);
-    } else if (partOfLocation = partsOfLocation['postal_town']) {
+    } else if (partOfLocation = partsOfLocation.postal_town) {
         displayAddress.push(partOfLocation);
     }
 
-    displayAddress.push(partsOfLocation['country']);
+    displayAddress.push(partsOfLocation.country);
 
     return displayAddress.join(", ");
 }
 
 function searchLocationAndDisplay(){
-	var address = jQuery("#addressSearchTxt").val();
+	var address = jQuery("#addressSearchTxt").val(),
+        geocoderRequest;
+
 	infoWindow.close(map);
- 	
+
 	if(!geocoder){
 		geocoder = new google.maps.Geocoder();
 	}
 					
-	var geocoderRequest = {
+	geocoderRequest = {
 		address: address
 	};
 	
@@ -507,7 +509,7 @@ function toggleClusterer() {
             if(gcMarkers.hasOwnProperty(key)){
                 typeArray = gcMarkers[key];
 
-                for (x = 0; x < typeArray.length; x++) {
+                for (x = 0; x < typeArray.length; x+=1) {
                     typeArray[x].setMap(map);
                 }
             }
@@ -517,7 +519,7 @@ function toggleClusterer() {
             if(gcMarkers.hasOwnProperty(key)){
                 typeArray = gcMarkers[key];
 
-                for (x = 0; x < typeArray.length; x++) {
+                for (x = 0; x < typeArray.length; x+=1) {
                     markerClusterer.addMarker(typeArray[x]);
                 }
             }
@@ -535,16 +537,15 @@ function toggleTraditionalCaches(checked) {
 }
 
 function adjustHeading() {
-    var path = straightPolygon.getPath();
-    var heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
+    var path = straightPolygon.getPath(),
+        heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
 
     jQuery('#angle').val(heading.toFixed(5) + ' \u00B0');
 }
 
 function adjustDistance(){
-    var path = straightPolygon.getPath();
-
-    var distance = google.maps.geometry.spherical.computeDistanceBetween(path.getAt(0), path.getAt(1));
+    var path = straightPolygon.getPath(),
+        distance = google.maps.geometry.spherical.computeDistanceBetween(path.getAt(0), path.getAt(1));
 
     if(distance > 2000){
         distance = (distance / 1000).toFixed(3) + ' km';
@@ -587,10 +588,12 @@ function updateDistanceLineDestination(marker){
 }
 
 function addOrigin(latLng) {
-    var path = straightPolygon.getPath();
+    var path = straightPolygon.getPath(),
+        gPath = geodesic.getPath();
+
     path.push(latLng);
-    var gPath = geodesic.getPath();
     gPath.push(latLng);
+
     bounds.extend(latLng);
 }
 
@@ -608,6 +611,8 @@ function displayDistance() {
 	
 	var distanceFromAddress = jQuery("#distanceFrom").val(),
 		distanceToAddress = jQuery("#distanceTo").val(),
+        polyOptions,
+        geodesicOptions,
 		latLngFrom = 0,
 		latLngTo = 0,
         geocoderRequest;
@@ -616,7 +621,7 @@ function displayDistance() {
 		geocoder = new google.maps.Geocoder();
 	}
 
-	var polyOptions = {
+	polyOptions = {
 			strokeColor: '#FF0000',
 			strokeOpacity: 1.0,
 			strokeWeight: 3
@@ -629,7 +634,7 @@ function displayDistance() {
 		straightPolygon.getPath().clear();
 	}
   
-	var geodesicOptions = {
+	geodesicOptions = {
 			strokeColor: '#CC0099',
 			strokeOpacity: 1.0,
 			strokeWeight: 3,

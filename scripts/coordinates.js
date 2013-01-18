@@ -55,8 +55,8 @@ function CHtoWGS() {
         lat,
         lng;
 
-    lat = new CHtoWGSlat(coordX, coordY).toFixed(6);
-    lng = new CHtoWGSlng(coordX, coordY).toFixed(6);
+    lat = CHtoWGSlat(coordX, coordY).toFixed(6);
+    lng = CHtoWGSlng(coordX, coordY).toFixed(6);
 
     jQuery('#coordDecimalAngle').val(lat + ' ' + lng);
 

@@ -3,7 +3,7 @@ hr {
 }
 
 dl{
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 dt {
@@ -117,10 +117,6 @@ ul.formList li span {
 
 .sliderOpen{
 	background-image: url('../images/toggle_plus.png');
-}
-
-.overflowAuto{
-	overflow: auto;
 }
 
 div.box_left {
