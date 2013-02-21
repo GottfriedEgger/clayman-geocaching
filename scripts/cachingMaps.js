@@ -561,10 +561,11 @@ function adjustDistance(){
 }
 
 function updateDistanceLines(marker, origin) {
-    var changePosition = origin ? 0 : 1;
+    var changePosition = origin ? 0 : 1,
+        markerPosition = marker.get('position');
 
-    straightPolygon.getPath().setAt(changePosition, marker.get('position'));
-    geodesic.getPath().setAt(changePosition, marker.get('position'));
+    straightPolygon.getPath().setAt(changePosition, markerPosition);
+    geodesic.getPath().setAt(changePosition, markerPosition);
 
     adjustHeading();
     adjustDistance();
@@ -609,105 +610,104 @@ function addDestination(latLng) {
     adjustDistance();
 }
 
+function getMarkerForDistanceDisplay(latLng){
+    return new google.maps.Marker({
+        map: map,
+        position: latLng,
+        draggable: true,
+        raiseOnDrag: false
+    });
+}
+
 function displayDistance() {
-	infoWindow.close(map);
-	bounds = new google.maps.LatLngBounds();
-	
-	var distanceFromAddress = jQuery("#distanceFrom").val(),
-		distanceToAddress = jQuery("#distanceTo").val(),
+    infoWindow.close(map);
+    bounds = new google.maps.LatLngBounds();
+
+    var distanceFromAddress = jQuery("#distanceFrom").val(),
+        distanceToAddress = jQuery("#distanceTo").val(),
         polyOptions,
         geodesicOptions,
-		latLngFrom = 0,
-		latLngTo = 0,
-        geocoderRequest;
-	
-	if(!geocoder){
-		geocoder = new google.maps.Geocoder();
-	}
+        latLngFrom = 0,
+        latLngTo = 0,
+        geocoderRequestFrom,
+        geocoderRequestTo;
 
-	polyOptions = {
-			strokeColor: '#FF0000',
-			strokeOpacity: 1.0,
-			strokeWeight: 3
-	};
-  
-	if(!straightPolygon){
-		straightPolygon = new google.maps.Polyline(polyOptions);
-		straightPolygon.setMap(map);
-	}else{
-		straightPolygon.getPath().clear();
-	}
-  
-	geodesicOptions = {
-			strokeColor: '#CC0099',
-			strokeOpacity: 1.0,
-			strokeWeight: 3,
-			geodesic: true,
-            title: 'Geodesic'
-	};
-  
-	if(!geodesic){
-		geodesic = new google.maps.Polyline(geodesicOptions);
-		geodesic.setMap(map);
-	}else{
-		geodesic.getPath().clear();
-	}
-  
-	geocoderRequest = {
-		address: distanceFromAddress
-	};
-	
-	geocoder.geocode(geocoderRequest, function(results, status){
-		if (status === google.maps.GeocoderStatus.OK){
-			latLngFrom = results[0].geometry.location;
+    if(!geocoder){
+        geocoder = new google.maps.Geocoder();
+    }
+
+    polyOptions = {
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 3
+    };
+
+    if(!straightPolygon){
+        straightPolygon = new google.maps.Polyline(polyOptions);
+        straightPolygon.setMap(map);
+    }else{
+        straightPolygon.getPath().clear();
+    }
+
+    geodesicOptions = {
+        strokeColor: '#CC0099',
+        strokeOpacity: 1.0,
+        strokeWeight: 3,
+        geodesic: true,
+        title: 'Geodesic'
+    };
+
+    if(!geodesic){
+        geodesic = new google.maps.Polyline(geodesicOptions);
+        geodesic.setMap(map);
+    }else{
+        geodesic.getPath().clear();
+    }
+
+    geocoderRequestFrom = {
+        address: distanceFromAddress
+    };
+
+    geocoder.geocode(geocoderRequestFrom, function(results, status){
+        if (status === google.maps.GeocoderStatus.OK){
+            latLngFrom = results[0].geometry.location;
 
 
             if(markerDistanceOrigin){
                 markerDistanceOrigin.setMap(null);
             }
 
-            markerDistanceOrigin = new google.maps.Marker({
-                map: map,
-                position: latLngFrom,
-                draggable: true,
-                raiseOnDrag: false
-            });
+            markerDistanceOrigin = getMarkerForDistanceDisplay(latLngFrom);
 
             markerDistanceOrigin.position_changed = function(){
                 updateDistanceLineOrigin(this);
             };
 
+            addOrigin(latLngFrom);
 
-			addOrigin(latLngFrom);
-		}
-	});
-	
-	geocoderRequest = {
-		address: distanceToAddress
-	};
-	
-	geocoder.geocode(geocoderRequest, function(results, status){
-		if (status === google.maps.GeocoderStatus.OK){
-			latLngTo = results[0].geometry.location;
-
-
-            if(markerDistanceDestination){
-                markerDistanceDestination.setMap(null);
-            }
-
-            markerDistanceDestination = new google.maps.Marker({
-                map: map,
-                position: latLngTo,
-                draggable: true,
-                raiseOnDrag: false
-            });
-
-            markerDistanceDestination.position_changed = function(){
-                updateDistanceLineDestination(markerDistanceDestination);
+            geocoderRequestTo = {
+                address: distanceToAddress
             };
 
-            addDestination(latLngTo);
-		}
-	});
+            geocoder.geocode(geocoderRequestTo, function(results, status){
+                if (status === google.maps.GeocoderStatus.OK){
+                    latLngTo = results[0].geometry.location;
+
+                    if(markerDistanceDestination){
+                        markerDistanceDestination.setMap(null);
+                    }
+
+                    markerDistanceDestination = getMarkerForDistanceDisplay(latLngTo);
+
+                    markerDistanceDestination.position_changed = function(){
+                        updateDistanceLineDestination(markerDistanceDestination);
+                    };
+
+                    addDestination(latLngTo);
+                }
+            });
+        }
+    });
+
 }
 
