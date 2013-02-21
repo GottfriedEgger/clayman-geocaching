@@ -566,9 +566,6 @@ function updateDistanceLines(marker, origin) {
 
     straightPolygon.getPath().setAt(changePosition, markerPosition);
     geodesic.getPath().setAt(changePosition, markerPosition);
-
-    adjustHeading();
-    adjustDistance();
 }
 
 function adjustOriginInfo(latLng){
@@ -589,6 +586,10 @@ function updateDistanceLineOrigin(marker){
 }
 function updateDistanceLineDestination(marker){
     updateDistanceLines(marker, false);
+
+    adjustHeading();
+    adjustDistance();
+
     adjustDestinationInfo(marker.get('position'));
 }
 
