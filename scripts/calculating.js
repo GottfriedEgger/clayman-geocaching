@@ -152,26 +152,27 @@ function calculateRot() {
     var rotResult = '',
         rotationInput,
         rotationCount,
-        x,
         charAtPosition,
-        rot,
-        index;
+        isCharUpperCase,
+        rotatedChar,
+        index,
+        i;
 
     rotationInput = jQuery('#rotationInput').val();
     rotationCount = parseInt(jQuery('#rotationCount').find('option:selected').text(), 10);
 
-    for (x = 0; x < rotationInput.length; x+=1) {
-        charAtPosition = rotationInput.charAt(x);
-        rot = charAtPosition;
+    for (i = 0; i < rotationInput.length; i+=1) {
+        charAtPosition = rotationInput.charAt(i);
         index = alphabet.indexOf(charAtPosition);
 
+
         if (index >= 0) {
-            rot = alphabet.charAt(index + rotationCount) % alphabet.length;
+            rotatedChar = alphabet.charAt((index + rotationCount) % alphabet.length);
         } else if ((index = alphabet.indexOf(charAtPosition.toUpperCase())) >= 0) {
-            rot = (alphabet.charAt((index + rotationCount) % alphabet.length)).toLowerCase();
+            rotatedChar = (alphabet.charAt((index + rotationCount) % alphabet.length)).toLowerCase();
         }
 
-        rotResult += rot;
+        rotResult += rotatedChar;
     }
 
     rotResult = replaceForHtml(rotResult);
