@@ -153,7 +153,6 @@ function calculateRot() {
         rotationInput,
         rotationCount,
         charAtPosition,
-        isCharUpperCase,
         rotatedChar,
         index,
         i;
