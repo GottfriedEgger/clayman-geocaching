@@ -598,7 +598,7 @@ function adjustHeading() {
     var path = straightPolygon.getPath(),
         heading = google.maps.geometry.spherical.computeHeading(path.getAt(0), path.getAt(1));
 
-    jQuery('#angle').val(heading.toFixed(5) + ' \u00B0');
+    jQuery('#angle').text(heading.toFixed(5) + ' \u00B0');
 }
 
 function adjustDistance() {
@@ -611,7 +611,7 @@ function adjustDistance() {
         distance = distance.toFixed(2) + ' m';
     }
 
-    jQuery('#distance').val(distance);
+    jQuery('#distance').text(distance);
 }
 
 function updateDistanceLines(marker, origin) {
