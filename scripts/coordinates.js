@@ -75,7 +75,19 @@ function CHtoWGS() {
     );
 }
 
-function convertGoogleLatLngToDecimalMinutes(latLng) {
+function convertWGStoCH(latLng){
+    var lat = latLng.lat(),
+        lng = latLng.lng(),
+        chX,
+        chY;
+
+    chX = WGStoCHx(lat, lng).toFixed(0);
+    chY = WGStoCHy(lat, lng).toFixed(0);
+
+    return chX + " / " + chY;
+}
+
+function convertLatLngToDecimalMinutes(latLng) {
     var lat = latLng.lat(),
         lng = latLng.lng(),
         latConverted = convertDecimalAngleToDecimalMinutes(lat, true),

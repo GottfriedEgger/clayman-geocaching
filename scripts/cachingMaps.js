@@ -59,7 +59,7 @@ var waterLabelMapStyleOff = {
 
 var elevationService = 0;
 
-function addSimpleMapType(){
+function addSimpleMapType() {
     var mapStyle = [],
         simpleStyledMap;
 
@@ -94,12 +94,12 @@ function getElevationInMeters(elevationResponse, responseStatus) {
     return elevationResult;
 }
 
-function placeChangedListener(){
+function placeChangedListener() {
     var place = autocomplete.getPlace(),
         latLng,
         content;
 
-    if(place.geometry){
+    if (place.geometry) {
         infoWindow.close(map);
 
         map.setCenter(place.geometry.location);
@@ -109,7 +109,7 @@ function placeChangedListener(){
 
         content = '<div class="locationInfoWindow" >';
         content += place.formatted_address + '<br />';
-        content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
+        content += 'Position: ' + convertLatLngToDecimalMinutes(latLng) + '<br>';
         content += '</div>';
 
         infoWindow.setPosition(latLng);
@@ -120,7 +120,9 @@ function placeChangedListener(){
 
 function showLocationInfoPopup(latLng) {
     var locations = [],
-        positionalRequest;
+        positionalRequest,
+        lat,
+        lng;
 
     infoWindow.close(map);
 
@@ -137,13 +139,17 @@ function showLocationInfoPopup(latLng) {
     elevationService.getElevationForLocations(positionalRequest, function (elevationResponse, responseStatus) {
         infoWindow.setPosition(latLng);
 
-        var content = '<div id="locationInfoWindow" class="locationInfoWindow">'+
+        lat = latLng.lat();
+        lng = latLng.lng();
+
+        var content = '<div id="locationInfoWindow" class="locationInfoWindow">' +
             '<dl class="dlLocationInfoWindow">' +
-            '<dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>' +
-            '<dd>' + convertGoogleLatLngToDecimalMinutes(latLng) + '</dd>' +
-            '<dt><dt><dd><span>' + latLng.lat().toFixed(6) + ' ' + latLng.lng().toFixed(6) + '</span></dd>'+
-            '<dt><label>' + jQuery.i18n.prop('map.elevation') + ':</label></dt>' +
-            '<dd>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</dd>'+
+            ' <dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>' +
+            ' <dd>' + convertLatLngToDecimalMinutes(latLng) + '</dd>' +
+            ' <dt><dt><dd><span>' + lat.toFixed(6) + ' ' + lng.toFixed(6) + '</span></dd>' +
+            ' <dt><dt><dd><span>' + convertWGStoCH(latLng) + '</span></dd>' +
+            ' <dt><label>' + jQuery.i18n.prop('map.elevation') + ':</label></dt>' +
+            ' <dd>' + getElevationInMeters(elevationResponse, responseStatus) + ' ' + jQuery.i18n.prop('map.elevation.unit') + '</dd>' +
             '</dl>' +
             '</div>';
 
@@ -195,33 +201,32 @@ window.onload = function () {
 };
 
 
-
 function setMarkersVisibility(visible) {
     var key, typeArray, x;
 
     for (key in gcMarkers) {
-        if(gcMarkers.hasOwnProperty(key)){
+        if (gcMarkers.hasOwnProperty(key)) {
             typeArray = gcMarkers[key];
 
-            for (x = 0; x < typeArray.length; x+=1) {
+            for (x = 0; x < typeArray.length; x += 1) {
                 typeArray[x].setVisible(visible);
             }
         }
     }
 }
 
-function clearDestinationOverlays(){
-    if(markerDistanceDestination){
+function clearDestinationOverlays() {
+    if (markerDistanceDestination) {
         markerDistanceOrigin.setMap(null);
     }
-    if(markerDistanceDestination){
+    if (markerDistanceDestination) {
         markerDistanceDestination.setMap(null);
     }
 
-    if(straightPolygon){
+    if (straightPolygon) {
         straightPolygon.getPath().clear();
     }
-    if(geodesic){
+    if (geodesic) {
         geodesic.getPath().clear();
     }
 }
@@ -260,28 +265,28 @@ function readFile() {
         if (evt.target.readyState === FileReader.DONE) { // DONE == 2
             var xmlContentGpx = evt.target.result,
                 waypoints = [],
-                xmlDoc = jQuery.parseXML( xmlContentGpx ),
-                $xml = jQuery( xmlDoc );
+                xmlDoc = jQuery.parseXML(xmlContentGpx),
+                $xml = jQuery(xmlDoc);
 
             $xml.find('wpt').each(function () {
-                var foundType, logDate='', logText='';
+                var foundType, logDate = '', logText = '';
 
-                jQuery(this).find("groundspeak\\:logs, logs").each(function(){
-                   foundType = jQuery(this).find("groundspeak\\:type, type").text();
-                   logDate = jQuery(this).find("groundspeak\\:date, date").text();
-                   logDate = logDate.substring(0, logDate.indexOf('T'));
-                   logText = jQuery(this).find("groundspeak\\:text, text").text();
+                jQuery(this).find("groundspeak\\:logs, logs").each(function () {
+                    foundType = jQuery(this).find("groundspeak\\:type, type").text();
+                    logDate = jQuery(this).find("groundspeak\\:date, date").text();
+                    logDate = logDate.substring(0, logDate.indexOf('T'));
+                    logText = jQuery(this).find("groundspeak\\:text, text").text();
                 });
 
-                if(foundType && foundType === 'Found it'){
+                if (foundType && foundType === 'Found it') {
                     var lat = jQuery(this).attr('lat'),
                         lon = jQuery(this).attr('lon'),
                         name = jQuery(this).find('name').text(),
                         urlName = jQuery(this).find('urlname').text(),
                         url = jQuery(this).find('url').text(),
                         type = jQuery(this).find('type').text().split("|")[1],
-                        waypoint = {lat:lat, lon: lon, name: name, urlName: urlName, url: url, type: type,
-                        logDate: logDate, logText: logText};
+                        waypoint = {lat: lat, lon: lon, name: name, urlName: urlName, url: url, type: type,
+                            logDate: logDate, logText: logText};
                     waypoints.push(waypoint);
                 }
 
@@ -301,13 +306,13 @@ function checkFileReadPreconditions(files) {
 
     if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
         warnMessageKey = 'map.warning.missing_file_api';
-    }else if (!files.length) {
+    } else if (!files.length) {
         warnMessageKey = 'map.warning.select_file';
-    }else if (!files[0].name.match('.*gpx')) {
+    } else if (!files[0].name.match('.*gpx')) {
         warnMessageKey = 'map.warning.select_gpx';
     }
 
-    if(warnMessageKey){
+    if (warnMessageKey) {
         showWarningDialog(warnMessageKey);
         return false;
     }
@@ -325,7 +330,7 @@ function displayWaypoints(waypoints) {
     var clusteringActivated = isClusteringActivated(),
         x;
 
-    for (x = 0; x < waypoints.length; x+=1) {
+    for (x = 0; x < waypoints.length; x += 1) {
         var waypoint = waypoints[x];
         var latLng = new google.maps.LatLng(waypoint.lat, waypoint.lon);
         bounds.extend(latLng);
@@ -354,7 +359,7 @@ function displayWaypoints(waypoints) {
                 }
 
                 var geocoderRequest = {
-                    latLng:gcMarker.position
+                    latLng: gcMarker.position
                 };
 
                 geocoder.geocode(geocoderRequest, function (geocoderRequestResult, status) {
@@ -364,11 +369,11 @@ function displayWaypoints(waypoints) {
                     gcLink = '<a href="' + waypoint.url + '" target="_blank">' + waypoint.urlName + '</a>';
 
                     content = '<div class="cacheInfoWindow">' +
-                                  '<table class="cacheInfoTable" style="border-spacing: 20px 5px;">' +
-                                  '<tr>' +
-                                  '<td>' + gcLink + '</td>' +
-                                  '<td>' + waypoint.name + '</td>' +
-                                  '</tr><tr>';
+                        '<table class="cacheInfoTable" style="border-spacing: 20px 5px;">' +
+                        '<tr>' +
+                        '<td>' + gcLink + '</td>' +
+                        '<td>' + waypoint.name + '</td>' +
+                        '</tr><tr>';
 
                     if (status === google.maps.GeocoderStatus.OK) {
                         content += '<td>' + jQuery.i18n.prop('map.wpt.location') + '</td>';
@@ -378,18 +383,18 @@ function displayWaypoints(waypoints) {
                     }
 
                     content += '<tr>' +
-                               '<td>' + jQuery.i18n.prop('map.wpt.found_at') + '</td>' +
-                               '<td>' + waypoint.logDate +'</td>' +
-                               '</tr>';
+                        '<td>' + jQuery.i18n.prop('map.wpt.found_at') + '</td>' +
+                        '<td>' + waypoint.logDate + '</td>' +
+                        '</tr>';
 
                     content += '<tr>' +
-                               '<td>' + jQuery.i18n.prop('map.wpt.log_text') + '</td>' +
-                               '<td>' + waypoint.logText.substring(0, 20) +'...</td>' +
-                               '</tr>';
+                        '<td>' + jQuery.i18n.prop('map.wpt.log_text') + '</td>' +
+                        '<td>' + waypoint.logText.substring(0, 20) + '...</td>' +
+                        '</tr>';
 
                     content += '</tr>' +
-                                '</table>'+
-                                '</div>';
+                        '</table>' +
+                        '</div>';
 
                     infoWindow.setContent(content);
                     infoWindow.open(map, gcMarker);
@@ -403,6 +408,27 @@ function displayWaypoints(waypoints) {
 
 }
 
+function containtsAddressShortName(geocoderRequestResult, shortNameToFind) {
+    var addressComponent,
+        addressComponents,
+        x,
+        y;
+
+    for (x = 0; x < geocoderRequestResult.length; x += 1) {
+        addressComponents = geocoderRequestResult[x].address_components;
+
+        for (y = 0; y < addressComponents.length; y += 1) {
+            addressComponent = addressComponents[y];
+
+            if (addressComponent.short_name === shortNameToFind) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 function getDisplayAddress(geocoderRequestResult) {
     var displayAddress = [],
         highLevelAddressComponents = 0,
@@ -414,7 +440,7 @@ function getDisplayAddress(geocoderRequestResult) {
         partOfLocation,
         addressComponent;
 
-    for (x = 0; x < geocoderRequestResult.length; x+=1) {
+    for (x = 0; x < geocoderRequestResult.length; x += 1) {
         types = geocoderRequestResult[x].types;
 
         if (!types.contains('bus_station')) {
@@ -423,11 +449,11 @@ function getDisplayAddress(geocoderRequestResult) {
         }
     }
 
-    for (x = 0; x < highLevelAddressComponents.length; x+=1) {
+    for (x = 0; x < highLevelAddressComponents.length; x += 1) {
         addressComponent = highLevelAddressComponents[x];
         types = addressComponent.types;
 
-        for (y = 0; y < types.length; y+=1) {
+        for (y = 0; y < types.length; y += 1) {
             type = types[y];
 
             if (type === 'country' || type === 'administrative_area_level_1' || type === 'locality' || type === 'administrative_area_level_2' || type === 'locality' || type === 'postal_town') {
@@ -453,52 +479,80 @@ function getDisplayAddress(geocoderRequestResult) {
     return displayAddress.join(", ");
 }
 
-function searchLocationAndDisplay(){
-	var address = jQuery("#addressSearchTxt").val(),
+function searchLocationAndDisplay() {
+    var address = jQuery("#addressSearchTxt").val(),
         geocoderRequest;
 
-    if(address === ''){
+    if (address === '') {
         return;
     }
 
     infoWindow.close(map);
 
-	if(!geocoder){
-		geocoder = new google.maps.Geocoder();
-	}
-					
-	geocoderRequest = {
-		address: address
-	};
-	
-	geocoder.geocode(geocoderRequest, function(results, status){
+    if (!geocoder) {
+        geocoder = new google.maps.Geocoder();
+    }
+
+    geocoderRequest = {
+        address: address
+    };
+
+    geocoder.geocode(geocoderRequest, function (results, status) {
         var content,
             formattedAddress,
             latLng;
 
-		if (status === google.maps.GeocoderStatus.OK){
-		
-			latLng = results[0].geometry.location;
-			map.setCenter(latLng);
-			map.setZoom(14);
-			
-			formattedAddress = results[0].formatted_address;
+        if (status === google.maps.GeocoderStatus.OK) {
 
-            content = '<div class="locationInfoWindow" >';
-			content += formattedAddress + '<br />';
-			content += 'Position: ' + convertGoogleLatLngToDecimalMinutes(latLng) + '<br>';
+            latLng = results[0].geometry.location;
+            map.setCenter(latLng);
+            map.setZoom(14);
+
+            formattedAddress = results[0].formatted_address;
+
+            var inCh = containtsAddressShortName(results, 'CH');
+
+            content = '<div id="locationInfoWindow" class="locationInfoWindow">';
+            content += '<dl class="dlLocationInfoWindow">';
+            content += ' <dt><label>' + jQuery.i18n.prop('map.location') + ':</label></dt>';
+            content += ' <dd>' + formattedAddress + '</dd>';
+            content += ' <dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>';
+            content += ' <dd>' + convertLatLngToDecimalMinutes(latLng) + '</dd>';
+            if(inCh){
+                content += ' <dt><dt><dd><span>' + convertWGStoCH(latLng) + '</span></dd>';
+            }
+            content += '</dl>';
             content += '</div>';
 
             infoWindow.setPosition(latLng);
             infoWindow.setContent(content);
             infoWindow.open(map);
 
-        }else if (status === google.maps.GeocoderStatus.ZERO_RESULTS ){
+        } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
             showWarningDialog('map.warning.zero_results', ['\'' + address + '\'']);
-        }else{
+        } else {
             showWarningDialog('map.warning.search_error');
         }
 
+    });
+}
+
+function getHeight(latLng){
+    var locations = [],
+        positionalRequest;
+
+    if (!elevationService) {
+        elevationService = new google.maps.ElevationService();
+    }
+
+    locations.push(latLng);
+
+    positionalRequest = {
+        'locations': locations
+    };
+
+    elevationService.getElevationForLocations(positionalRequest, function (elevationResponse, responseStatus) {
+        return getElevationInMeters(elevationResponse, responseStatus);
     });
 }
 
@@ -510,20 +564,20 @@ function toggleClusterer() {
         markerClusterer.clearMarkers();
 
         for (key in gcMarkers) {
-            if(gcMarkers.hasOwnProperty(key)){
+            if (gcMarkers.hasOwnProperty(key)) {
                 typeArray = gcMarkers[key];
 
-                for (x = 0; x < typeArray.length; x+=1) {
+                for (x = 0; x < typeArray.length; x += 1) {
                     typeArray[x].setMap(map);
                 }
             }
         }
     } else {
         for (key in gcMarkers) {
-            if(gcMarkers.hasOwnProperty(key)){
+            if (gcMarkers.hasOwnProperty(key)) {
                 typeArray = gcMarkers[key];
 
-                for (x = 0; x < typeArray.length; x+=1) {
+                for (x = 0; x < typeArray.length; x += 1) {
                     markerClusterer.addMarker(typeArray[x]);
                 }
             }
@@ -547,13 +601,13 @@ function adjustHeading() {
     jQuery('#angle').val(heading.toFixed(5) + ' \u00B0');
 }
 
-function adjustDistance(){
+function adjustDistance() {
     var path = straightPolygon.getPath(),
         distance = google.maps.geometry.spherical.computeDistanceBetween(path.getAt(0), path.getAt(1));
 
-    if(distance > 2000){
+    if (distance > 2000) {
         distance = (distance / 1000).toFixed(3) + ' km';
-    }else{
+    } else {
         distance = distance.toFixed(2) + ' m';
     }
 
@@ -568,23 +622,23 @@ function updateDistanceLines(marker, origin) {
     geodesic.getPath().setAt(changePosition, markerPosition);
 }
 
-function adjustOriginInfo(latLng){
+function adjustOriginInfo(latLng) {
     jQuery('#distanceFrom').val(
-        convertGoogleLatLngToDecimalMinutes(latLng)
+        convertLatLngToDecimalMinutes(latLng)
     );
 }
 
-function adjustDestinationInfo(latLng){
+function adjustDestinationInfo(latLng) {
     jQuery('#distanceTo').val(
-        convertGoogleLatLngToDecimalMinutes(latLng)
+        convertLatLngToDecimalMinutes(latLng)
     );
 }
 
-function updateDistanceLineOrigin(marker){
+function updateDistanceLineOrigin(marker) {
     updateDistanceLines(marker, true);
     adjustOriginInfo(marker.get('position'));
 }
-function updateDistanceLineDestination(marker){
+function updateDistanceLineDestination(marker) {
     updateDistanceLines(marker, false);
 
     adjustHeading();
@@ -611,7 +665,7 @@ function addDestination(latLng) {
     adjustDistance();
 }
 
-function getMarkerForDistanceDisplay(latLng){
+function getMarkerForDistanceDisplay(latLng) {
     return new google.maps.Marker({
         map: map,
         position: latLng,
@@ -633,7 +687,7 @@ function displayDistance() {
         geocoderRequestFrom,
         geocoderRequestTo;
 
-    if(!geocoder){
+    if (!geocoder) {
         geocoder = new google.maps.Geocoder();
     }
 
@@ -643,10 +697,10 @@ function displayDistance() {
         strokeWeight: 3
     };
 
-    if(!straightPolygon){
+    if (!straightPolygon) {
         straightPolygon = new google.maps.Polyline(polyOptions);
         straightPolygon.setMap(map);
-    }else{
+    } else {
         straightPolygon.getPath().clear();
     }
 
@@ -658,10 +712,10 @@ function displayDistance() {
         title: 'Geodesic'
     };
 
-    if(!geodesic){
+    if (!geodesic) {
         geodesic = new google.maps.Polyline(geodesicOptions);
         geodesic.setMap(map);
-    }else{
+    } else {
         geodesic.getPath().clear();
     }
 
@@ -669,18 +723,18 @@ function displayDistance() {
         address: distanceFromAddress
     };
 
-    geocoder.geocode(geocoderRequestFrom, function(results, status){
-        if (status === google.maps.GeocoderStatus.OK){
+    geocoder.geocode(geocoderRequestFrom, function (results, status) {
+        if (status === google.maps.GeocoderStatus.OK) {
             latLngFrom = results[0].geometry.location;
 
 
-            if(markerDistanceOrigin){
+            if (markerDistanceOrigin) {
                 markerDistanceOrigin.setMap(null);
             }
 
             markerDistanceOrigin = getMarkerForDistanceDisplay(latLngFrom);
 
-            markerDistanceOrigin.position_changed = function(){
+            markerDistanceOrigin.position_changed = function () {
                 updateDistanceLineOrigin(this);
             };
 
@@ -690,17 +744,17 @@ function displayDistance() {
                 address: distanceToAddress
             };
 
-            geocoder.geocode(geocoderRequestTo, function(results, status){
-                if (status === google.maps.GeocoderStatus.OK){
+            geocoder.geocode(geocoderRequestTo, function (results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
                     latLngTo = results[0].geometry.location;
 
-                    if(markerDistanceDestination){
+                    if (markerDistanceDestination) {
                         markerDistanceDestination.setMap(null);
                     }
 
                     markerDistanceDestination = getMarkerForDistanceDisplay(latLngTo);
 
-                    markerDistanceDestination.position_changed = function(){
+                    markerDistanceDestination.position_changed = function () {
                         updateDistanceLineDestination(markerDistanceDestination);
                     };
 
