@@ -51,7 +51,9 @@ function CHtoWGS() {
     var coordCH = jQuery('#coordCH').val(),
         splittedCoord,
         coordX,coordY,
-        lat,lng;
+        lat,lng,
+        convertedCoordinatesWGSSection,
+        conversionResultWGSHtml;
 
     if(coordCH === ''){
         return;
@@ -64,15 +66,13 @@ function CHtoWGS() {
     lat = CHtoWGSlat(coordX, coordY).toFixed(6);
     lng = CHtoWGSlng(coordX, coordY).toFixed(6);
 
-    jQuery('#coordDecimalAngle').val(lat + ' ' + lng);
+    convertedCoordinatesWGSSection = jQuery('#convertedCoordinatesWGS');
+    conversionResultWGSHtml =
+        '<b>' + convertDecimalAngleToDecimalMinutes(lat, true) + ' ' + convertDecimalAngleToDecimalMinutes(lng, false) + '</b><br>'+
+        lat + ' ' + lng + '<br>'+
+        convertDecimalAngleToAngleMinutesSeconds(lat, true) + ' ' + convertDecimalAngleToAngleMinutesSeconds(lng, false);
 
-    jQuery('#coordDecimalMinutes').val(
-        convertDecimalAngleToDecimalMinutes(lat, true) + ' ' + convertDecimalAngleToDecimalMinutes(lng, false)
-    );
-
-    jQuery('#coordAngleMinutesSeconds').val(
-        convertDecimalAngleToAngleMinutesSeconds(lat, true) + ' ' + convertDecimalAngleToAngleMinutesSeconds(lng, false)
-    );
+    convertedCoordinatesWGSSection.html(conversionResultWGSHtml);
 }
 
 function convertWGStoCH(latLng){

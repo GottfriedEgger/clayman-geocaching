@@ -107,30 +107,34 @@
 				<div id="slider" class="slider sliderOpen" ></div>
 			</div>
 		
-			<div id="map" style="height: 200px; width: 100%"></div>
+			<div id="map" style="height: 200px; width: 100%;"></div>
 		</div>
 
 		<div id="tools">
-			<div>
-				<h4 data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</h4>
-				<label for="coordCH">WGS84</label> <img src="images/info_16x16.png"
-					title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
-				<input id="coordCH" type="text" size="16" placeholder="600000 / 200000"/>
-				<button onclick="CHtoWGS();">&gt;CH1903 - Schweizer Gitter</button>
-				<input id="coordDecimalAngle" type="text" class="numberOrientation" size="26" readonly="readonly"/>
-				<input id="coordDecimalMinutes" type="text" class="numberOrientation" size="30" readonly="readonly"/>
-				<input id="coordAngleMinutesSeconds" type="text" class="numberOrientation" size="36" readonly="readonly"/>
-			</div>
-			<hr>
-		
-			<div>
-				<h4 data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</h4>
+			<fieldset>
+                <legend data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</legend>
+
+                <div class="box_left">
+                    <label for="coordCH">CH1903</label>
+                    <img src="images/info_16x16.png"
+                        title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
+                    <input id="coordCH" type="text" size="16" placeholder="600000 / 200000"/>
+                    <button onclick="CHtoWGS();" data-i18n-key="tools.convert">konvertieren</button>
+                </div>
+				<div id="convertedCoordinatesWGS" class="box_right"></div>
+				<div id="convertedCoordinatesCH" class="box_right"></div>
+			</fieldset>
+
+			<!--<hr class="clear">-->
+
+            <fieldset>
+				<legend data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</legend>
 				<div class="box_left">
                     <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults();"
                             data-i18n-placeholder-key="tools.letter_calculation.placeholder" placeholder="Text eingeben" />
 				</div>
 				
-				<div id="calculations" style="float: left;">
+				<div id="calculations" class="box_right">
                     <dl class="dlCalculation">
                         <dt>
                             <label id="sum" data-i18n-key="tools.sum">Summe:</label>
@@ -154,12 +158,12 @@
                         <dd></dd>
                     </dl>
 				</div>
-			</div>
+			</fieldset>
 			
-			<hr style="clear: both;">
+			<!--<hr style="clear: both;">-->
 
-			<div>			
-				<h4 data-i18n-key="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</h4>
+			<fieldset>
+				<legend data-i18n-key="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</legend>
 				<table>
                     <tr>
                         <td style="vertical-align: top;">
@@ -191,7 +195,7 @@
 						<td><div id="rotationResult" style="width: 100%;"></div></td>
 					</tr>
 				</table>
-			</div>
+			</fieldset>
 		</div>
 	</div>
 	

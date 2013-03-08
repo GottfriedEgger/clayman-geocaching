@@ -121,5 +121,23 @@ ul.formList li span {
 
 div.box_left {
     float: left;
-    margin-right: 15px;
+    margin-right: 25px;
+}
+
+div.box_right {
+    float: left;
+}
+
+.clear {
+    clear: both;
+}
+
+fieldset {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-color: #a9a9a9;
+}
+
+fieldset legend{
+    font-weight: bold;
 }
