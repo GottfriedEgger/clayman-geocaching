@@ -115,11 +115,11 @@
                 <legend data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</legend>
 
                 <div class="box_left">
-                    <label for="coordCH">CH1903</label>
+                    <label for="inputCoordinates" data-i18n-key="tools.coordinates">Koordinaten</label>
                     <img src="images/info_16x16.png"
                         title="Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
-                    <input id="coordCH" type="text" size="16" placeholder="600000 / 200000"/>
-                    <button onclick="CHtoWGS();" data-i18n-key="tools.convert">konvertieren</button>
+                    <input id="inputCoordinates" type="text" size="20"/>
+                    <button onclick="convertCoordinates();" data-i18n-key="tools.convert">konvertieren</button>
                 </div>
 				<div id="convertedCoordinatesWGS" class="box_right"></div>
 				<div id="convertedCoordinatesCH" class="box_right"></div>

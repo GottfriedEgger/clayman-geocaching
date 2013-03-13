@@ -55,8 +55,20 @@ TestCase('coordinates tests', {
         assertTrue(convertedCoordinates.indexOf('600000 / 200000') >= 0);
 
         assertFalse(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
+    },
 
+    'test get converted coordinates for decimal': function(){
+        var convertedCoordinates = getConvertedCoordinates('46.951083 7.438633');
 
+        assertTrue(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
+        assertTrue(convertedCoordinates.indexOf('600000 / 200000') >= 0);
+
+        assertFalse(convertedCoordinates.indexOf('46.951083 7.438633') >= 0);
+    },
+
+    'test convert wrong input': function(){
+        var convertedCoordinates = getConvertedCoordinates('abc');
+        assertTrue(convertedCoordinates.length === 0);
     },
 
     'test convert ch to wgs': function(){

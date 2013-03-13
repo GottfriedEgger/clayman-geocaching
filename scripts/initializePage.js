@@ -144,11 +144,6 @@ function initPage(){
 
     setMapDivHeight();
 
-    jQuery(function($){
-        $.mask.definitions.D ='[nNeEsSwW]';
-        $("#coordCH").mask("999999 / 999999");
-    });
-
     placeSlider();
 
     bindEnterActions();

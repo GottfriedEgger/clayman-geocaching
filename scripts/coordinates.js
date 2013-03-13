@@ -11,6 +11,12 @@ coordinatesPatterns.push(wgs84DecimalMinutesPattern);
 
 var converterStrategies;
 
+var ConverterStrategy = function (parameters) {
+    this.convert = parameters.convertFunction;
+    this.convertBack = parameters.backConvertFunction;
+    this.coordinatesPattern = parameters.coordinatesPattern;
+};
+
 function getDirection(decimalAngle, lat) {
     var direction;
     if (lat) {
@@ -66,7 +72,7 @@ function convertDecimalMinutesPartToDecimal(input) {
         positiveDirections = 'nNeE',
         firstChar;
 
-    firstChar = input.substring(0,1);
+    firstChar = input.substring(0, 1);
 
     if (positiveDirections.indexOf(firstChar) >= 0) {
         input = input.substr(1);
@@ -139,29 +145,22 @@ function convertInputWGSDegreeDecimalToCH(input) {
     return chX + " / " + chY;
 }
 
-function CHtoWGS() {
-    var coordCH = jQuery('#coordCH').val(),
-        splittedCoord,
-        wgsDegreeDecimal,
-        lat, lng,
+function convertCoordinates() {
+    var inputCoordinates,
         convertedCoordinatesWGSSection,
-        conversionResultWGSHtml;
+        convertedCoordinates,
+        conversionResultWGSHtml = '',
+        i;
 
-    if (coordCH === '') {
-        return;
-    }
+    inputCoordinates = jQuery('#inputCoordinates').val();
 
-    wgsDegreeDecimal = convertInputCHtoWGSDecimal(coordCH);
-
-    splittedCoord = wgsDegreeDecimal.split(' ');
-    lat = splittedCoord[0];
-    lng = splittedCoord[1];
+    convertedCoordinates = getConvertedCoordinates(inputCoordinates);
 
     convertedCoordinatesWGSSection = jQuery('#convertedCoordinatesWGS');
-    conversionResultWGSHtml =
-        '<b>' + convertDecimalAngleToDecimalMinutes(lat, true) + ' ' + convertDecimalAngleToDecimalMinutes(lng, false) + '</b><br>' +
-            lat + ' ' + lng + '<br>' +
-            convertDecimalAngleToAngleMinutesSeconds(lat, true) + ' ' + convertDecimalAngleToAngleMinutesSeconds(lng, false);
+
+    for (i = 0; i < convertedCoordinates.length; i += 1) {
+        conversionResultWGSHtml += '<b>' + convertedCoordinates[i] + '</b><br>';
+    }
 
     convertedCoordinatesWGSSection.html(conversionResultWGSHtml);
 }
@@ -182,38 +181,28 @@ function convertLatLngToDecimalMinutes(latLng) {
     return latConverted + ' ' + lngConverted;
 }
 
-var ConverterStrategy = function (parameters) {
-    this.convert = parameters.convertFunction;
-    this.convertBack = parameters.backConvertFunction;
-    this.coordinatesPattern = parameters.coordinatesPattern;
-};
-
 function getConverterStrategies() {
-    var CHtoWGSConverterStrategy,
-        WGStoCHConverterStrategy,
-        WGSDecimalMinutestoDecimalConverterStrategy;
-
-    if (!converterStrategies) {
+        if (!converterStrategies) {
         converterStrategies = [];
 
-        CHtoWGSConverterStrategy = new ConverterStrategy({
-            convertFunction: convertInputCHtoWGSDecimal,
-            backConvertFunction: convertInputWGSDegreeDecimalToCH,
-            coordinatesPattern: ch1903Pattern
-        });
-        WGStoCHConverterStrategy = new ConverterStrategy({
-            convertFunction: convertWGStoCH,
-            coordinatesPattern: wgs84DecimalPattern
-        });
-        WGSDecimalMinutestoDecimalConverterStrategy = new ConverterStrategy({
+        converterStrategies.push(
+            new ConverterStrategy({
+                convertFunction: convertWGStoCH,
+                coordinatesPattern: wgs84DecimalPattern
+            }));
+
+        converterStrategies.push(
+            new ConverterStrategy({
+                convertFunction: convertInputCHtoWGSDecimal,
+                backConvertFunction: convertInputWGSDegreeDecimalToCH,
+                coordinatesPattern: ch1903Pattern
+            }));
+
+        converterStrategies.push(new ConverterStrategy({
             convertFunction: convertInputWGSDecimalMinutesToDecimal,
             backConvertFunction: convertInputWGSDegreeDecimalToDegreeDecimalMinutes,
             coordinatesPattern: wgs84DecimalMinutesPattern
-        });
-
-        converterStrategies.push(WGStoCHConverterStrategy);
-        converterStrategies.push(CHtoWGSConverterStrategy);
-        converterStrategies.push(WGSDecimalMinutestoDecimalConverterStrategy);
+        }));
     }
 
     return converterStrategies;
@@ -249,6 +238,10 @@ function getConvertedCoordinates(input) {
 
     matchingPattern = getMatchingPattern(input);
 
+    if (!matchingPattern) {
+        return [];
+    }
+
     for (i = 0; i < getConverterStrategies().length; i += 1) {
         converterStrategy = getConverterStrategies()[i];
 
@@ -262,7 +255,7 @@ function getConvertedCoordinates(input) {
     isAlreadyBasePattern = rootConverterStrategy.coordinatesPattern === wgs84DecimalPattern;
 
     if (isAlreadyBasePattern) {
-        convertedCoordinates = input;
+        conversionResult = input;
     } else {
         conversionResult = rootConverterStrategy.convert(input);
         convertedCoordinates.push(conversionResult);
