@@ -253,13 +253,7 @@ function getConvertedCoordinates(input) {
         converterStrategy = getConverterStrategies()[i];
 
         if (matchingPattern === converterStrategy.coordinatesPattern) {
-
             rootConverterStrategy = converterStrategy;
-
-//            conversionResult = converterStrategy.convert(input);
-//            convertedCoordinates.push(conversionResult);
-
-//            convertedCoordinates.push(convertInputWGSDegreeDecimalToDegreeDecimalMinutes(conversionResult));
         } else {
             targetConverterStrategies.push(converterStrategy);
         }
@@ -273,17 +267,11 @@ function getConvertedCoordinates(input) {
         conversionResult = rootConverterStrategy.convert(input);
         convertedCoordinates.push(conversionResult);
     }
-    console.log('base pattern ' + isAlreadyBasePattern);
-    console.log('conversionResult ' + conversionResult);
-    console.log('root converter ' + rootConverterStrategy.coordinatesPattern);
-
 
     for (i = 0; i < targetConverterStrategies.length; i += 1) {
         targetConverterStrategy = targetConverterStrategies[i];
 
         if (rootConverterStrategy !== targetConverterStrategy && wgs84DecimalPattern !== targetConverterStrategy.coordinatesPattern) {
-            console.log("strat pattern " + targetConverterStrategy.coordinatesPattern);
-            console.log("strat back function " + targetConverterStrategy.convertBack);
             convertedCoordinates.push(targetConverterStrategy.convertBack(conversionResult));
         }
     }

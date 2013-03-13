@@ -44,16 +44,17 @@ TestCase('coordinates tests', {
         assertTrue(convertedCoordinates.indexOf('46.951081 7.438637') >= 0);
         assertTrue(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
 
+        assertFalse(convertedCoordinates.indexOf('600000 / 200000') >= 0);
+
     },
 
     'test get converted coordinates for decimal minutes': function(){
         var convertedCoordinates = getConvertedCoordinates('N46° 57.065 E7° 26.318');
 
-        console.log(convertedCoordinates[0]);
-        console.log(convertedCoordinates[1]);
-
         assertTrue(convertedCoordinates.indexOf('46.951083 7.438633') >= 0);
         assertTrue(convertedCoordinates.indexOf('600000 / 200000') >= 0);
+
+        assertFalse(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
 
 
     },
