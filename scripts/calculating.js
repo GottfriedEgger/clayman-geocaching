@@ -164,7 +164,6 @@ function calculateRot() {
         charAtPosition = rotationInput.charAt(i);
         index = alphabet.indexOf(charAtPosition);
 
-
         if (index >= 0) {
             rotatedChar = alphabet.charAt((index + rotationCount) % alphabet.length);
         } else if ((index = alphabet.indexOf(charAtPosition.toUpperCase())) >= 0) {
