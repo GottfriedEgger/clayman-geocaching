@@ -107,9 +107,9 @@ function convertInputCHtoWGSDecimal(input) {
         coordX, coordY,
         lat, lng;
 
-    splittedCoord = input.split(" / ");
-    coordX = splittedCoord[0];
-    coordY = splittedCoord[1];
+    splittedCoord = input.split("/");
+    coordX = splittedCoord[0].trim();
+    coordY = splittedCoord[1].trim();
 
     lat = CHtoWGSlat(coordX, coordY).toFixed(6);
     lng = CHtoWGSlng(coordX, coordY).toFixed(6);
@@ -137,8 +137,7 @@ function convertInputWGSDegreeDecimalToCH(input) {
     lat = splittedCoord[0];
     lng = splittedCoord[1];
 
-    //the x and y are somehow exchanged
-
+    //x and y are somehow exchanged
     chY = WGStoCHx(lat, lng).toFixed(0);
     chX = WGStoCHy(lat, lng).toFixed(0);
 
@@ -159,7 +158,7 @@ function convertCoordinates() {
     convertedCoordinatesWGSSection = jQuery('#convertedCoordinatesWGS');
 
     for (i = 0; i < convertedCoordinates.length; i += 1) {
-        conversionResultWGSHtml += '<b>' + convertedCoordinates[i] + '</b><br>';
+        conversionResultWGSHtml += '<span>' + convertedCoordinates[i] + '</span><br>';
     }
 
     convertedCoordinatesWGSSection.html(conversionResultWGSHtml);
@@ -187,7 +186,6 @@ function getConverterStrategies() {
 
         converterStrategies.push(
             new ConverterStrategy({
-                convertFunction: convertWGStoCH,
                 coordinatesPattern: wgs84DecimalPattern
             }));
 

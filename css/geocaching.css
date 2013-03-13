@@ -37,8 +37,11 @@ ul.formList li label, ul.formList li p {
     width: 23%;
 }
 
-label {
+dl.dlLocationInfoWindow dt label {
     font-weight: bold;
+}
+
+label {
     margin-right: 4px;
 }
 

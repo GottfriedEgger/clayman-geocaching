@@ -46,6 +46,11 @@ TestCase('coordinates tests', {
 
         assertFalse(convertedCoordinates.indexOf('600000 / 200000') >= 0);
 
+
+//        var convertedCoordinates = getConvertedCoordinates('600000/200000');
+//
+//        assertTrue(convertedCoordinates.indexOf('46.951081 7.438637') >= 0);
+
     },
 
     'test get converted coordinates for decimal minutes': function(){
@@ -73,7 +78,9 @@ TestCase('coordinates tests', {
 
     'test convert ch to wgs': function(){
         var convertedCoordinate = convertInputCHtoWGSDecimal('600000 / 200000');
+        assertEquals('46.951081 7.438637',convertedCoordinate);
 
+        convertedCoordinate = convertInputCHtoWGSDecimal('600000/200000');
         assertEquals('46.951081 7.438637',convertedCoordinate);
     },
 
