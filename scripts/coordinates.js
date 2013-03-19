@@ -1,8 +1,8 @@
 /*global jQuery, CHtoWGSlat, CHtoWGSlng */
 
-var ch1903Pattern = /^\d{6}\s*\/\s*\d{6}$/;
-var wgs84DecimalPattern = /^[\-]?\d{1,2}([.]\d+)?\s+[\-]?\d{1,3}([.]\d+)?$/;
-var wgs84DecimalMinutesPattern = /^[nNsS]\s*\d{1,2}\s*°\s*\d{1,2}([.]\d{3,})?\s+[eEwW]\s*\d{1,3}°\s*\d{1,2}([.]\d{3,})?$/;
+var ch1903Pattern = /^(\d{6})\s*\/\s*(\d{6})$/;
+var wgs84DecimalPattern = /^([\-]?\d{1,2}(?:[.]\d+)?)(?:\s+|\s*,\s*)([\-]?\d{1,3}(?:[.]\d+)?)$/;
+var wgs84DecimalMinutesPattern = /^([nNsS]\s*\d{1,2}\s*°\s*\d{1,2}(?:[.]\d{3,})?)\s+([eEwW]\s*\d{1,3}°\s*\d{1,2}(?:[.]\d{3,})?)$/;
 
 var coordinatesPatterns = [];
 coordinatesPatterns.push(ch1903Pattern);
@@ -88,28 +88,22 @@ function convertDecimalMinutesPartToDecimal(input) {
 }
 
 function convertInputWGSDecimalMinutesToDecimal(input) {
-    var lat, lng,
-        pattern,
-        matchResult;
+    var matchResult;
 
-    pattern = /[eEwW]/;
-    matchResult = pattern.exec(input);
+    matchResult = wgs84DecimalMinutesPattern.exec(input);
 
-    lat = input.substring(0, matchResult.index - 1);
-    lng = input.substring(matchResult.index);
-
-    return convertDecimalMinutesPartToDecimal(lat) + ' ' + convertDecimalMinutesPartToDecimal(lng);
+    return convertDecimalMinutesPartToDecimal(matchResult[1]) + ' ' + convertDecimalMinutesPartToDecimal(matchResult[2]);
 
 }
 
 function convertInputCHtoWGSDecimal(input) {
-    var splittedCoord,
+    var matchResult,
         coordX, coordY,
         lat, lng;
 
-    splittedCoord = input.split("/");
-    coordX = splittedCoord[0].trim();
-    coordY = splittedCoord[1].trim();
+    matchResult = ch1903Pattern.exec(input);
+    coordX = matchResult[1].trim();
+    coordY = matchResult[2].trim();
 
     lat = CHtoWGSlat(coordX, coordY).toFixed(6);
     lng = CHtoWGSlng(coordX, coordY).toFixed(6);
@@ -118,24 +112,24 @@ function convertInputCHtoWGSDecimal(input) {
 }
 
 function convertInputWGSDegreeDecimalToDegreeDecimalMinutes(input) {
-    var splittedCoord,
+    var matchResult,
         lat, lng;
 
-    splittedCoord = input.split(" ");
-    lat = splittedCoord[0];
-    lng = splittedCoord[1];
+    matchResult = wgs84DecimalPattern.exec(input);
+    lat = matchResult[1];
+    lng = matchResult[2];
 
     return convertDecimalAngleToDecimalMinutes(lat, true) + ' ' + convertDecimalAngleToDecimalMinutes(lng, false);
 }
 
 function convertInputWGSDegreeDecimalToCH(input) {
-    var splittedCoord,
+    var matchResult,
         lat, lng,
         chX, chY;
 
-    splittedCoord = input.split(" ");
-    lat = splittedCoord[0];
-    lng = splittedCoord[1];
+    matchResult = wgs84DecimalPattern.exec(input);
+    lat = matchResult[1];
+    lng = matchResult[2];
 
     //x and y are somehow exchanged
     chY = WGStoCHx(lat, lng).toFixed(0);

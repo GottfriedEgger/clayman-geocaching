@@ -17,6 +17,7 @@ TestCase('coordinates tests', {
     'test wgs degree deecimal regex': function(){
         assertTrue(isPatternMatching('-47.006480 8.470459', wgs84DecimalPattern));
         assertTrue(isPatternMatching('-47.55555555555 8.666666666', wgs84DecimalPattern));
+        assertTrue(isPatternMatching('-47.55555555555, 8.666666666', wgs84DecimalPattern));
         assertTrue(isPatternMatching('47 -8', wgs84DecimalPattern));
 
         assertFalse(isPatternMatching('100.00 -7.00', wgs84DecimalPattern));
@@ -45,12 +46,6 @@ TestCase('coordinates tests', {
         assertTrue(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
 
         assertFalse(convertedCoordinates.indexOf('600000 / 200000') >= 0);
-
-
-//        var convertedCoordinates = getConvertedCoordinates('600000/200000');
-//
-//        assertTrue(convertedCoordinates.indexOf('46.951081 7.438637') >= 0);
-
     },
 
     'test get converted coordinates for decimal minutes': function(){
@@ -69,6 +64,15 @@ TestCase('coordinates tests', {
         assertTrue(convertedCoordinates.indexOf('600000 / 200000') >= 0);
 
         assertFalse(convertedCoordinates.indexOf('46.951083 7.438633') >= 0);
+
+        convertedCoordinates = getConvertedCoordinates('46.951083, 7.438633');
+        assertTrue(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
+
+        convertedCoordinates = getConvertedCoordinates('46.951083  , 7.438633');
+        assertTrue(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
+
+        convertedCoordinates = getConvertedCoordinates('46.951083,7.438633');
+        assertTrue(convertedCoordinates.indexOf('N46° 57.065 E7° 26.318') >= 0);
     },
 
     'test convert wrong input': function(){
@@ -86,7 +90,9 @@ TestCase('coordinates tests', {
 
     'test convert wgs degree decimal to degree decimal minutes': function(){
         var convertedCoordinate = convertInputWGSDegreeDecimalToDegreeDecimalMinutes('46.951081 7.438637');
+        assertEquals('N46° 57.065 E7° 26.318',convertedCoordinate);
 
+        convertedCoordinate = convertInputWGSDegreeDecimalToDegreeDecimalMinutes('46.951081, 7.438637');
         assertEquals('N46° 57.065 E7° 26.318',convertedCoordinate);
     }
 });
