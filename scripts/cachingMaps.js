@@ -1,6 +1,6 @@
 /*global jQuery, google, FileReader, convertGoogleLatLngToDecimalMinutes, MarkerClusterer */
 
-var map;
+var mainMap;
 var autocomplete;
 var gcMarkers = {};
 var geocoder = 0;
@@ -73,7 +73,7 @@ function addSimpleMapType() {
     simpleStyledMap = new google.maps.StyledMapType(mapStyle,
         {name: "Simple Map"});
 
-    map.mapTypes.set('simple_map_style', simpleStyledMap);
+    mainMap.mapTypes.set('simple_map_style', simpleStyledMap);
 
 }
 
@@ -100,10 +100,10 @@ function placeChangedListener() {
         content;
 
     if (place.geometry) {
-        infoWindow.close(map);
+        infoWindow.close(mainMap);
 
-        map.setCenter(place.geometry.location);
-        map.setZoom(14);
+        mainMap.setCenter(place.geometry.location);
+        mainMap.setZoom(14);
 
         latLng = place.geometry.location;
 
@@ -114,7 +114,7 @@ function placeChangedListener() {
 
         infoWindow.setPosition(latLng);
         infoWindow.setContent(content);
-        infoWindow.open(map);
+        infoWindow.open(mainMap);
     }
 }
 
@@ -124,7 +124,7 @@ function showLocationInfoPopup(latLng) {
         lat,
         lng;
 
-    infoWindow.close(map);
+    infoWindow.close(mainMap);
 
     if (!elevationService) {
         elevationService = new google.maps.ElevationService();
@@ -154,7 +154,7 @@ function showLocationInfoPopup(latLng) {
             '</div>';
 
         infoWindow.setContent(content);
-        infoWindow.open(map);
+        infoWindow.open(mainMap);
     });
 }
 
@@ -179,23 +179,23 @@ window.onload = function () {
             position: google.maps.ControlPosition.RIGHT_BOTTOM
         }
     };
-    map = new google.maps.Map(mapDiv, options);
+    mainMap = new google.maps.Map(mapDiv, options);
 
     infoWindow.setPosition(latLng);
     infoWindow.setContent(jQuery.i18n.prop('map.start_info_window_text'));
-    infoWindow.open(map);
+    infoWindow.open(mainMap);
 
-    google.maps.event.addListener(map, 'click', function (e) {
+    google.maps.event.addListener(mainMap, 'click', function (e) {
         showLocationInfoPopup(e.latLng);
     });
 
     addSimpleMapType();
 
-    markerClusterer = new MarkerClusterer(map);
+    markerClusterer = new MarkerClusterer(mainMap);
 
     inputAddress = document.getElementById('addressSearchTxt');
     autocomplete = new google.maps.places.Autocomplete(inputAddress);
-    autocomplete.bindTo('bounds', map);
+    autocomplete.bindTo('bounds', mainMap);
 
     google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
 };
@@ -233,7 +233,7 @@ function clearDestinationOverlays() {
 
 function clearMap() {
     if (infoWindow) {
-        infoWindow.close(map);
+        infoWindow.close(mainMap);
     }
 
     setMarkersVisibility(false);
@@ -337,7 +337,7 @@ function displayWaypoints(waypoints) {
 
         var gcMarker = new google.maps.Marker({
             position: latLng,
-            map: map,
+            map: mainMap,
             icon: 'images/smiley_16x16.png'
         });
 
@@ -397,14 +397,14 @@ function displayWaypoints(waypoints) {
                         '</div>';
 
                     infoWindow.setContent(content);
-                    infoWindow.open(map, gcMarker);
+                    infoWindow.open(mainMap, gcMarker);
                 });
             });
 
         })(gcMarker, waypoint);
     }
 
-    map.fitBounds(bounds);
+    mainMap.fitBounds(bounds);
 
 }
 
@@ -487,7 +487,7 @@ function searchLocationAndDisplay() {
         return;
     }
 
-    infoWindow.close(map);
+    infoWindow.close(mainMap);
 
     if (!geocoder) {
         geocoder = new google.maps.Geocoder();
@@ -505,8 +505,8 @@ function searchLocationAndDisplay() {
         if (status === google.maps.GeocoderStatus.OK) {
 
             latLng = results[0].geometry.location;
-            map.setCenter(latLng);
-            map.setZoom(14);
+            mainMap.setCenter(latLng);
+            mainMap.setZoom(14);
 
             formattedAddress = results[0].formatted_address;
 
@@ -526,7 +526,7 @@ function searchLocationAndDisplay() {
 
             infoWindow.setPosition(latLng);
             infoWindow.setContent(content);
-            infoWindow.open(map);
+            infoWindow.open(mainMap);
 
         } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
             showWarningDialog('map.warning.zero_results', ['\'' + address + '\'']);
@@ -568,7 +568,7 @@ function toggleClusterer() {
                 typeArray = gcMarkers[key];
 
                 for (x = 0; x < typeArray.length; x += 1) {
-                    typeArray[x].setMap(map);
+                    typeArray[x].setMap(mainMap);
                 }
             }
         }
@@ -660,14 +660,14 @@ function addOrigin(latLng) {
 function addDestination(latLng) {
     addOrigin(latLng);
 
-    map.fitBounds(bounds);
+    mainMap.fitBounds(bounds);
     adjustHeading();
     adjustDistance();
 }
 
 function getMarkerForDistanceDisplay(latLng) {
     return new google.maps.Marker({
-        map: map,
+        map: mainMap,
         position: latLng,
         draggable: true,
         raiseOnDrag: false
@@ -675,7 +675,7 @@ function getMarkerForDistanceDisplay(latLng) {
 }
 
 function displayDistance() {
-    infoWindow.close(map);
+    infoWindow.close(mainMap);
     bounds = new google.maps.LatLngBounds();
 
     var distanceFromAddress = jQuery("#distanceFrom").val(),
@@ -699,7 +699,7 @@ function displayDistance() {
 
     if (!straightPolygon) {
         straightPolygon = new google.maps.Polyline(polyOptions);
-        straightPolygon.setMap(map);
+        straightPolygon.setMap(mainMap);
     } else {
         straightPolygon.getPath().clear();
     }
@@ -714,7 +714,7 @@ function displayDistance() {
 
     if (!geodesic) {
         geodesic = new google.maps.Polyline(geodesicOptions);
-        geodesic.setMap(map);
+        geodesic.setMap(mainMap);
     } else {
         geodesic.getPath().clear();
     }
