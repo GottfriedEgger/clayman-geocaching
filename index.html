@@ -7,12 +7,12 @@
 <meta name="keywords" lang="de" content="Geocaching, Cache, Caches, Maps, Google Maps, Google Maps API">
 <meta name="keywords" lang="en" content="Geocaching, Cache, Caches, Maps, Google Maps, Google Maps API Koordinaten">
 
-<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
 <link href="prime-ui/prime-ui-0.7-min.css" rel="stylesheet" type="text/css">
 <link href="css/geocaching.css" rel="stylesheet" type="text/css">
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCwCI3e4wumFEgWZpsfwzKX1_1H2QsoSz8&libraries=geometry,places&sensor=false"></script>
 
 <script type="text/javascript" src="scripts/3rdPartyLibs/jquery.i18n.properties-min.js"></script>
@@ -34,18 +34,18 @@
 
         <div id="warningDialogPlaceholder" title="Warnung">content</div>
 
-        <!-- tabs -->
+		<!-- tabs -->
 		<ul class="tabNavigation">
-			<li><a href="#googleMaps" data-i18n-key="tab.maps">Google Maps</a></li>
-			<li><a href="#tools" data-i18n-key="tab.tools">Tools</a></li>
+			<li><a href="#googleMapsTabContent" data-i18n-key="tab.maps">Google Maps</a></li>
+			<li><a href="#toolsTabContent" data-i18n-key="tab.tools">Tools</a></li>
 		</ul>
 
 		<!-- tab containers -->
-		<div id="googleMaps">
-			<div id="mapCommands" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;">
-				<div id="mapCommandsContentWrapper" class="mapCommandsContent overflowScroll">
-					<div id="mapCommandsContent" class="paddingLeft10">
-						
+		<div id="googleMapsTabContent">
+			<div id="mapCommands" class="mapCommandsPanel" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;">
+				<div id="mapCommandsContentWrapper" class="mapCommandsContentWrapper overflowScroll">
+					<div id="mapCommandsContent" class="paddingLeft10" class="mapCommandsContent">
+
 						<h5 data-i18n-key="map.load.title">Gefundene Caches darstellen</h5>
 						<input type="file" id="files" name="file" />
 						<button data-i18n-key="map.load.finds" data-i18n-title-key="map.load.finds.tooltip"
@@ -58,12 +58,12 @@
 						<input type="checkbox" id="useClustering" onclick="toggleClusterer();" >
 						<label for="useClustering" data-i18n-key="map.use_clustering">Mit Clustering</label>
 						<hr>
-						
-						<h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
-						<input id="addressSearchTxt" type="text" data-enter-action-button-id="addressSearchBtn"
-                               data-i18n-placeholder-key="map.search.placeholder" placeholder="z.B. Bern" size="30">
 
-						<button id="addressSearchBtn" data-i18n-key="map.search" onclick="searchLocationAndDisplay();">Suchen</button>
+						<h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
+						<input type="text" id="addressSearchTxtMainMap" placeholder="" size="30">
+
+						<button id="addressSearchBtnMap" data-i18n-key="map.search"
+                                onclick="searchLocationAndDisplay(mainMap, 'addressSearchTxtMainMap');">Suchen</button>
 						<hr>
 						
 						<h5 data-i18n-key="map.distance.title">Gefundene Caches darstellen</h5>
@@ -75,7 +75,7 @@
                                            data-i18n-placeholder-key="map.distance.from.placeholder" placeholder="Ausgangspunkt">
                                 </span>
 							</li>
-							<li>						
+							<li>
 								<label for="distanceTo" data-i18n-key="map.distance.to">Bis:</label>
                                 <span>
 								    <input type="text" id="distanceTo" data-enter-action-button-id="displayDistance"
@@ -104,13 +104,13 @@
 					</div>
 				</div>
 				
-				<div id="slider" class="slider sliderOpen" ></div>
+				<div id="sliderMap" class="slider sliderOpen" ></div>
 			</div>
 		
-			<div id="map" style="height: 200px; width: 100%;"></div>
+			<div id="map" class="map"></div>
 		</div>
 
-		<div id="tools">
+		<div id="toolsTabContent">
 			<fieldset>
                 <legend data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</legend>
 
@@ -125,15 +125,13 @@
 				<div id="convertedCoordinatesCH" class="box_right"></div>
 			</fieldset>
 
-			<!--<hr class="clear">-->
-
             <fieldset>
 				<legend data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</legend>
 				<div class="box_left">
                     <input id="calcLetterInp" type="text" onkeyup="calculateLetterValuesAndDisplayResults();"
                             data-i18n-placeholder-key="tools.letter_calculation.placeholder" placeholder="Text eingeben" />
 				</div>
-				
+
 				<div id="calculations" class="box_right">
                     <dl class="dlCalculation">
                         <dt>
@@ -159,8 +157,6 @@
                     </dl>
 				</div>
 			</fieldset>
-			
-			<!--<hr style="clear: both;">-->
 
 			<fieldset>
 				<legend data-i18n-key="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</legend>

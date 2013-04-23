@@ -3,7 +3,7 @@ hr {
 }
 
 dl{
-    margin-top: 0;
+    margin-top: 0px;
 }
 
 dt {
@@ -43,6 +43,10 @@ dl.dlLocationInfoWindow dt label {
 
 label {
     margin-right: 4px;
+}
+
+.map{
+    height: 200px; width: 100%;
 }
 
 .dlCalculation dd{
@@ -92,9 +96,9 @@ ul.formList li span {
     margin-left: 30%;
 }
 
-.mapCommandsContent{
+.mapCommandsContentWrapper{
 	height: 100%;
-	width: 390px;
+	width: 400px;
 	float: left;
 /* 	background-color: rgba(255, 255, 255); */
 	background-image: url(../images/75p_white.png);
@@ -144,3 +148,8 @@ fieldset {
 fieldset legend{
     font-weight: bold;
 }
+
+.overflowAuto{
+    overflow: auto;
+}
+

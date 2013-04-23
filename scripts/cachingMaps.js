@@ -179,6 +179,7 @@ window.onload = function () {
             position: google.maps.ControlPosition.RIGHT_BOTTOM
         }
     };
+
     mainMap = new google.maps.Map(mapDiv, options);
 
     infoWindow.setPosition(latLng);
@@ -193,11 +194,7 @@ window.onload = function () {
 
     markerClusterer = new MarkerClusterer(mainMap);
 
-    inputAddress = document.getElementById('addressSearchTxt');
-    autocomplete = new google.maps.places.Autocomplete(inputAddress);
-    autocomplete.bindTo('bounds', mainMap);
-
-    google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
+    addAutocompleteListener(mainMap, 'addressSearchTxtMainMap');
 };
 
 
@@ -479,15 +476,15 @@ function getDisplayAddress(geocoderRequestResult) {
     return displayAddress.join(", ");
 }
 
-function searchLocationAndDisplay() {
-    var address = jQuery("#addressSearchTxt").val(),
+function searchLocationAndDisplay(map, inputFieldId){
+	var address = jQuery("#" + inputFieldId).val(),
         geocoderRequest;
 
     if (address === '') {
         return;
     }
 
-    infoWindow.close(mainMap);
+    infoWindow.close(map);
 
     if (!geocoder) {
         geocoder = new google.maps.Geocoder();
@@ -505,8 +502,8 @@ function searchLocationAndDisplay() {
         if (status === google.maps.GeocoderStatus.OK) {
 
             latLng = results[0].geometry.location;
-            mainMap.setCenter(latLng);
-            mainMap.setZoom(14);
+            map.setCenter(latLng);
+            map.setZoom(14);
 
             formattedAddress = results[0].formatted_address;
 
@@ -526,7 +523,7 @@ function searchLocationAndDisplay() {
 
             infoWindow.setPosition(latLng);
             infoWindow.setContent(content);
-            infoWindow.open(mainMap);
+            infoWindow.open(map);
 
         } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
             showWarningDialog('map.warning.zero_results', ['\'' + address + '\'']);
