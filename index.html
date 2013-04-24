@@ -38,6 +38,7 @@
 		<ul class="tabNavigation">
 			<li><a href="#googleMapsTabContent" data-i18n-key="tab.maps">Google Maps</a></li>
 			<li><a href="#toolsTabContent" data-i18n-key="tab.tools">Tools</a></li>
+			<li><a href="#tatortTabContent" id="tatortTab" data-i18n-key="tab.tatort">Tatort</a></li>
 		</ul>
 
 		<!-- tab containers -->
@@ -195,6 +196,27 @@
 		</div>
 	</div>
 	
+        <div id="tatortTabContent">
+
+            <div id="tatortCommands" class="mapCommandsPanel" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;" >
+                <div id="tatortCommandsContentWrapper" class="mapCommandsContentWrapper overflowScroll">
+                    <div id="tatortCommandsContent" class="paddingLeft10" class="commandPanelContent">
+                        <h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
+                        <input type="text" id="addressSearchTxtTatort" placeholder="" size="30">
+
+                        <button id="addressSearchBtnTatort" data-i18n-key="map.search" onclick="searchLocationAndDisplay(tatortMap, 'addressSearchTxtTatort');">Suchen</button>
+                    </div>
+                </div>
+
+                <div id="sliderTatort" class="slider sliderOpen" ></div>
+            </div>
+
+
+            <div id="mapTatort" class="map"></div>
+
+        </div>
+	</div>
+
 	<div id="footer" style="float: right">
 		Software by <a href="http://www.geocaching.com/profile/">GottfriedEgger</a>
 	</div>
@@ -204,5 +226,6 @@
 	<script type="text/javascript" src="scripts/cachingMaps.js"></script>
 	<script type="text/javascript" src="scripts/calculating.js"></script>
 	<script type="text/javascript" src="scripts/coordinates.js"></script>
+	<script type="text/javascript" src="scripts/tatort.js"></script>
 </body>
 </html>

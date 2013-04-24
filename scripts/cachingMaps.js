@@ -158,7 +158,7 @@ function showLocationInfoPopup(latLng) {
     });
 }
 
-window.onload = function () {
+function loadGeocachingMap() {
     var mapDiv = document.getElementById('map'),
         latLng = new google.maps.LatLng(46.8, 7.985),
         options,

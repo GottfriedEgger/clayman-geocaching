@@ -7,36 +7,41 @@ function setMapDivHeight(){
         footerHeight = jQuery("#footer").outerHeight(true),
         mapHeight = docHeight - mainTitleHeight - tabNavigationHeight - footerHeight - 66;
 
-    jQuery("#map").height(mapHeight);
+    jQuery('.map').each(function () {
+        jQuery(this).height(mapHeight)
+    });
 }
 
 function placeSlider(){
-    var $map = jQuery("#map"),
-        top = $map.position().top,
-        left = $map.position().left - 1,
-        height = $map.height(),
-        $mapCommands = jQuery("#mapCommands");
 
-    $mapCommands.css({	top: top + 'px',
+    jQuery('.mapCommandsPanel').each(function(){
+        var $commandPanelContentWrapper = jQuery(this).children('.mapCommandsContentWrapper');
+        var $commandPanelContent = jQuery($commandPanelContentWrapper.children());
+        var $slider = jQuery(this).children('.slider');
+        var $map = jQuery(this).next();
+        var top = $map.position().top,
+        left = $map.position().left - 1,
+            height = $map.height();
+
+        jQuery(this).css({	top: top + 'px',
         left: left + 'px',
         height: height + 'px',
         visibility: 'visible'});
 
-    jQuery("#slider").click(function (){
-        jQuery(this).toggleClass("sliderOpen");
+        $slider.click(function(){
+            $slider.toggleClass("sliderOpen");
 
-        var $mapCommandsContent = jQuery("#mapCommandsContent"),
-            $mapCommandsContentWrapper = jQuery('#mapCommandsContentWrapper');
+            $commandPanelContent.toggleClass('paddingLeft10');
 
-        $mapCommandsContent.toggleClass('paddingLeft10');
+            if($commandPanelContentWrapper.width() > 0){
+                $commandPanelContentWrapper.animate({width: '0px'});
+                $commandPanelContentWrapper.css('visibility', 'hidden');
+            }else{
+                $commandPanelContentWrapper.animate({width: '390px'});
+                $commandPanelContentWrapper.css('visibility', 'visible');
+            }
+        });
 
-        if($mapCommandsContentWrapper.width() > 0){
-            $mapCommandsContentWrapper.animate({width: '0px'});
-            $mapCommandsContentWrapper.css('visibility', 'hidden');
-        }else{
-            $mapCommandsContentWrapper.animate({width: '390px'});
-            $mapCommandsContentWrapper.css('visibility', 'visible');
-        }
     });
 }
 
@@ -137,8 +142,29 @@ function bindWarningDialog(){
     });
 }
 
-function initPage(){
+function initTabs(){
+    var $tabs = jQuery("#tabs");
+
     jQuery("#tabs").tabs();
+
+    jQuery("#tabs").bind('tabsshow', function(event, ui) {
+
+        if (ui.panel.id == "tatortTabContent") {
+            tatortTabSelected();
+        }
+
+        placeSlider();
+    });
+
+}
+
+function initializePage(){
+
+    initTabs();
+
+    loadGeocachingMap();
+
+    loadTatortMap();
 
     translatePage();
 
@@ -149,8 +175,13 @@ function initPage(){
     bindEnterActions();
 
     bindWarningDialog();
+
+    if(getUrlParams()['game']){
+        jQuery("#tabs").tabs('select', 2);
+    }
+
 }
 
 jQuery(document).ready(function() {
-        initPage();
+    initializePage();
 });
