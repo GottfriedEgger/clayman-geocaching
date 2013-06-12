@@ -145,9 +145,9 @@ function bindWarningDialog(){
 function initTabs(){
     var $tabs = jQuery("#tabs");
 
-    jQuery("#tabs").tabs();
+    $tabs.tabs();
 
-    jQuery("#tabs").bind('tabsshow', function(event, ui) {
+    $tabs.bind('tabsshow', function(event, ui) {
 
         if (ui.panel.id == "tatortTabContent") {
             tatortTabSelected();
@@ -164,7 +164,7 @@ function initializePage(){
 
     loadGeocachingMap();
 
-    loadTatortMap();
+    initTatort();
 
     translatePage();
 

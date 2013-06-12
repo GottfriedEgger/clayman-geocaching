@@ -22,6 +22,38 @@ function GameStage(areaPointTopLeft, areaPointBottomRight, infoTextKey, child){
     this.child = child;
 }
 
+function bindTatortDialog(){
+    jQuery('#tatortDialogPlaceholder').puidialog({
+        showEffect: 'fade',
+        hideEffect: 'fade',
+        modal: true,
+        resizable: false,
+        buttons: [{
+            text: 'OK',
+            icon: 'ui-icon-check',
+            click: function() {
+                jQuery('#tatortDialogPlaceholder').puidialog('hide');
+            }
+        }]
+    });
+}
+
+function showDialog(contentKey, parameters){
+    var $dialog = jQuery('#tatortDialogPlaceholder'),
+        $content = $dialog.find('.pui-dialog-content'),
+        $title = $dialog.find('.pui-dialog-title'),
+        dialogContent = jQuery.i18n.prop(contentKey),
+        dialogTitle = jQuery.i18n.prop(parameters);
+
+    $title.html(dialogTitle);
+    $content.html(dialogContent);
+    $dialog.puidialog('show');
+}
+
+function showWelcomeDialog(){
+    showDialog('tatort.dialog.welcome','tatort.dialog.title.welcome');
+}
+
 function isPointInRectangle(point, pointTopLeft, pointBottomRight){
 
     return point.lat().between(pointBottomRight.lat(), pointTopLeft.lat()) &&
@@ -58,9 +90,10 @@ function checkLocation(clickedLatLng){
         }
     }
     if(foundGameState != null){
-        alert(jQuery.i18n.prop(foundGameState.infoTextKey));
+//        alert(jQuery.i18n.prop(foundGameState.infoTextKey));
+        showDialog(foundGameState.infoTextKey, 'tatort.dialog.title.ok')
     }else{
-        alert("Falsch");
+        showDialog('tatort.dialog.nok', 'tatort.dialog.title.nok');
     }
 
 }
@@ -84,9 +117,6 @@ function loadTatortMap() {
     };
     tatortMap = new google.maps.Map(mapDiv, options);
 
-    tatortInfoWindow.setPosition(latLng);
-    tatortInfoWindow.setContent('JFK');
-    tatortInfoWindow.open(tatortMap);
 
     google.maps.event.addListener(tatortMap, 'click', function (e) {
         checkLocation(e.latLng);
@@ -96,12 +126,18 @@ function loadTatortMap() {
 }
 
 function tatortTabSelected(){
-//        jQuery('#tatortTabContent').load('tatort.html');
-
     google.maps.event.trigger(tatortMap, "resize");
     tatortMap.setCenter(tatortMapCenter);
+
+    showWelcomeDialog();
 }
 
 Number.prototype.between = function (number1, number2) {
     return number1 <= this.valueOf() && number2 >= this.valueOf();
 };
+
+function initTatort(){
+    loadTatortMap();
+
+    bindTatortDialog();
+}
