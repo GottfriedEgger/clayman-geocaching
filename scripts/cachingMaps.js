@@ -161,8 +161,7 @@ function showLocationInfoPopup(latLng) {
 function loadGeocachingMap() {
     var mapDiv = document.getElementById('map'),
         latLng = new google.maps.LatLng(46.8, 7.985),
-        options,
-        inputAddress;
+        options;
 
     options = {
         center: latLng,
@@ -177,6 +176,15 @@ function loadGeocachingMap() {
         scaleControl: true,
         scaleControlOptions: {
             position: google.maps.ControlPosition.RIGHT_BOTTOM
+        },
+        zoomControl: true,
+        zoomControlOptions: {
+            style: google.maps.ZoomControlStyle.LARGE,
+            position: google.maps.ControlPosition.RIGHT_TOP
+        },
+        panControl: true,
+        panControlOptions: {
+            position: google.maps.ControlPosition.TOP_RIGHT
         }
     };
 
@@ -195,8 +203,7 @@ function loadGeocachingMap() {
     markerClusterer = new MarkerClusterer(mainMap);
 
     addAutocompleteListener(mainMap, 'addressSearchTxtMainMap');
-};
-
+}
 
 function setMarkersVisibility(visible) {
     var key, typeArray, x;
