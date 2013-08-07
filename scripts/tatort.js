@@ -5,8 +5,9 @@ var tatortMapCenter;
 var tatorte = [];
 
 var pompeius = new GameStage(new google.maps.LatLng(41.895956, 12.472465), new google.maps.LatLng(41.894267, 12.474289),'tatort.jc.question', 'tatort.jc.pompeius', false, false);
-var fordsTheatre = new GameStage(new google.maps.LatLng(38.897329, -77.025983), new google.maps.LatLng(38.896669, -77.025082),'tatort.bdk.question','tatort.fordsTheatre', false, pompeius);
-var fortSumnerPark = new GameStage(new google.maps.LatLng(34.404, -104.198), new google.maps.LatLng(34.399, -104.192), 'tatort.bdk.question', 'tatort.bdk.fortSumnerPark', false, fordsTheatre);
+var fordsTheatre = new GameStage(new google.maps.LatLng(38.897329, -77.025983), new google.maps.LatLng(38.896669, -77.025082),'tatort.fordsTheatre','tatort.fordsTheatre', false, pompeius);
+var headstone = new GameStage(new google.maps.LatLng(34.404, -104.194), new google.maps.LatLng(34.403, -104.193), '', 'tatort.bdk.headstone', false, fordsTheatre);
+var fortSumnerPark = new GameStage(new google.maps.LatLng(34.404, -104.198), new google.maps.LatLng(34.399, -104.192), 'tatort.bdk.question', 'tatort.bdk.fortSumnerPark', headstone, false);
 var dealeyPlaza = new GameStage(new google.maps.LatLng(32.779359, -96.809008), new google.maps.LatLng(32.778141, -96.807678),'', 'tatort.jfk.dealeyPlaza',false, fortSumnerPark);
 var dallas = new GameStage(new google.maps.LatLng(32.934, -96.900), new google.maps.LatLng(32.698, -96.628), '', 'tatort.jfk.dallas', dealeyPlaza, false);
 tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius);
