@@ -4,7 +4,9 @@ var tatortMap;
 var tatortMapCenter;
 var tatorte = [];
 
-var medellin = new GameStage(new google.maps.LatLng(6.267685, -75.644156), new google.maps.LatLng(6.193965, -75.510432),'tatort.ae.question', 'tatort.ae.medellin', false, false);
+var kingston = new GameStage(new google.maps.LatLng(18.003065, -76.775098), new google.maps.LatLng(18.002922, -76.774883),'tatort.bm.question', 'tatort.bm.kingston', false, false);
+var rothenbaum = new GameStage(new google.maps.LatLng(53.574136, 9.990508), new google.maps.LatLng(53.572944, 9.992590),'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
+var medellin = new GameStage(new google.maps.LatLng(6.267685, -75.644156), new google.maps.LatLng(6.193965, -75.510432),'tatort.ae.question', 'tatort.ae.medellin', false, rothenbaum);
 var buergerbraeu =  new GameStage(new google.maps.LatLng(48.130653, 11.592083), new google.maps.LatLng(48.130571, 11.592201),'tatort.ah.question', 'tatort.ah.buergerbraeu', false, medellin);
 var pompeius = new GameStage(new google.maps.LatLng(41.895956, 12.472465), new google.maps.LatLng(41.894267, 12.474289),'tatort.jc.question', 'tatort.jc.pompeius', false, buergerbraeu);
 var fordsTheatre = new GameStage(new google.maps.LatLng(38.897014, -77.025970), new google.maps.LatLng(38.896392, -77.025347),'tatort.al.question','tatort.al.fordsTheatre', false, pompeius);
@@ -12,7 +14,7 @@ var headstone = new GameStage(new google.maps.LatLng(34.404, -104.194), new goog
 var fortSumnerPark = new GameStage(new google.maps.LatLng(34.404, -104.198), new google.maps.LatLng(34.399, -104.192), 'tatort.bdk.question', 'tatort.bdk.fortSumnerPark', headstone, false);
 var dealeyPlaza = new GameStage(new google.maps.LatLng(32.779359, -96.809008), new google.maps.LatLng(32.778141, -96.807678),'', 'tatort.jfk.dealeyPlaza',false, fortSumnerPark);
 var dallas = new GameStage(new google.maps.LatLng(32.934, -96.900), new google.maps.LatLng(32.698, -96.628), '', 'tatort.jfk.dallas', dealeyPlaza, false);
-tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin);
+tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin, rothenbaum, kingston);
 
 var currentGameState;
 
