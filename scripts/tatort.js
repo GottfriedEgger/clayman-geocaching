@@ -4,21 +4,22 @@ var tatortMap;
 var tatortMapCenter;
 var tatorte = [];
 
-var kingston = new GameStage(new google.maps.LatLng(18.003065, -76.775098), new google.maps.LatLng(18.002922, -76.774883),'tatort.bm.question', 'tatort.bm.kingston', false, false);
-var rothenbaum = new GameStage(new google.maps.LatLng(53.574136, 9.990508), new google.maps.LatLng(53.572944, 9.992590),'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
-var medellin = new GameStage(new google.maps.LatLng(6.267685, -75.644156), new google.maps.LatLng(6.193965, -75.510432),'tatort.ae.question', 'tatort.ae.medellin', false, rothenbaum);
-var buergerbraeu =  new GameStage(new google.maps.LatLng(48.130653, 11.592083), new google.maps.LatLng(48.130571, 11.592201),'tatort.ah.question', 'tatort.ah.buergerbraeu', false, medellin);
-var pompeius = new GameStage(new google.maps.LatLng(41.895956, 12.472465), new google.maps.LatLng(41.894267, 12.474289),'tatort.jc.question', 'tatort.jc.pompeius', false, buergerbraeu);
-var fordsTheatre = new GameStage(new google.maps.LatLng(38.897014, -77.025970), new google.maps.LatLng(38.896392, -77.025347),'tatort.al.question','tatort.al.fordsTheatre', false, pompeius);
+var theEnd = new GameStage(null, null, null,'tatort.end', false, false);
+var kingston = new GameStage(new google.maps.LatLng(18.003065, -76.775098), new google.maps.LatLng(18.002922, -76.774883), 'tatort.bm.question', 'tatort.bm.kingston', false, theEnd);
+var rothenbaum = new GameStage(new google.maps.LatLng(53.574136, 9.990508), new google.maps.LatLng(53.572944, 9.992590), 'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
+var medellin = new GameStage(new google.maps.LatLng(6.267685, -75.644156), new google.maps.LatLng(6.193965, -75.510432), 'tatort.ae.question', 'tatort.ae.medellin', false, rothenbaum);
+var buergerbraeu = new GameStage(new google.maps.LatLng(48.130653, 11.592083), new google.maps.LatLng(48.130571, 11.592201), 'tatort.ah.question', 'tatort.ah.buergerbraeu', false, medellin);
+var pompeius = new GameStage(new google.maps.LatLng(41.895956, 12.472465), new google.maps.LatLng(41.894267, 12.474289), 'tatort.jc.question', 'tatort.jc.pompeius', false, buergerbraeu);
+var fordsTheatre = new GameStage(new google.maps.LatLng(38.897014, -77.025970), new google.maps.LatLng(38.896392, -77.025347), 'tatort.al.question', 'tatort.al.fordsTheatre', false, pompeius);
 var headstone = new GameStage(new google.maps.LatLng(34.404, -104.194), new google.maps.LatLng(34.403, -104.193), '', 'tatort.bdk.headstone', false, fordsTheatre);
 var fortSumnerPark = new GameStage(new google.maps.LatLng(34.404, -104.198), new google.maps.LatLng(34.399, -104.192), 'tatort.bdk.question', 'tatort.bdk.fortSumnerPark', headstone, false);
-var dealeyPlaza = new GameStage(new google.maps.LatLng(32.779359, -96.809008), new google.maps.LatLng(32.778141, -96.807678),'', 'tatort.jfk.dealeyPlaza',false, fortSumnerPark);
+var dealeyPlaza = new GameStage(new google.maps.LatLng(32.779359, -96.809008), new google.maps.LatLng(32.778141, -96.807678), '', 'tatort.jfk.dealeyPlaza', false, fortSumnerPark);
 var dallas = new GameStage(new google.maps.LatLng(32.934, -96.900), new google.maps.LatLng(32.698, -96.628), '', 'tatort.jfk.dallas', dealeyPlaza, false);
-tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin, rothenbaum, kingston);
+tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin, rothenbaum, kingston, theEnd);
 
 var currentGameState;
 
-function GameStage(areaPointTopLeft, areaPointBottomRight, questionKey, rightAnswerKey, child, nextGameStage){
+function GameStage(areaPointTopLeft, areaPointBottomRight, questionKey, rightAnswerKey, child, nextGameStage) {
     this.areaPointTopLeft = areaPointTopLeft;
     this.areaPointBottomRight = areaPointBottomRight;
     this.questionKey = questionKey;
@@ -27,31 +28,34 @@ function GameStage(areaPointTopLeft, areaPointBottomRight, questionKey, rightAns
     this.nextGameStage = nextGameStage;
 }
 
-function showDialog(contentKey, parameters){
+function showDialog(contentKey, dialogTitleKey) {
     var $dialog = jQuery('#tatortDialogPlaceholder'),
         $content = $dialog.find('.pui-dialog-content'),
         $title = $dialog.find('.pui-dialog-title'),
         dialogContent = jQuery.i18n.prop(contentKey),
-        dialogTitle = jQuery.i18n.prop(parameters);
+        dialogTitle = jQuery.i18n.prop(dialogTitleKey);
+
+    console.log(dialogTitleKey);
+    console.log(dialogTitle);
 
     $title.html(dialogTitle);
     $content.html(dialogContent);
     $dialog.puidialog('show');
 }
 
-function showWelcomeDialog(){
-    showDialog('tatort.dialog.welcome','tatort.dialog.title.welcome');
+function showWelcomeDialog() {
+    showDialog('tatort.dialog.welcome', 'tatort.dialog.title.welcome');
 }
 
-function showOkDialog(gameState){
+function showOkDialog(gameState) {
     showDialog(gameState.rightAnswerKey, 'tatort.dialog.title.ok');
 }
 
-function showQuestionDialog(gameState){
+function showQuestionDialog(gameState) {
     showDialog(gameState.questionKey, 'tatort.dialog.title.next');
 }
 
-function bindTatortDialog(){
+function bindTatortDialog() {
     var $tatortDialogPlaceholder = jQuery('#tatortDialogPlaceholder');
     $tatortDialogPlaceholder.puidialog({
         showEffect: 'fade',
@@ -59,40 +63,52 @@ function bindTatortDialog(){
         modal: true,
         resizable: true,
         width: 400,
-        buttons: [{
-            text: 'OK',
-            icon: 'ui-icon-check',
-            click: function() {
-                $tatortDialogPlaceholder.puidialog('hide');
+        buttons: [
+            {
+                text: 'OK',
+                icon: 'ui-icon-check',
+                click: function () {
+                    $tatortDialogPlaceholder.puidialog('hide');
+                }
             }
-        }]
+        ]
     });
 
     $tatortDialogPlaceholder.puidialog({
-        afterHide: function() {
-            if(currentGameState){
-                showQuestionDialog(currentGameState.nextGameStage);
+        afterHide: function () {
+            var isLastGameStage,
+                nextGameStage;
+
+            if (currentGameState) {
+                nextGameStage = currentGameState.nextGameStage;
+                isLastGameStage = nextGameStage === tatorte[tatorte.length - 1];
+
+                if (isLastGameStage) {
+                    showDialog(nextGameStage.rightAnswerKey, 'tatort.dialog.title.end');
+                } else {
+                    showQuestionDialog(nextGameStage);
+                }
                 currentGameState = null;
             }
         }
     });
 }
 
-function isPointInRectangle(point, pointTopLeft, pointBottomRight){
+function isPointInRectangle(point, pointTopLeft, pointBottomRight) {
     return point.lat().between(pointBottomRight.lat(), pointTopLeft.lat()) &&
         point.lng().between(pointTopLeft.lng(), pointBottomRight.lng());
 
 }
 
-function findGameState(clickedLatLng, tatort){
-    var pointInRectangle =  isPointInRectangle(clickedLatLng, tatort.areaPointTopLeft, tatort.areaPointBottomRight),
+function findGameState(clickedLatLng, tatort) {
+    var pointInRectangle = isPointInRectangle(clickedLatLng, tatort.areaPointTopLeft, tatort.areaPointBottomRight),
         foundGameState;
 
-    if(pointInRectangle){
-        if(tatort.child){
+    if (pointInRectangle) {
+        if (tatort.child) {
             foundGameState = findGameState(clickedLatLng, tatort.child);
         }
-        if(foundGameState){
+        if (foundGameState) {
             return foundGameState;
         }
         return tatort;
@@ -101,23 +117,24 @@ function findGameState(clickedLatLng, tatort){
     return null;
 }
 
-function checkLocation(clickedLatLng){
+function checkLocation(clickedLatLng) {
     var x,
         foundGameState;
 
     for (x = 0; x < tatorte.length; x++) {
         foundGameState = findGameState(clickedLatLng, tatorte[x]);
 
-        if(foundGameState !== null){
+        if (foundGameState !== null) {
             break;
         }
     }
-    if(foundGameState !== null){
-        if(!foundGameState.child){
+    if (foundGameState !== null) {
+        if (!foundGameState.child) {
             currentGameState = foundGameState;
         }
+
         showOkDialog(foundGameState);
-    }else{
+    } else {
         currentGameState = null;
         showDialog('tatort.dialog.nok', 'tatort.dialog.title.nok');
     }
@@ -162,7 +179,7 @@ function loadTatortMap() {
     addAutocompleteListener(tatortMap, 'addressSearchTxtTatort');
 }
 
-function tatortTabSelected(){
+function tatortTabSelected() {
     google.maps.event.trigger(tatortMap, "resize");
     tatortMap.setCenter(tatortMapCenter);
 
@@ -173,7 +190,7 @@ Number.prototype.between = function (number1, number2) {
     return number1 <= this.valueOf() && number2 >= this.valueOf();
 };
 
-function initTatort(){
+function initTatort() {
     loadTatortMap();
 
     bindTatortDialog();

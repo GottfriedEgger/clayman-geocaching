@@ -3,7 +3,7 @@ hr {
 }
 
 dl{
-    margin-top: 0px;
+    margin-top: 0;
 }
 
 dt {
@@ -147,6 +147,10 @@ fieldset {
 
 fieldset legend{
     font-weight: bold;
+}
+
+.smallFontSize {
+    font-size: 9px;
 }
 
 .overflowAuto{
