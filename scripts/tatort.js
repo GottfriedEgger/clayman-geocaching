@@ -4,7 +4,7 @@ var tatortMap;
 var tatortMapCenter;
 var tatorte = [];
 
-var theEnd = new GameStage(null, null, null,'tatort.end', false, false);
+var theEnd = new GameStage(null, null, null, 'tatort.end', false, false);
 var kingston = new GameStage(new google.maps.LatLng(18.003065, -76.775098), new google.maps.LatLng(18.002922, -76.774883), 'tatort.bm.question', 'tatort.bm.kingston', false, theEnd);
 var rothenbaum = new GameStage(new google.maps.LatLng(53.574136, 9.990508), new google.maps.LatLng(53.572944, 9.992590), 'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
 var medellin = new GameStage(new google.maps.LatLng(6.267685, -75.644156), new google.maps.LatLng(6.193965, -75.510432), 'tatort.ae.question', 'tatort.ae.medellin', false, rothenbaum);
@@ -35,9 +35,6 @@ function showDialog(contentKey, dialogTitleKey) {
         dialogContent = jQuery.i18n.prop(contentKey),
         dialogTitle = jQuery.i18n.prop(dialogTitleKey);
 
-    console.log(dialogTitleKey);
-    console.log(dialogTitle);
-
     $title.html(dialogTitle);
     $content.html(dialogContent);
     $dialog.puidialog('show');
@@ -62,7 +59,7 @@ function bindTatortDialog() {
         hideEffect: 'fade',
         modal: true,
         resizable: true,
-        width: 400,
+        width: 450,
         buttons: [
             {
                 text: 'OK',
@@ -95,6 +92,10 @@ function bindTatortDialog() {
 }
 
 function isPointInRectangle(point, pointTopLeft, pointBottomRight) {
+    if (pointTopLeft === null || pointBottomRight === null) {
+        return false;
+    }
+
     return point.lat().between(pointBottomRight.lat(), pointTopLeft.lat()) &&
         point.lng().between(pointTopLeft.lng(), pointBottomRight.lng());
 
