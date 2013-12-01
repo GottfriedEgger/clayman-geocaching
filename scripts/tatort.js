@@ -1,27 +1,11 @@
 /*global jQuery, google */
 
-var tatortMap;
-var tatortMapCenter;
-var tatorte = [];
-
-var theEnd = new GameStage(null, null, null, 'tatort.end', false, false);
-var kingston = new GameStage(new google.maps.LatLng(18.003065, -76.775098), new google.maps.LatLng(18.002922, -76.774883), 'tatort.bm.question', 'tatort.bm.kingston', false, theEnd);
-var rothenbaum = new GameStage(new google.maps.LatLng(53.574136, 9.990508), new google.maps.LatLng(53.572944, 9.992590), 'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
-var medellin = new GameStage(new google.maps.LatLng(6.267685, -75.644156), new google.maps.LatLng(6.193965, -75.510432), 'tatort.ae.question', 'tatort.ae.medellin', false, rothenbaum);
-var buergerbraeu = new GameStage(new google.maps.LatLng(48.130653, 11.592083), new google.maps.LatLng(48.130571, 11.592201), 'tatort.ah.question', 'tatort.ah.buergerbraeu', false, medellin);
-var pompeius = new GameStage(new google.maps.LatLng(41.895956, 12.472465), new google.maps.LatLng(41.894267, 12.474289), 'tatort.jc.question', 'tatort.jc.pompeius', false, buergerbraeu);
-var fordsTheatre = new GameStage(new google.maps.LatLng(38.897014, -77.025970), new google.maps.LatLng(38.896392, -77.025347), 'tatort.al.question', 'tatort.al.fordsTheatre', false, pompeius);
-var headstone = new GameStage(new google.maps.LatLng(34.404, -104.194), new google.maps.LatLng(34.403, -104.193), '', 'tatort.bdk.headstone', false, fordsTheatre);
-var fortSumnerPark = new GameStage(new google.maps.LatLng(34.404, -104.198), new google.maps.LatLng(34.399, -104.192), 'tatort.bdk.question', 'tatort.bdk.fortSumnerPark', headstone, false);
-var dealeyPlaza = new GameStage(new google.maps.LatLng(32.779359, -96.809008), new google.maps.LatLng(32.778141, -96.807678), '', 'tatort.jfk.dealeyPlaza', false, fortSumnerPark);
-var dallas = new GameStage(new google.maps.LatLng(32.934, -96.900), new google.maps.LatLng(32.698, -96.628), '', 'tatort.jfk.dallas', dealeyPlaza, false);
-tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin, rothenbaum, kingston, theEnd);
-
 var currentGameState;
+var currentQuestion;
 
-function GameStage(areaPointTopLeft, areaPointBottomRight, questionKey, rightAnswerKey, child, nextGameStage) {
-    this.areaPointTopLeft = areaPointTopLeft;
+function GameStage(areaPointBottomRight, areaPointTopLeft, questionKey, rightAnswerKey, child, nextGameStage) {
     this.areaPointBottomRight = areaPointBottomRight;
+    this.areaPointTopLeft = areaPointTopLeft;
     this.questionKey = questionKey;
     this.rightAnswerKey = rightAnswerKey;
     this.child = child;
@@ -42,6 +26,7 @@ function showDialog(contentKey, dialogTitleKey) {
 
 function showWelcomeDialog() {
     showDialog('tatort.dialog.welcome', 'tatort.dialog.title.welcome');
+    currentQuestion = dallas;
 }
 
 function showOkDialog(gameState) {
@@ -52,6 +37,10 @@ function showQuestionDialog(gameState) {
     showDialog(gameState.questionKey, 'tatort.dialog.title.next');
 }
 
+function showCurrentQuestion(){
+    showQuestionDialog(currentQuestion);
+}
+
 function bindTatortDialog() {
     var $tatortDialogPlaceholder = jQuery('#tatortDialogPlaceholder');
     $tatortDialogPlaceholder.puidialog({
@@ -59,7 +48,7 @@ function bindTatortDialog() {
         hideEffect: 'fade',
         modal: true,
         resizable: true,
-        width: 450,
+        width: 480,
         buttons: [
             {
                 text: 'OK',
@@ -84,6 +73,7 @@ function bindTatortDialog() {
                     showDialog(nextGameStage.rightAnswerKey, 'tatort.dialog.title.end');
                 } else {
                     showQuestionDialog(nextGameStage);
+                    currentQuestion = nextGameStage;
                 }
                 currentGameState = null;
             }
@@ -117,6 +107,22 @@ function findGameState(clickedLatLng, tatort) {
 
     return null;
 }
+
+var tatortMap;
+var tatortMapCenter;
+var tatorte = [];
+var theEnd = new GameStage(null, null, null, 'tatort.end', false, false);
+var kingston = new GameStage(new google.maps.LatLng(18.002922, -76.774883), new google.maps.LatLng(18.003065, -76.775098), 'tatort.bm.question', 'tatort.bm.kingston', false, theEnd);
+var rothenbaum = new GameStage(new google.maps.LatLng(53.572944, 9.992590), new google.maps.LatLng(53.574136, 9.990508), 'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
+var medellin = new GameStage(new google.maps.LatLng(6.193965, -75.510432), new google.maps.LatLng(6.267685, -75.644156), 'tatort.ae.question', 'tatort.ae.medellin', false, rothenbaum);
+var buergerbraeu = new GameStage(new google.maps.LatLng(48.130571, 11.592201), new google.maps.LatLng(48.130653, 11.592083), 'tatort.ah.question', 'tatort.ah.buergerbraeu', false, medellin);
+var pompeius = new GameStage(new google.maps.LatLng(41.894267, 12.474289), new google.maps.LatLng(41.895956, 12.472465), 'tatort.jc.question', 'tatort.jc.pompeius', false, buergerbraeu);
+var fordsTheatre = new GameStage(new google.maps.LatLng(38.896392, -77.025347), new google.maps.LatLng(38.897014, -77.025970), 'tatort.al.question', 'tatort.al.fordsTheatre', false, pompeius);
+var headstone = new GameStage(new google.maps.LatLng(34.403, -104.193), new google.maps.LatLng(34.404, -104.194), '', 'tatort.bdk.headstone', false, fordsTheatre);
+var fortSumnerPark = new GameStage(new google.maps.LatLng(34.399, -104.192), new google.maps.LatLng(34.404, -104.198), 'tatort.bdk.question', 'tatort.bdk.fortSumnerPark', headstone, false);
+var dealeyPlaza = new GameStage(new google.maps.LatLng(32.778141, -96.807678), new google.maps.LatLng(32.779359, -96.809008), '', 'tatort.jfk.dealeyPlaza', false, fortSumnerPark);
+var dallas = new GameStage(new google.maps.LatLng(32.698, -96.628), new google.maps.LatLng(32.934, -96.900), 'tatort.dialog.welcome', 'tatort.jfk.dallas', dealeyPlaza, false);
+tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin, rothenbaum, kingston, theEnd);
 
 function checkLocation(clickedLatLng) {
     var x,

@@ -178,6 +178,8 @@ function initializePage(){
 
     if(getUrlParams()['game']){
         jQuery("#tabs").tabs('select', 2);
+    }else{
+        jQuery("#tabs").tabs('remove', 2);
     }
 
 }

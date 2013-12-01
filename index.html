@@ -45,7 +45,7 @@
 		<div id="googleMapsTabContent">
 			<div id="mapCommands" class="mapCommandsPanel" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;">
 				<div id="mapCommandsContentWrapper" class="mapCommandsContentWrapper overflowScroll">
-					<div id="mapCommandsContent" class="paddingLeft10" class="mapCommandsContent">
+					<div id="mapCommandsContent" class="mapCommandsContent paddingLeft10">
 
 						<h5 data-i18n-key="map.load.title">Gefundene Caches darstellen</h5>
 						<input type="file" id="files" name="file" />
@@ -201,11 +201,15 @@
 
             <div id="tatortCommands" class="mapCommandsPanel" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;" >
                 <div id="tatortCommandsContentWrapper" class="mapCommandsContentWrapper overflowScroll">
-                    <div id="tatortCommandsContent" class="paddingLeft10" class="commandPanelContent">
+                    <div id="tatortCommandsContent" class="commandPanelContent paddingLeft10">
                         <h5 data-i18n-key="map.search.title">Nach Adresse, Platz oder Koordinaten suchen</h5>
                         <input type="text" id="addressSearchTxtTatort" data-enter-action-button-id="addressSearchBtnTatort" placeholder="" size="30">
 
                         <button id="addressSearchBtnTatort" data-i18n-key="map.search" onclick="searchLocationAndDisplay(tatortMap, 'addressSearchTxtTatort');">Suchen</button>
+
+                        <p>
+                            <a data-i18n-key="tatort.show_current_question" href="" onclick="showCurrentQuestion()">Aktuelle Frage anzeigen</a>
+                        </p>
                     </div>
                 </div>
 
