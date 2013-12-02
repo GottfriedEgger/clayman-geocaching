@@ -1,6 +1,6 @@
 /*global jQuery, CHtoWGSlat, CHtoWGSlng */
 
-var ch1903Pattern = /^(\d{6})\s*\/\s*(\d{6})$/;
+var ch1903Pattern = /^(\d{6})\s*(?:\/ || \s*)\s*(\d{6})$/;
 var wgs84DecimalPattern = /^([\-]?\d{1,2}(?:[.]\d+)?)(?:\s+|\s*,\s*)([\-]?\d{1,3}(?:[.]\d+)?)$/;
 var wgs84DecimalMinutesPattern = /^([nNsS]\s*\d{1,2}\s*°\s*\d{1,2}(?:[.]\d{3,})?)\s+([eEwW]\s*\d{1,3}°\s*\d{1,2}(?:[.]\d{3,})?)$/;
 
@@ -138,26 +138,6 @@ function convertInputWGSDegreeDecimalToCH(input) {
     return chX + " / " + chY;
 }
 
-function convertCoordinates() {
-    var inputCoordinates,
-        convertedCoordinatesWGSSection,
-        convertedCoordinates,
-        conversionResultWGSHtml = '',
-        i;
-
-    inputCoordinates = jQuery('#inputCoordinates').val();
-
-    convertedCoordinates = getConvertedCoordinates(inputCoordinates);
-
-    convertedCoordinatesWGSSection = jQuery('#convertedCoordinatesWGS');
-
-    for (i = 0; i < convertedCoordinates.length; i += 1) {
-        conversionResultWGSHtml += '<span>' + convertedCoordinates[i] + '</span><br>';
-    }
-
-    convertedCoordinatesWGSSection.html(conversionResultWGSHtml);
-}
-
 function convertWGStoCH(latLng) {
     var lat = latLng.lat(),
         lng = latLng.lng();
@@ -262,5 +242,25 @@ function getConvertedCoordinates(input) {
     }
 
     return convertedCoordinates;
+}
+
+function convertCoordinates() {
+    var inputCoordinates,
+        convertedCoordinatesWGSSection,
+        convertedCoordinates,
+        conversionResultWGSHtml = '',
+        i;
+
+    inputCoordinates = jQuery('#inputCoordinates').val();
+
+    convertedCoordinates = getConvertedCoordinates(inputCoordinates);
+
+    convertedCoordinatesWGSSection = jQuery('#convertedCoordinatesWGS');
+
+    for (i = 0; i < convertedCoordinates.length; i += 1) {
+        conversionResultWGSHtml += '<span>' + convertedCoordinates[i] + '</span><br>';
+    }
+
+    convertedCoordinatesWGSSection.html(conversionResultWGSHtml);
 }
 
