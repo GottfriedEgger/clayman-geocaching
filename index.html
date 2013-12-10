@@ -119,7 +119,7 @@
                     <label for="inputCoordinates" data-i18n-key="tools.coordinates">Koordinaten</label>
                     <img src="images/info_16x16.png"
                         title="WGS84 / CH1903 Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
-                    <input id="inputCoordinates" type="text" size="20"/>
+                    <input id="inputCoordinates" type="text" size="20" data-i18n-placeholder-key="tools.coordinates.placeholder"/>
                     <button onclick="convertCoordinates();" data-i18n-key="tools.convert">konvertieren</button>
                 </div>
 				<div id="convertedCoordinatesWGS" class="box_right"></div>
@@ -197,7 +197,7 @@
 
         <div id="tatortTabContent">
 
-            <div id="tatortDialogPlaceholder" title="Tatort">content</div>
+            <div id="tatortDialogPlaceholder" title="Tatort Geocache">content</div>
 
             <div id="tatortCommands" class="mapCommandsPanel" style="visibility: collapse; width: 430px; position: absolute;  z-index: 10;" >
                 <div id="tatortCommandsContentWrapper" class="mapCommandsContentWrapper overflowScroll">
@@ -207,9 +207,7 @@
 
                         <button id="addressSearchBtnTatort" data-i18n-key="map.search" onclick="searchLocationAndDisplay(tatortMap, 'addressSearchTxtTatort');">Suchen</button>
 
-                        <p>
-                            <a data-i18n-key="tatort.show_current_question" href="" onclick="showCurrentQuestion()">Aktuelle Frage anzeigen</a>
-                        </p>
+                        <p data-i18n-key="tatort.show_current_question" href="" onclick="showCurrentQuestion()" class="fakeLink">Aktuelle Frage anzeigen</p>
                     </div>
                 </div>
 
