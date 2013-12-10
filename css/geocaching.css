@@ -157,3 +157,11 @@ fieldset legend{
     overflow: auto;
 }
 
+.fakeLink{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pui-dialog-buttonpane button {
+    float: right;
+}

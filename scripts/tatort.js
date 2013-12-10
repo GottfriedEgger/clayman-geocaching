@@ -2,6 +2,9 @@
 
 var currentGameState;
 var currentQuestion;
+var tatortMap;
+var tatortMapCenter;
+var tatorte = [];
 
 function GameStage(areaPointBottomRight, areaPointTopLeft, questionKey, rightAnswerKey, child, nextGameStage) {
     this.areaPointBottomRight = areaPointBottomRight;
@@ -108,9 +111,6 @@ function findGameState(clickedLatLng, tatort) {
     return null;
 }
 
-var tatortMap;
-var tatortMapCenter;
-var tatorte = [];
 var theEnd = new GameStage(null, null, null, 'tatort.end', false, false);
 var kingston = new GameStage(new google.maps.LatLng(18.002922, -76.774883), new google.maps.LatLng(18.003065, -76.775098), 'tatort.bm.question', 'tatort.bm.kingston', false, theEnd);
 var rothenbaum = new GameStage(new google.maps.LatLng(53.572944, 9.992590), new google.maps.LatLng(53.574136, 9.990508), 'tatort.ms.question', 'tatort.ms.rothenbaum', false, kingston);
@@ -173,7 +173,17 @@ function loadTatortMap() {
         panControl: true,
         panControlOptions: {
             position: google.maps.ControlPosition.TOP_RIGHT
-        }
+        },
+        styles: [
+            {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [
+                    { visibility: "off" }
+                ]
+            }
+        ]
+
 
     };
     tatortMap = new google.maps.Map(mapDiv, options);
