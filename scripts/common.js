@@ -34,7 +34,7 @@ function getUrlParams(){
         urlParams = splitedUrl[1].split('&');
     }
 
-    for(i = 0; i< urlParams.length; i++){
+    for(i = 0; i < urlParams.length; i++){
         keyValue = urlParams[i].split("=");
         params.push(keyValue[0]);
         params[keyValue[0]] = keyValue[1];
@@ -52,4 +52,12 @@ function addAutocompleteListener(map, searchFieldId){
     autocomplete.bindTo('bounds', map);
 
     google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
+}
+
+function changeFavicon(faviconFileName) {
+    var $oldLink = jQuery('#myFavicon'),
+        $head = jQuery('head');
+
+    $oldLink.remove();
+    $head.append('<link rel="shortcut icon" id="myFavicon" href="images/icons/' + faviconFileName + '">');
 }

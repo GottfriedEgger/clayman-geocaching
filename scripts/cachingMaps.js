@@ -205,6 +205,11 @@ function loadGeocachingMap() {
     addAutocompleteListener(mainMap, 'addressSearchTxtMainMap');
 }
 
+function geocachingTabSelected() {
+    changeFavicon("globe.ico");
+    google.maps.event.trigger(mainMap, "resize");
+}
+
 function setMarkersVisibility(visible) {
     var key, typeArray, x;
 

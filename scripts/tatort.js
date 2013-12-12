@@ -197,6 +197,8 @@ function loadTatortMap() {
 }
 
 function tatortTabSelected() {
+    changeFavicon("gun.ico");
+
     google.maps.event.trigger(tatortMap, "resize");
     tatortMap.setCenter(tatortMapCenter);
 

@@ -179,6 +179,10 @@ function calculateRot() {
 
 }
 
+function toolsTabSelected(){
+    changeFavicon("tools.ico");
+}
+
 Number.prototype.getChecksum = function () {
     var numberString = this.toString(),
         checksum = 0,

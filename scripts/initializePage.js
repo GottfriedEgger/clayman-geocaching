@@ -148,14 +148,21 @@ function initTabs(){
     $tabs.tabs();
 
     $tabs.bind('tabsshow', function(event, ui) {
-
-        if (ui.panel.id == "tatortTabContent") {
-            tatortTabSelected();
-        }
-
         placeSlider();
-    });
 
+
+        switch(ui.panel.id){
+            case  "tatortTabContent":
+                tatortTabSelected();
+                break;
+            case "toolsTabContent":
+                toolsTabSelected();
+                break;
+            case "googleMapsTabContent":
+                geocachingTabSelected();
+                break;
+        }
+    });
 }
 
 function initializePage(){
