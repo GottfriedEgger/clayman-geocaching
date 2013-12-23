@@ -1,0 +1,46 @@
+project.ext {
+    buildDir = new File('build/')
+}
+
+task clean(type: Delete) {
+    delete 'build'
+}
+
+task prepareBuildDir (dependsOn: clean) << {
+    buildDir.mkdirs()
+}
+
+task copyFiles(dependsOn: 'prepareBuildDir', type: Sync) {
+
+    webappDir = 'src/main/webapp/'
+
+    from (webappDir + 'bundle'){
+        into 'bundle'
+    }
+
+    from (webappDir + 'css'){
+        into 'css'
+    }
+
+    from (webappDir + 'images'){
+        into 'images'
+    }
+
+    from (webappDir + 'prime-ui'){
+        into 'prime-ui'
+    }
+
+    from (webappDir + 'scripts'){
+        into 'scripts'
+    }
+
+    from webappDir + 'index.html'
+
+    into 'build'
+
+    doLast{
+        println 'copied files successfully'
+    }
+
+
+}
