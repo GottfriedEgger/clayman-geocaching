@@ -40,7 +40,7 @@ function showQuestionDialog(gameState) {
     showDialog(gameState.questionKey, 'tatort.dialog.title.next');
 }
 
-function showCurrentQuestion(){
+function showCurrentQuestion() {
     showQuestionDialog(currentQuestion);
 }
 
@@ -124,7 +124,7 @@ var dealeyPlaza = new GameStage(new google.maps.LatLng(32.778141, -96.807678), n
 var dallas = new GameStage(new google.maps.LatLng(32.698, -96.628), new google.maps.LatLng(32.934, -96.900), 'tatort.dialog.welcome', 'tatort.jfk.dallas', dealeyPlaza, false);
 tatorte.push(dallas, fortSumnerPark, fordsTheatre, pompeius, buergerbraeu, medellin, rothenbaum, kingston, theEnd);
 
-function checkLocation(clickedLatLng) {
+function findLocation(clickedLatLng) {
     var x,
         foundGameState;
 
@@ -139,13 +139,22 @@ function checkLocation(clickedLatLng) {
         if (!foundGameState.child) {
             currentGameState = foundGameState;
         }
-
-        showOkDialog(foundGameState);
     } else {
         currentGameState = null;
+    }
+    return foundGameState;
+}
+
+function checkLocation(clickedLatLng) {
+    var foundLocation = findLocation(clickedLatLng);
+
+    if (foundLocation !== null) {
+        showOkDialog(foundLocation);
+    } else {
         showDialog('tatort.dialog.nok', 'tatort.dialog.title.nok');
     }
 }
+
 
 function loadTatortMap() {
     var options,
@@ -213,4 +222,66 @@ function initTatort() {
     loadTatortMap();
 
     bindTatortDialog();
+}
+
+function searchLocationAndDisplay(inputFieldId) {
+    var address = jQuery("#" + inputFieldId).val(),
+        geocoderRequest;
+
+    if (address === '') {
+        return;
+    }
+
+    infoWindow.close(tatortMap);
+
+    if (!geocoder) {
+        geocoder = new google.maps.Geocoder();
+    }
+
+    geocoderRequest = {
+        address: address
+    };
+
+    geocoder.geocode(geocoderRequest, function (results, status) {
+        var content,
+            formattedAddress,
+            latLng;
+
+        if (status === google.maps.GeocoderStatus.OK) {
+
+            latLng = results[0].geometry.location;
+            tatortMap.setCenter(latLng);
+            tatortMap.setZoom(14);
+
+            var foundLocation = findLocation(latLng);
+            if (foundLocation !== null) {
+                showOkDialog(foundLocation);
+            } else {
+                formattedAddress = results[0].formatted_address;
+
+                var inCh = containtsAddressShortName(results, 'CH');
+
+                content = '<div id="locationInfoWindow" class="locationInfoWindow">';
+                content += '<dl class="dlLocationInfoWindow">';
+                content += ' <dt><label>' + jQuery.i18n.prop('map.location') + ':</label></dt>';
+                content += ' <dd>' + formattedAddress + '</dd>';
+                content += ' <dt><label>' + jQuery.i18n.prop('map.position') + ':</label></dt>';
+                content += ' <dd>' + convertLatLngToDecimalMinutes(latLng) + '</dd>';
+                if (inCh) {
+                    content += ' <dt><dt><dd><span>' + convertWGStoCH(latLng) + '</span></dd>';
+                }
+                content += '</dl>';
+                content += '</div>';
+
+                infoWindow.setPosition(latLng);
+                infoWindow.setContent(content);
+                infoWindow.open(tatortMap);
+            }
+        } else if (status === google.maps.GeocoderStatus.ZERO_RESULTS) {
+            showWarningDialog('map.warning.zero_results', ['\'' + address + '\'']);
+        } else {
+            showWarningDialog('map.warning.search_error');
+        }
+
+    });
 }
