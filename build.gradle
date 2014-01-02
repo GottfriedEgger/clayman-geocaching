@@ -26,11 +26,13 @@ task copyFiles(dependsOn: 'prepareBuildDir', type: Sync) {
         into 'images'
     }
 
-    from (webappDir + 'prime-ui'){
-        into 'prime-ui'
+    from (webappDir + 'primeui'){
+        into 'primeui'
     }
 
     from (webappDir + 'scripts'){
+        include '**/*.min.js'
+        include '**/3rdPartyLibs/*.js'
         into 'scripts'
     }
 
