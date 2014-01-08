@@ -202,7 +202,7 @@ function loadTatortMap() {
         checkLocation(e.latLng);
     });
 
-    addAutocompleteListener(tatortMap, 'addressSearchTxtTatort');
+    addAutoCompleteListener(tatortMap, 'addressSearchTxtTatort');
 }
 
 function tatortTabSelected() {
@@ -224,7 +224,7 @@ function initTatort() {
     bindTatortDialog();
 }
 
-function searchLocationAndDisplay(inputFieldId) {
+function searchLocationAndDisplayTatort(inputFieldId) {
     var address = jQuery("#" + inputFieldId).val(),
         geocoderRequest;
 

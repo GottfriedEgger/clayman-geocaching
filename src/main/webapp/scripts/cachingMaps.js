@@ -1,7 +1,7 @@
 /*global jQuery, google, FileReader, convertGoogleLatLngToDecimalMinutes, MarkerClusterer */
 
 var mainMap;
-var autocomplete;
+var autoComplete;
 var gcMarkers = {};
 var geocoder = 0;
 var markerClusterer = 0;
@@ -95,7 +95,7 @@ function getElevationInMeters(elevationResponse, responseStatus) {
 }
 
 function placeChangedListener() {
-    var place = autocomplete.getPlace(),
+    var place = autoComplete.getPlace(),
         latLng,
         content;
 
@@ -202,7 +202,7 @@ function loadGeocachingMap() {
 
     markerClusterer = new MarkerClusterer(mainMap);
 
-    addAutocompleteListener(mainMap, 'addressSearchTxtMainMap');
+    autoComplete = addAutoCompleteListener(mainMap, 'addressSearchTxtMainMap');
 }
 
 function geocachingTabSelected() {

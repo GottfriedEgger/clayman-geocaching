@@ -43,15 +43,17 @@ function getUrlParams(){
     return params;
 }
 
-function addAutocompleteListener(map, searchFieldId){
+function addAutoCompleteListener(map, searchFieldId){
     var inputAddress,
-        autocomplete;
+        autoComplete;
 
     inputAddress = document.getElementById(searchFieldId);
-    autocomplete = new google.maps.places.Autocomplete(inputAddress);
-    autocomplete.bindTo('bounds', map);
+    autoComplete = new google.maps.places.Autocomplete(inputAddress);
+    autoComplete.bindTo('bounds', map);
 
-    google.maps.event.addListener(autocomplete, 'place_changed', placeChangedListener);
+    google.maps.event.addListener(autoComplete, 'place_changed', placeChangedListener);
+
+    return autoComplete;
 }
 
 function changeFavicon(faviconFileName) {
