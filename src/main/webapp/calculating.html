@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta http-equiv="Content-type" content="application/x-www-form-urlencoded; charset=UTF-8">
+
+</head>
+
+<body>
+
+    <div id="toolsTabContent" ng-app="calculatingApp" ng-controller="CalculatingController">
+        <fieldset>
+            <legend data-i18n-key="tools.coordinates_convertion">Koordinaten konvertieren</legend>
+
+            <div class="box_left">
+                <label for="inputCoordinates" data-i18n-key="tools.coordinates">Koordinaten</label>
+                <img src="images/info_16x16.png"
+                     title="WGS84 / CH1903 Script: http://www.swisstopo.admin.ch/internet/swisstopo/en/home/products/software/products/skripts.html" />
+                <input id="inputCoordinates" type="text" size="20" data-i18n-placeholder-key="tools.coordinates.placeholder"/>
+                <button onclick="convertCoordinates();" data-i18n-key="tools.convert">konvertieren</button>
+            </div>
+            <div id="convertedCoordinatesWGS" class="box_right"></div>
+            <div id="convertedCoordinatesCH" class="box_right"></div>
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n-key="tools.letter_calculation">Buchstabenwerte berechnen</legend>
+            <div class="box_left">
+                <input id="calcLetterInp" type="text" ng-model="letterInput" ng-change="recalculateLetterValues()"
+                       data-i18n-placeholder-key="tools.letter_calculation.placeholder" placeholder="Text eingeben" />
+            </div>
+
+            <div id="calculations" class="box_right">
+                <dl class="dlCalculation">
+                    <dt>
+                        <label data-i18n-key="tools.sum">Summe:</label>
+                    </dt>
+                    <dd>{{sum}}</dd>
+                    <dt>
+                        <label data-i18n-key="tools.single_letters">Buchstaben einzeln:</label>
+                    </dt>
+                    <dd></dd>
+                    <dt>
+                        <label data-i18n-key="tools.product">Produkt:</label>
+                    </dt>
+                    <dd></dd>
+                    <dt>
+                        <label data-i18n-key="tools.checksum">Quersumme:</label>
+                    </dt>
+                    <dd></dd>
+                    <dt>
+                        <label data-i18n-key="tools.one_digit_checksum">Einstellige Quersumme:</label>
+                    </dt>
+                    <dd></dd>
+                </dl>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend data-i18n-key="tools.caesar_rot13.title">Cäsar Chiffre / ROT13</legend>
+            <table>
+                <tr>
+                    <td style="vertical-align: top;">
+                        <label>ROT</label>
+
+                        <script type="text/javascript">
+                            document.writeln('<select id="rotationCount" onclick="calculateRot()" onkeyup="calculateRot()">');
+
+                            for(var x=0; x<26; x++){
+                                if(x === 13){
+                                    document.writeln('<option value="'+ x + '" selected="selected">' + x + '</option>');
+                                }else{
+                                    document.writeln('<option value="'+ x + '">' + x + '</option>');
+                                }
+                            }
+
+                            document.writeln('</select>');
+
+                        </script>
+                    </td>
+                    <td style="width: 800px;">
+                        <textarea id="rotationInput" rows="3" onkeyup="calculateRot()" style="width: 100%;"
+                                  data-i18n-placeholder-key="tools.caesar_rot13.placeholder" placeholder="Zu verschlüsselnden Text eingeben"></textarea>
+                        <br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span data-i18n-key="tools.caesar_rot13.result">Resultat:</span></td>
+                    <td><div id="rotationResult" style="width: 100%;"></div></td>
+                </tr>
+            </table>
+        </fieldset>
+    </div>
+
+    <script type="text/javascript" src="scripts/3rdPartyLibs/jquery-1.11.2.min.js"></script>
+
+    <script type="text/javascript" src="scripts/3rdPartyLibs/angular-1.3.9.js"></script>
+    <script type="text/javascript" src="scripts/controllers.js"></script>
+
+    <script type="text/javascript" src="scripts/3rdPartyLibs/wgs84_ch1903.js"></script>
+    <script type="text/javascript" src="scripts/calculating.js"></script>
+
+
+</body>
+</html>

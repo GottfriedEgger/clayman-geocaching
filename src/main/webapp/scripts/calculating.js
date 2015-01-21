@@ -104,7 +104,6 @@ function calculateLetterValuesAndDisplayResults() {
         letter,
         output = [];
 
-
     letter = inputText.substring(0,1);
 
     for (x = 0; x < inputText.length; x+=1) {
