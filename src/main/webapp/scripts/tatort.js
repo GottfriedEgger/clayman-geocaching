@@ -17,8 +17,8 @@ function GameStage(areaPointBottomRight, areaPointTopLeft, questionKey, rightAns
 
 function showDialog(contentKey, dialogTitleKey) {
     var $dialog = jQuery('#tatortDialogPlaceholder'),
-        $content = $dialog.find('.pui-dialog-content'),
-        $title = $dialog.find('.pui-dialog-title'),
+        $content = $dialog.find('.ui-dialog-content'),
+        $title = $dialog.find('.ui-dialog-title'),
         dialogContent = jQuery.i18n.prop(contentKey),
         dialogTitle = jQuery.i18n.prop(dialogTitleKey);
 
@@ -168,7 +168,8 @@ function loadTatortMap() {
         zoom: 4,
         mapTypeId: google.maps.MapTypeId.HYBRID,
         mapTypeControlOptions: {
-            mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID]
+            mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID],
+            position: google.maps.ControlPosition.TOP_CENTER
         },
         scaleControl: true,
         scaleControlOptions: {

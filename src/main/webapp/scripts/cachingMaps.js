@@ -168,7 +168,8 @@ function loadGeocachingMap() {
         zoom: 8,
         mapTypeId: google.maps.MapTypeId.TERRAIN,
         mapTypeControlOptions: {
-            mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID, 'simple_map_style']
+            mapTypeIds: [google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, google.maps.MapTypeId.HYBRID, 'simple_map_style'],
+            position: google.maps.ControlPosition.TOP_CENTER
         },
         navigationControlOptions: {
             position: google.maps.ControlPosition.TOP_RIGHT
